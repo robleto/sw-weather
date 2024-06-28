@@ -28,6 +28,8 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 }) => {
 	if (!weatherData) return null;
 
+	const planet = weatherInfo.planet;
+
 	return (
 		<section className={styles.weatherSection}>
 			<div className={styles.weatherDetails}>
@@ -45,15 +47,19 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 				<p className={styles.planetDesc}>{weatherInfo.description}</p>
 			</div>
 			<div className={styles.imageContainer}>
-				{[...Array(10)].map((_, index) => (
-					<img
+				{[...Array(6)].map((_, index) => (
+					<div
 						key={index}
-						src=""
-						alt={`${weatherInfo.planet}-${index + 1}`}
-						className={`${styles.weatherImage} ${
-							weatherInfo.planet
-						}-${index + 1}`}
-					/>
+						className={`${styles.parallaxLayer} ${
+							styles[`layer${index}`]
+						}`}
+					>
+						<img
+							src={`/images/${planet}/${planet}-${index + 1}.svg`}
+							alt={`${planet}-${index + 1}`}
+							className={`${styles.weatherImage}`}
+						/>
+					</div>
 				))}
 			</div>
 		</section>
