@@ -1,0 +1,154 @@
+.exegol {
+  background: linear-gradient(
+      180deg,
+      rgba(69, 54, 87, 0.68) 0%,
+      rgba(81, 65, 100, 0.75) 39.75%,
+      rgba(91, 74, 110, 0.75) 72.01%
+    ),
+    linear-gradient(180deg, #01487d 0%, #c0dcde 100%);
+}
+
+.kamino {
+  background: linear-gradient(
+    180deg,
+    #314e60 0%,
+    #41647c 39.75%,
+    #4e7791 72.01%
+  ); /* Example style for Kamino (thunderstorms) */
+}
+
+.dagobah {
+  background: linear-gradient(
+      180deg,
+      rgba(145, 163, 111, 0.37) 0%,
+      rgba(142, 168, 151, 0.75) 39.75%,
+      rgba(226, 234, 197, 0.75) 72.01%
+    ),
+    linear-gradient(180deg, #697a4c 0%, #b9cbd3 100%); /* Example style for Dagobah (drizzle) */
+}
+
+.felucia {
+  background: linear-gradient(
+    120deg,
+    #32cd32,
+    #228b22
+  ); /* Example style for Felucia (rain) */
+}
+
+.hoth {
+  background: linear-gradient(
+    180deg,
+    #175586 0%,
+    #a0d0e7 39.75%,
+    #cceaf9 72.01%
+  ); /* Example style for Hoth (snow) */
+}
+
+.endor {
+  background: linear-gradient(
+      180deg,
+      rgba(181, 202, 191, 0.53) 0%,
+      rgba(233, 226, 187, 0.7) 100%
+    ),
+    linear-gradient(180deg, #115836 0%, #b9cbd3 100%); /* Example style for Endor (mist) */
+}
+
+.mustafar {
+  background: linear-gradient(
+      180deg,
+      rgba(109, 24, 49, 0.75) 0%,
+      rgba(181, 57, 47, 0.75) 39.75%,
+      rgba(210, 62, 40, 0.75) 72.01%
+    ),
+    linear-gradient(180deg, #0b0144 0%, #c0dcde 100%); /* Example style for Mustafar (smoke) */
+}
+
+.coruscant {
+  background: linear-gradient(
+    120deg,
+    #b0c4de,
+    #4682b4
+  ); /* Example style for Coruscant (haze) */
+}
+
+.bespin {
+  background: linear-gradient(
+      180deg,
+      #ed685a 0%,
+      #ebe187 72.01%
+    ),
+    linear-gradient(180deg, #2473ad 0%, #7eb4cb 100%); /* Example style for Bespin (fog) */
+}
+
+.cloud-city {
+  background: linear-gradient(
+      180deg,
+      #ed685a 0%,
+      #ebe187 72.01%
+    ),
+    linear-gradient(180deg, #2473ad 0%, #7eb4cb 100%); /* Example style for Cloud City (clouds) */
+}
+
+.tatooine {
+  background: linear-gradient(
+    180deg,
+    #ee7e26 0%,
+    #fee1a7 100%
+  ); /* Example style for Tatooine (very hot) */
+}
+
+.kashyyyk {
+  background: linear-gradient(
+      180deg,
+      rgba(181, 202, 191, 0.53) 0%,
+      rgba(233, 226, 187, 0.7) 100%
+    ),
+    linear-gradient(180deg, #1f7661 0%, #b9cbd3 100%); /* Example style for Geonosis (hot) */
+}
+
+.naboo {
+  background: linear-gradient(
+    120deg,
+    #87ceeb,
+    #00bfff
+  ); /* Example style for Naboo (temperate) */
+}
+
+.alderaan {
+  background: linear-gradient(
+    120deg,
+    #add8e6,
+    #4682b4
+  ); /* Example style for Alderaan (chilly) */
+}
+
+.ahch-to {
+  background: linear-gradient(
+    180deg,
+    #687aab 0%,
+    #aecddf 58%,
+    #e0e5f4 100%
+  );
+}
+
+.scarif {
+  background: linear-gradient(
+    180deg,
+    #0fa9da 0%,
+    rgba(134, 220, 237, 0.85) 100%
+  );
+}
+
+.ilum {
+  background: linear-gradient(
+      180deg,
+      #3887b7 2.69%,
+      #66bcf2 46.02%,
+      rgba(223, 189, 222, 0.67) 96%
+    ),
+    #b2cbe1; /* Example style for Ilum (cold) */
+}
+
+.default {
+  background: linear-gradient(120deg, #c547ff, #442bb2); /* Default style */
+}

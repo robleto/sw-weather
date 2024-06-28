@@ -1,113 +1,293 @@
-import Image from "next/image";
+"use client";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import styles from "./styles/page.module.css";
+import planetStyles from "./styles/planetStyles.module.css";
+import { fetchWeather } from "./utils/fetchWeather";
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+// Define the type for weather data
+interface WeatherData {
+	name: string;
+	main: {
+		temp: number;
+	};
+	weather: [
+		{
+			main: string;
+		}
+	];
 }
+
+interface City {
+	name: string;
+	country: string;
+}
+
+const Home = () => {
+	const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+	const [city, setCity] = useState("");
+	const [suggestions, setSuggestions] = useState<City[]>([]);
+
+	async function fetchData(cityName: string) {
+		try {
+			const data = await fetchWeather(cityName);
+			setWeatherData(data);
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
+	}
+
+	async function fetchCitySuggestions(cityName: string) {
+		try {
+			const response = await axios.get(
+				`/api/city-search?city=${cityName}`
+			);
+			setSuggestions(response.data.list || []);
+		} catch (error) {
+			console.error("Error fetching city suggestions:", error);
+		}
+	}
+
+	useEffect(() => {
+		const cityFromQuery = new URLSearchParams(window.location.search).get(
+			"city"
+		);
+		if (cityFromQuery) {
+			setCity(cityFromQuery);
+			fetchData(cityFromQuery);
+		} else if ("geolocation" in navigator) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					const { latitude, longitude } = position.coords;
+					fetchDataByCoordinates(latitude, longitude);
+				},
+				(error) => {
+					console.error("Error getting geolocation:", error);
+				}
+			);
+		}
+	}, []);
+
+	async function fetchDataByCoordinates(latitude: number, longitude: number) {
+		try {
+			const response = await axios.get(
+				`/api/weather?lat=${latitude}&lon=${longitude}`
+			);
+			setWeatherData(response.data.data);
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
+	}
+
+	const convertKelvinToFahrenheit = (kelvin: number) => {
+		return ((kelvin - 273.15) * 9) / 5 + 32;
+	};
+
+	const getWeatherDescription = (main: string, temp: number) => {
+		const weatherCondition = main.toLowerCase();
+		const tempF = convertKelvinToFahrenheit(temp);
+
+		if (weatherCondition === "thunderstorm") {
+			return {
+				planet: "exegol",
+				description:
+					"Known for its perpetual, intense thunderstorms with constant heavy rain and violent storms.",
+			};
+		}
+		if (weatherCondition === "drizzle") {
+			return {
+				planet: "dagobah",
+				description:
+					"The swampy, mist-laden planet often has a drizzly and damp atmosphere, fitting the constant light rain.",
+			};
+		}
+		if (weatherCondition === "rain") {
+			return {
+				planet: "kamino",
+				description:
+					"A water planet that experiences frequent, heavy rainfall.",
+			};
+		}
+		if (weatherCondition === "snow") {
+			return {
+				planet: "hoth",
+				description:
+					"The icy planet covered in ice and snow year-round, making it the perfect match for snowy conditions.",
+			};
+		}
+		if (weatherCondition === "mist") {
+			return {
+				planet: "endor",
+				description:
+					"The forest moon often features misty conditions with dense forests and a cool, humid atmosphere.",
+			};
+		}
+		if (weatherCondition === "smoke") {
+			return {
+				planet: "mustafar",
+				description:
+					"A volcanic planet with rivers of lava and a smoky, ash-filled atmosphere due to constant volcanic activity.",
+			};
+		}
+		if (weatherCondition === "haze") {
+			return {
+				planet: "coruscant",
+				description:
+					"The city-planet often has a hazy atmosphere due to pollution and dense urban activity, creating a perpetual smog.",
+			};
+		}
+		if (weatherCondition === "fog") {
+			return {
+				planet: "bespin",
+				description:
+					"Though primarily known for its clouds, the lower levels of Cloud City can be quite foggy, with thick, low-lying clouds creating fog-like conditions.",
+			};
+		}
+		if (weatherCondition === "clear" || weatherCondition === "clouds") {
+			if (tempF >= 90) {
+				return {
+					planet: "tatooine",
+					description:
+						"The desert planet with twin suns is known for its scorching heat and clear skies.",
+				};
+			} else if (tempF >= 76) {
+				return {
+					planet: "scarif",
+					description:
+						"This rocky, arid planet has clear skies and hot temperatures, though not as extreme as Tatooine.",
+				};
+			} else if (tempF >= 66) {
+				return {
+					planet: "naboo",
+					description:
+						"Known for its beautiful landscapes and pleasant, temperate climate with clear skies.",
+				};
+			} else if (tempF >= 50) {
+				return {
+					planet: "alderaan",
+					description:
+						"This now-destroyed planet had a diverse climate, with clear, cool conditions in many regions.",
+				};
+			} else if (tempF >= 32) {
+				return {
+					planet: "kashyyyk",
+					description:
+						"A diverse climate with clear, cool conditions in many regions.",
+				};
+			} else {
+				return {
+					planet: "ilum",
+					description:
+						"A frigid planet, often with clear skies, known for its kyber crystal caves and cold temperatures.",
+				};
+			}
+		}
+		return { planet: "default", description: main };
+	};
+
+	const weatherInfo = weatherData
+		? getWeatherDescription(
+				weatherData.weather[0].main,
+				weatherData.main.temp
+		  )
+		: { planet: "default", description: "" };
+
+	const widgetClass = planetStyles[weatherInfo.planet];
+
+	return (
+		<main className={`${styles.main} ${widgetClass}`}>
+			<nav className={styles.navHeader}>
+				<h1 className={styles.title}>Star Wars Weather</h1>
+				<form
+					className={styles.weatherLocation}
+					onSubmit={(e) => {
+						e.preventDefault();
+						fetchData(city);
+					}}
+				>
+					<input
+						className={styles.input_field}
+						placeholder="Enter a City"
+						type="text"
+						id="cityName"
+						name="cityName"
+						value={city}
+						onChange={(e) => {
+							setCity(e.target.value);
+							if (e.target.value.length > 2) {
+								fetchCitySuggestions(e.target.value);
+							}
+						}}
+					/>
+					<button className={styles.search_button} type="submit">
+						Search
+					</button>
+					{suggestions.length > 0 && (
+						<ul className={styles.suggestionsList}>
+							{suggestions.map((suggestion, index) => (
+								<li
+									key={index}
+									onClick={() => {
+										setCity(
+											`${suggestion.name}, ${suggestion.country}`
+										);
+										setSuggestions([]);
+									}}
+								>
+									{suggestion.name}, {suggestion.country}
+								</li>
+							))}
+						</ul>
+					)}
+				</form>
+			</nav>
+			{weatherData && (
+				<section className={styles.weatherSection}>
+					<div className={styles.weatherDetails}>
+						<p className={styles.location}>
+							Today's Forecast for {weatherData.name}
+						</p>
+						<h3 className={styles.tempForecast}>
+							{convertKelvinToFahrenheit(
+								weatherData.main.temp
+							).toFixed(0)}
+							°F and {weatherData.weather[0].main}
+						</h3>
+						<p className={styles.mightAs}>
+							You might as well be on{" "}
+						</p>
+						<h2 className={styles.planetName}>
+							{weatherInfo.planet}
+						</h2>
+						<p className={styles.planetDesc}>
+							{" "}
+							{weatherInfo.description}
+						</p>
+					</div>
+					<div className={styles.imageContainer}>
+						{[...Array(10)].map((_, index) => (
+							<img
+								key={index}
+								src=""
+								alt={`${weatherInfo.planet}-${index + 1}`}
+								className={`${styles.weatherImage} ${
+									weatherInfo.planet
+								}-${index + 1}`}
+							/>
+						))}
+					</div>
+				</section>
+			)}
+			<footer className={styles.footer}>
+				<p className={styles.inspiredBy}>
+					Inspired by the original, now defunct, Star Wars Weather{" "}
+				</p>
+				<div className={styles.credits}>
+					Designed and developed by Greg Robleto
+				</div>
+			</footer>
+		</main>
+	);
+};
+
+export default Home;
