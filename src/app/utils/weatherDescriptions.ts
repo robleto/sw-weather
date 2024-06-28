@@ -1,33 +1,55 @@
-import planetDescriptions from "../data/planetDescriptions.json";
-import { convertKelvinToFahrenheit } from "./temperature";
+import planetData from "../data/planetData.json";
 
-interface WeatherDescription {
-	planet: string;
-	description: string;
+interface PlanetColor {
+	primary: string;
+	headline: string;
 }
 
-export const getWeatherDescription = (
-	main: string,
-	temp: number
-): WeatherDescription => {
-	const weatherCondition = main.toLowerCase();
-	const tempF = convertKelvinToFahrenheit(temp);
+interface PlanetData {
+	[key: string]: {
+		planet: string;
+		description: string;
+		color: PlanetColor;
+	};
+}
 
-	if (weatherCondition === "thunderstorm")
-		return planetDescriptions.thunderstorm;
-	if (weatherCondition === "drizzle") return planetDescriptions.drizzle;
-	if (weatherCondition === "rain") return planetDescriptions.rain;
-	if (weatherCondition === "snow") return planetDescriptions.snow;
-	if (weatherCondition === "mist") return planetDescriptions.mist;
-	if (weatherCondition === "smoke") return planetDescriptions.smoke;
-	if (weatherCondition === "haze") return planetDescriptions.haze;
-	if (weatherCondition === "fog") return planetDescriptions.fog;
-	if (weatherCondition === "clear" || weatherCondition === "clouds") {
-		if (tempF >= 90) return planetDescriptions.clear_hot;
-		if (tempF >= 76) return planetDescriptions.clear_warm;
-		if (tempF >= 66) return planetDescriptions.clear_temperate;
-		if (tempF >= 50) return planetDescriptions.clear_cool;
-		return planetDescriptions.clear_cold;
+const planetDataTyped: PlanetData = planetData as PlanetData;
+
+export const getWeatherDescription = (weather: string, temp: number) => {
+	const weatherCondition = weather.toLowerCase();
+	console.log("Weather condition received from API:", weatherCondition); // Debug log
+
+	// Handle specific weather conditions
+	if (weatherCondition in planetDataTyped) {
+		return planetDataTyped[weatherCondition];
 	}
-	return { planet: "default", description: main };
+
+	// Handle clear or cloudy conditions based on temperature
+	if (weatherCondition === "clear" || weatherCondition === "clouds") {
+		const tempF = convertKelvinToFahrenheit(temp);
+		if (tempF >= 90) {
+			return planetDataTyped["clear_hot"];
+		} else if (tempF >= 76) {
+			return planetDataTyped["clear_warm"];
+		} else if (tempF >= 66) {
+			return planetDataTyped["clear_temperate"];
+		} else if (tempF >= 50) {
+			return planetDataTyped["clear_cool"];
+		} else {
+			return planetDataTyped["clear_cold"];
+		}
+	}
+
+	console.warn(
+		`Weather condition "${weatherCondition}" not found in planetData.`
+	);
+	return {
+		planet: "unknown",
+		description: "Unknown weather condition",
+		color: { primary: "#000000", headline: "#000000" },
+	};
+};
+
+const convertKelvinToFahrenheit = (kelvin: number): number => {
+	return ((kelvin - 273.15) * 9) / 5 + 32;
 };

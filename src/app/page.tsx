@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import styles from "./styles/page.module.css";
 import planetStyles from "./styles/planetStyles.module.css";
 import { fetchWeather, fetchWeatherByCoordinates } from "./utils/fetchWeather";
-import { convertKelvinToFahrenheit } from "./utils/temperature";
 import { getWeatherDescription } from "./utils/weatherDescriptions";
 import WeatherForm from "./components/Header";
 import WeatherDetails from "./components/WeatherDetails";
@@ -62,7 +61,11 @@ const Home = () => {
 				weatherData.weather[0].main,
 				weatherData.main.temp
 		  )
-		: { planet: "default", description: "" };
+		: {
+				planet: "default",
+				description: "",
+				color: { primary: "#000000", headline: "#000000" },
+		  };
 
 	const widgetClass = planetStyles[weatherInfo.planet];
 
