@@ -1,0 +1,76 @@
+.weatherSection {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10vh 5vw;
+  text-align: center;
+  position: relative; /* Ensure positioning context for absolute elements */
+  overflow: hidden; /* Prevent layers from overflowing */
+}
+
+.weatherDetails {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+  z-index: 100; /* Ensure text is above parallax layers */
+}
+
+.location {
+  font-size: 4vw;
+}
+
+.tempForecast {
+  font-size: 5vw;
+}
+
+.planetName {
+  font-size: 8vw;
+  letter-spacing: 1vw;
+  text-transform: uppercase;
+  max-width: 90vw;
+  word-wrap: break-word;
+}
+
+.planetDesc {
+  line-height: 1.15;
+  font-size: 4vw;
+}
+
+.icon_and_weatherInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4vw;
+  margin-top: 5vw;
+}
+
+.temperature {
+  font-size: 5vw;
+  color: white;
+}
+
+.place {
+  text-align: center;
+  font-size: 3.5vw;
+  margin-top: 7vw;
+  color: white;
+}
+
+.weatherCondition {
+  color: white;
+}
+
+.date {
+  text-align: center;
+  font-size: 2vw;
+  margin-top: 2vw;
+  color: white;
+}

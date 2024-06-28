@@ -5,7 +5,7 @@ import planetStyles from "./styles/planetStyles.module.css";
 import { fetchWeather, fetchWeatherByCoordinates } from "./utils/fetchWeather";
 import { convertKelvinToFahrenheit } from "./utils/temperature";
 import { getWeatherDescription } from "./utils/weatherDescriptions";
-import WeatherForm from "./components/WeatherForm";
+import WeatherForm from "./components/Header";
 import WeatherDetails from "./components/WeatherDetails";
 import Footer from "./components/Footer";
 

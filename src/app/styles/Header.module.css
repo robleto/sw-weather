@@ -1,0 +1,51 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.weatherLocation {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+}
+
+.weatherLocation button {
+  background: #41485a;
+  color: #fff;
+}
+
+.weatherLocation input:focus {
+  outline: none;
+}
+
+.input_field {
+  width: 60%;
+  border-radius: 10px;
+  border: none;
+  height: 28px;
+  margin-right: 8px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 16px;
+  background-color: #e4e8f1;
+}
+
+.search_button {
+  width: 80px;
+  height: 28px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 80%;
+}

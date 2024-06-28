@@ -1,5 +1,6 @@
 import React from "react";
-import styles from "../styles/page.module.css";
+import weatherStyles from "../styles/WeatherDetails.module.css";
+import parallaxStyles from "../styles/Parallax.module.css";
 import { convertKelvinToFahrenheit } from "../utils/temperature";
 
 interface WeatherData {
@@ -31,33 +32,37 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 	const planet = weatherInfo.planet;
 
 	return (
-		<section className={styles.weatherSection}>
-			<div className={styles.weatherDetails}>
-				<p className={styles.location}>
+		<section className={weatherStyles.weatherSection}>
+			<div className={weatherStyles.weatherDetails}>
+				<p className={weatherStyles.location}>
 					Today's Forecast for {weatherData.name}
 				</p>
-				<h3 className={styles.tempForecast}>
+				<h3 className={weatherStyles.tempForecast}>
 					{convertKelvinToFahrenheit(weatherData.main.temp).toFixed(
 						0
 					)}
 					°F and {weatherData.weather[0].main}
 				</h3>
-				<p className={styles.mightAs}>You might as well be on</p>
-				<h2 className={styles.planetName}>{weatherInfo.planet}</h2>
-				<p className={styles.planetDesc}>{weatherInfo.description}</p>
+				<p className={weatherStyles.mightAs}>You might as well be on</p>
+				<h2 className={weatherStyles.planetName}>
+					{weatherInfo.planet}
+				</h2>
+				<p className={weatherStyles.planetDesc}>
+					{weatherInfo.description}
+				</p>
 			</div>
-			<div className={styles.imageContainer}>
+			<div className={parallaxStyles.imageContainer}>
 				{[...Array(6)].map((_, index) => (
 					<div
 						key={index}
-						className={`${styles.parallaxLayer} ${
-							styles[`layer${index}`]
+						className={`${parallaxStyles.parallaxLayer} ${
+							parallaxStyles[`layer${index}`]
 						}`}
 					>
 						<img
 							src={`/images/${planet}/${planet}-${index + 1}.svg`}
 							alt={`${planet}-${index + 1}`}
-							className={`${styles.weatherImage}`}
+							className={`${parallaxStyles.weatherImage}`}
 						/>
 					</div>
 				))}
