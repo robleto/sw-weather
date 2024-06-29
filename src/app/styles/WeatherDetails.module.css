@@ -80,10 +80,9 @@
   color: white;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 500px) {
 
   .weatherSection {
-    height: 87vh;
     padding-top: 10vh;
   }
 

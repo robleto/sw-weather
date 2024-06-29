@@ -16,14 +16,14 @@
 }
 
 .input_field {
-  width: 60%;
-  border-radius: 10px;
+  width: 80%;
+  border-radius: 20px;
   border: none;
   height: 28px;
   margin-right: 8px;
   text-align: center;
   text-transform: uppercase;
-  font-size: 16px;
+  font-size: 14px;
   background-color: #e4e8f1;
 }
 

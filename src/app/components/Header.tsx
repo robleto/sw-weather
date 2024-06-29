@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "../styles/Header.module.css";
+import debounce from "lodash.debounce";
 
 interface WeatherFormProps {
 	city: string;
@@ -12,13 +13,29 @@ const WeatherForm: React.FC<WeatherFormProps> = ({
 	setCity,
 	fetchData,
 }) => {
+	const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(
+		null
+	);
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const newCity = e.target.value;
+		setCity(newCity);
+
+		if (typingTimeout) {
+			clearTimeout(typingTimeout);
+		}
+
+		const timeout = setTimeout(() => {
+			fetchData(newCity);
+		}, 500); // Adjust the debounce time as needed
+
+		setTypingTimeout(timeout);
+	};
+
 	return (
 		<form
 			className={styles.weatherLocation}
-			onSubmit={(e) => {
-				e.preventDefault();
-				fetchData(city);
-			}}
+			onSubmit={(e) => e.preventDefault()}
 		>
 			<input
 				className={styles.input_field}
@@ -27,11 +44,8 @@ const WeatherForm: React.FC<WeatherFormProps> = ({
 				id="cityName"
 				name="cityName"
 				value={city}
-				onChange={(e) => setCity(e.target.value)}
+				onChange={handleInputChange}
 			/>
-			<button className={styles.search_button} type="submit">
-				Search
-			</button>
 		</form>
 	);
 };

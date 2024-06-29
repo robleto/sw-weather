@@ -35,8 +35,10 @@ export const getWeatherDescription = (weather: string, temp: number) => {
 			return planetDataTyped["clear_temperate"];
 		} else if (tempF >= 50) {
 			return planetDataTyped["clear_cool"];
-		} else {
+		} else if (tempF >= 18) {
 			return planetDataTyped["clear_cold"];
+		} else {
+			return planetDataTyped["clear_freezing"];
 		}
 	}
 

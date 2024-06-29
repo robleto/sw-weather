@@ -3,32 +3,32 @@
 		"planet": "exegol",
 		"description": "Known for its perpetual, intense thunderstorms with constant heavy rain and violent storms.",
 		"color": {
-      "primary": "#999999",
-      "headline": "#BBBBBB"
-    }
+			"primary": "#999999",
+			"headline": "#BBBBBB"
+		}
 	},
 	"drizzle": {
 		"planet": "dagobah",
 		"description": "The swampy, mist-laden planet often has a drizzly and damp atmosphere, fitting the constant light rain.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#48542D",
+			"headline": "#6C7858"
 		}
 	},
 	"rain": {
 		"planet": "kamino",
 		"description": "A water planet that experiences frequent, heavy rainfall.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#868D9F",
+			"headline": "#C9CFB9"
 		}
 	},
 	"snow": {
 		"planet": "hoth",
 		"description": "The icy planet covered in ice and snow year-round, making it the perfect match for snowy conditions.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#8DA2AE",
+			"headline": "#6DB3DC"
 		}
 	},
 	"mist": {
@@ -67,16 +67,16 @@
 		"planet": "tatooine",
 		"description": "The desert planet with twin suns is known for its scorching heat and clear skies.",
 		"color": {
-      "primary": "#944505",
-      "headline": "#FDC683"
-    }
+			"primary": "#944505",
+			"headline": "#FDC683"
+		}
 	},
 	"clear_warm": {
 		"planet": "scarif",
 		"description": "This rocky, arid planet has clear skies and hot temperatures, though not as extreme as Tatooine.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#237691",
+			"headline": "#95E1F6"
 		}
 	},
 	"clear_temperate": {
@@ -96,11 +96,19 @@
 		}
 	},
 	"clear_cold": {
+		"planet": "hoth",
+		"description": "The icy planet covered in ice and snow year-round, making it the perfect match for snowy conditions.",
+		"color": {
+			"primary": "#8DA2AE",
+			"headline": "#6DB3DC"
+		}
+	},
+	"clear_freezing": {
 		"planet": "ilum",
 		"description": "A frigid planet, often with clear skies, known for its kyber crystal caves and cold temperatures.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#A4B3C1",
+			"headline": "#A9CEEF"
 		}
 	}
 }
