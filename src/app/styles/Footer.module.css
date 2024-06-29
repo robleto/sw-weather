@@ -9,5 +9,10 @@
   position: fixed;
   bottom: 0;
   font-size: 13px;
-  z-index: 100; /* Ensure the footer is above other elements */
+  z-index: 1000; /* Ensure the footer is above other elements */
+}
+
+.footer p {
+  color: #FAFAFA;
+  opacity: 0.3
 }
