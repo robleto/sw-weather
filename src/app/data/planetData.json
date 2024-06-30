@@ -1,14 +1,16 @@
 {
 	"thunderstorm": {
 		"planet": "exegol",
+		"planetName": "Exegol",
 		"description": "Known for its perpetual, intense thunderstorms with constant heavy rain and violent storms.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#9589A4",
+			"headline": "#686788"
 		}
 	},
 	"drizzle": {
 		"planet": "dagobah",
+		"planetName": "Dagobah",
 		"description": "The swampy, mist-laden planet often has a drizzly and damp atmosphere, fitting the constant light rain.",
 		"color": {
 			"primary": "#48542D",
@@ -17,6 +19,7 @@
 	},
 	"rain": {
 		"planet": "kamino",
+		"planetName": "Kamino",
 		"description": "A water planet that experiences frequent, heavy rainfall.",
 		"color": {
 			"primary": "#868D9F",
@@ -25,6 +28,7 @@
 	},
 	"snow": {
 		"planet": "hoth",
+		"planetName": "Hoth",
 		"description": "The icy planet covered in ice and snow year-round, making it the perfect match for snowy conditions.",
 		"color": {
 			"primary": "#8DA2AE",
@@ -33,38 +37,43 @@
 	},
 	"mist": {
 		"planet": "endor",
+		"planetName": "Endor",
 		"description": "The forest moon often features misty conditions with dense forests and a cool, humid atmosphere.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#6B8A60",
+			"headline": "#BCD2B5"
 		}
 	},
 	"smoke": {
 		"planet": "mustafar",
+		"planetName": "Mustafar",
 		"description": "A volcanic planet with rivers of lava and a smoky, ash-filled atmosphere due to constant volcanic activity.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#AC5861",
+			"headline": "#B47A80"
 		}
 	},
 	"haze": {
-		"planet": "coruscant",
-		"description": "The city-planet often has a hazy atmosphere due to pollution and dense urban activity, creating a perpetual smog.",
+		"planet": "niamos",
+		"planetName": "Niamos",
+		"description": "The forest moon often features misty conditions with dense forests and a cool, humid atmosphere.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#BCD4C4",
+			"headline": "#DBDFBF"
 		}
 	},
 	"fog": {
 		"planet": "bespin",
+		"planetName": "Bespin",
 		"description": "Though primarily known for its clouds, the lower levels of Cloud City can be quite foggy, with thick, low-lying clouds creating fog-like conditions.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#C15A51",
+			"headline": "#F4BE9C"
 		}
 	},
 	"clear_hot": {
 		"planet": "tatooine",
+		"planetName": "Tatooine",
 		"description": "The desert planet with twin suns is known for its scorching heat and clear skies.",
 		"color": {
 			"primary": "#944505",
@@ -73,6 +82,7 @@
 	},
 	"clear_warm": {
 		"planet": "scarif",
+		"planetName": "Scarif",
 		"description": "This rocky, arid planet has clear skies and hot temperatures, though not as extreme as Tatooine.",
 		"color": {
 			"primary": "#237691",
@@ -81,22 +91,34 @@
 	},
 	"clear_temperate": {
 		"planet": "naboo",
+		"planetName": "Naboo",
 		"description": "Known for its beautiful landscapes and pleasant, temperate climate with clear skies.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#7A609B",
+			"headline": "#B5C0EE"
 		}
 	},
 	"clear_cool": {
-		"planet": "alderaan",
+		"planet": "ahch-to",
+		"planetName": "Ahch To",
 		"description": "This now-destroyed planet had a diverse climate, with clear, cool conditions in many regions.",
 		"color": {
-			"primary": "#999999",
-			"headline": "#BBBBBB"
+			"primary": "#5F749E",
+			"headline": "#C4D8E8"
+		}
+	},
+	"clear_chilly": {
+		"planet": "kashyyyk",
+		"planetName": "Kashyyyk",
+		"description": "The icy planet covered in ice and snow year-round, making it the perfect match for snowy conditions.",
+		"color": {
+			"primary": "#6C7F74",
+			"headline": "#7C9688"
 		}
 	},
 	"clear_cold": {
 		"planet": "hoth",
+		"planetName": "Hoth",
 		"description": "The icy planet covered in ice and snow year-round, making it the perfect match for snowy conditions.",
 		"color": {
 			"primary": "#8DA2AE",
@@ -105,6 +127,7 @@
 	},
 	"clear_freezing": {
 		"planet": "ilum",
+		"planetName": "Ilum",
 		"description": "A frigid planet, often with clear skies, known for its kyber crystal caves and cold temperatures.",
 		"color": {
 			"primary": "#A4B3C1",

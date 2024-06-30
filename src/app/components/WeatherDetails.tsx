@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import weatherStyles from "../styles/WeatherDetails.module.css";
 import parallaxStyles from "../styles/Parallax.module.css";
 import { convertKelvinToFahrenheit } from "../utils/temperature";
@@ -20,18 +20,11 @@ interface PlanetColor {
 	headline: string;
 }
 
-interface PlanetData {
-	[key: string]: {
-		planet: string;
-		description: string;
-		color: PlanetColor;
-	};
-}
-
 interface WeatherDetailsProps {
 	weatherData: WeatherData | null;
 	weatherInfo: {
 		planet: string;
+		planetName: string;
 		description: string;
 		color: PlanetColor;
 	};
@@ -52,11 +45,11 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 					className={weatherStyles.location}
 					style={{ color: planetColors.primary }}
 				>
-					Today&apos;s Forecast for {weatherData.name}
+					Today's Forecast for {weatherData.name}
 				</p>
 				<h3
 					className={weatherStyles.tempForecast}
-					style={{ color: planetColors.primary }}
+					style={{ color: planetColors.headline }}
 				>
 					{convertKelvinToFahrenheit(weatherData.main.temp).toFixed(
 						0
@@ -73,7 +66,7 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 					className={weatherStyles.planetName}
 					style={{ color: planetColors.headline }}
 				>
-					{weatherInfo.planet}
+					{weatherInfo.planetName}
 				</h2>
 				<p
 					className={weatherStyles.planetDesc}

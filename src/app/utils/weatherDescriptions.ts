@@ -8,6 +8,7 @@ interface PlanetColor {
 interface PlanetData {
 	[key: string]: {
 		planet: string;
+		planetName: string;
 		description: string;
 		color: PlanetColor;
 	};
@@ -35,7 +36,9 @@ export const getWeatherDescription = (weather: string, temp: number) => {
 			return planetDataTyped["clear_temperate"];
 		} else if (tempF >= 50) {
 			return planetDataTyped["clear_cool"];
-		} else if (tempF >= 18) {
+		} else if (tempF >= 41) {
+			return planetDataTyped["clear_chilly"];
+		} else if (tempF >= 14) {
 			return planetDataTyped["clear_cold"];
 		} else {
 			return planetDataTyped["clear_freezing"];
@@ -47,6 +50,7 @@ export const getWeatherDescription = (weather: string, temp: number) => {
 	);
 	return {
 		planet: "unknown",
+		planetName: "Unknown",
 		description: "Unknown weather condition",
 		color: { primary: "#000000", headline: "#000000" },
 	};

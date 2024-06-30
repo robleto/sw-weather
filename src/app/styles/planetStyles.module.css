@@ -1,20 +1,47 @@
-.exegol {
+
+
+
+
+
+
+
+
+
+
+
+
+.alderaan {
   background: linear-gradient(
-      180deg,
-      rgba(69, 54, 87, 0.68) 0%,
-      rgba(81, 65, 100, 0.75) 39.75%,
-      rgba(91, 74, 110, 0.75) 72.01%
-    ),
-    linear-gradient(180deg, #01487d 0%, #c0dcde 100%);
+    120deg,
+    #add8e6,
+    #4682b4
+  ); /* Example style for Alderaan (chilly) */
 }
 
-.kamino {
+.ahch-to {
   background: linear-gradient(
     180deg,
-    #314e60 0%,
-    #41647c 39.75%,
-    #4e7791 72.01%
-  ); /* Example style for Kamino (thunderstorms) */
+    #687aab 0%,
+    #aecddf 58%,
+    #e0e5f4 100%
+  );
+}
+
+.cloud-city, .bespin {
+  background: linear-gradient(
+      180deg,
+      #ed685a 0%,
+      #ebe187 72.01%
+    ),
+    linear-gradient(180deg, #2473ad 0%, #7eb4cb 100%); /* Example style for Cloud City (clouds) */
+}
+
+.coruscant {
+  background: linear-gradient(
+    120deg,
+    #b0c4de,
+    #4682b4
+  ); /* Example style for Coruscant (haze) */
 }
 
 .dagobah {
@@ -25,6 +52,25 @@
       rgba(226, 234, 197, 0.75) 72.01%
     ),
     linear-gradient(180deg, #697a4c 0%, #b9cbd3 100%); /* Example style for Dagobah (drizzle) */
+}
+
+.endor {
+  background: linear-gradient(
+      180deg,
+      rgba(181, 202, 191, 0.53) 0%,
+      rgba(233, 226, 187, 0.7) 100%
+    ),
+    linear-gradient(180deg, #115836 0%, #b9cbd3 100%); /* Example style for Endor (mist) */
+}
+
+.exegol {
+  background: linear-gradient(
+      180deg,
+      rgba(69, 54, 87, 0.68) 0%,
+      rgba(81, 65, 100, 0.75) 39.75%,
+      rgba(91, 74, 110, 0.75) 72.01%
+    ),
+    linear-gradient(180deg, #01487d 0%, #c0dcde 100%);
 }
 
 .felucia {
@@ -44,13 +90,22 @@
   ); /* Example style for Hoth (snow) */
 }
 
-.endor {
+.kamino {
+  background: linear-gradient(
+    180deg,
+    #314e60 0%,
+    #41647c 39.75%,
+    #4e7791 72.01%
+  ); /* Example style for Kamino (thunderstorms) */
+}
+
+.kashyyyk {
   background: linear-gradient(
       180deg,
       rgba(181, 202, 191, 0.53) 0%,
       rgba(233, 226, 187, 0.7) 100%
     ),
-    linear-gradient(180deg, #115836 0%, #b9cbd3 100%); /* Example style for Endor (mist) */
+    linear-gradient(180deg, #1f7661 0%, #b9cbd3 100%); /* Example style for Geonosis (hot) */
 }
 
 .mustafar {
@@ -63,81 +118,14 @@
     linear-gradient(180deg, #0b0144 0%, #c0dcde 100%); /* Example style for Mustafar (smoke) */
 }
 
-.coruscant {
-  background: linear-gradient(
-    120deg,
-    #b0c4de,
-    #4682b4
-  ); /* Example style for Coruscant (haze) */
-}
-
-.bespin {
-  background: linear-gradient(
-      180deg,
-      #ed685a 0%,
-      #ebe187 72.01%
-    ),
-    linear-gradient(180deg, #2473ad 0%, #7eb4cb 100%); /* Example style for Bespin (fog) */
-}
-
-.cloud-city {
-  background: linear-gradient(
-      180deg,
-      #ed685a 0%,
-      #ebe187 72.01%
-    ),
-    linear-gradient(180deg, #2473ad 0%, #7eb4cb 100%); /* Example style for Cloud City (clouds) */
-}
-
-.tatooine {
-  background: linear-gradient(
-    180deg,
-    #ee7e26 0%,
-    #fee1a7 100%
-  ); /* Example style for Tatooine (very hot) */
-}
-
-.kashyyyk {
-  background: linear-gradient(
-      180deg,
-      rgba(181, 202, 191, 0.53) 0%,
-      rgba(233, 226, 187, 0.7) 100%
-    ),
-    linear-gradient(180deg, #1f7661 0%, #b9cbd3 100%); /* Example style for Geonosis (hot) */
-}
-
 .naboo {
-  background: linear-gradient(
-    120deg,
-    #87ceeb,
-    #00bfff
-  ); /* Example style for Naboo (temperate) */
+  background: linear-gradient(180deg, rgba(149, 126, 179, 0.87) 0%, rgba(187, 162, 218, 0.56) 50%, rgba(221, 170, 225, 0.44) 100%), linear-gradient(180deg, #175586 0%, #A0D0E7 39.75%, #CCEAF9 72.01%);
 }
 
-.alderaan {
-  background: linear-gradient(
-    120deg,
-    #add8e6,
-    #4682b4
-  ); /* Example style for Alderaan (chilly) */
+.niamos {
+  background: linear-gradient(180deg, rgba(181, 176, 156, 0.30) 2.98%, rgba(235, 216, 158, 0.59) 57.46%), linear-gradient(180deg, rgba(41, 189, 210, 0.70) 0%, rgba(178, 231, 239, 0.70) 52.07%);
 }
 
-.ahch-to {
-  background: linear-gradient(
-    180deg,
-    #687aab 0%,
-    #aecddf 58%,
-    #e0e5f4 100%
-  );
-}
-
-.scarif {
-  background: linear-gradient(
-    180deg,
-    #0fa9da 0%,
-    rgba(134, 220, 237, 0.85) 100%
-  );
-}
 
 .ilum {
   background: linear-gradient(
@@ -148,6 +136,23 @@
     ),
     #b2cbe1; /* Example style for Ilum (cold) */
 }
+
+.scarif {
+  background: linear-gradient(
+    180deg,
+    #0fa9da 0%,
+    rgba(134, 220, 237, 0.85) 100%
+  );
+}
+
+.tatooine {
+  background: linear-gradient(
+    180deg,
+    #ee7e26 0%,
+    #fee1a7 100%
+  ); /* Example style for Tatooine (very hot) */
+}
+
 
 .default {
   background: linear-gradient(120deg, #c547ff, #442bb2); /* Default style */
