@@ -45,7 +45,7 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 					className={weatherStyles.location}
 					style={{ color: planetColors.primary }}
 				>
-					Today's Forecast for {weatherData.name}
+					Today&apos;s Forecast for {weatherData.name}
 				</p>
 				<h3
 					className={weatherStyles.tempForecast}
