@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../styles/Footer.module.css";
 
-const footerIcons = [
+const socialMediaIcons = [
 	{
 		alt: "Website",
 		src: "/images/_icons/website-icon.svg",
@@ -31,20 +31,29 @@ const footerIcons = [
 
 const Footer: React.FC = () => (
 	<footer className={styles.footer}>
-		<p className={styles.inspiredText}>
-			Inspired by a previous{" "}
-			<a
-				href="https://www.tomscott.com/weather/starwars/"
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				Star Wars Weather
-			</a>.
-		</p>
-		<div className={styles.developedBy}>
-			<p>Designed / developed by Greg Robleto</p>
-			<span className={styles.iconContainer}>
-				{footerIcons.map((icon) => (
+		<div className={styles.footerText}>
+			<p className={styles.inspiredText}>
+				Inspired by another{" "}
+				<a
+					href="https://www.tomscott.com/weather/starwars/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					SW Weather
+				</a> from long ago.
+			</p>
+			<p className={styles.developedBy}>
+				Designed and developed by&nbsp;  {" "}
+				<a
+					href="https://www.robleto.com/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					 Greg Robleto
+				</a>
+			</p>
+			<div className={styles.iconContainer}>
+				{socialMediaIcons.map((icon) => (
 					<a
 						key={icon.alt}
 						href={icon.href}
@@ -58,7 +67,7 @@ const Footer: React.FC = () => (
 						/>
 					</a>
 				))}
-			</span>
+			</div>
 		</div>
 	</footer>
 );

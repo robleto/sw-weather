@@ -1,20 +1,17 @@
-
 .footer {
-  background-color: rgba(8, 7, 5, 0.5);
+  background-color: rgba(8, 7, 5, 0.95);
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100vw;
   padding: 0.75rem 1.5rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  position: fixed;
-  bottom: 0;
-  opacity: .4;
   font-size: 13px;
   z-index: 100; /* Ensure the footer is above other elements */
 }
 
 .footerText {
+  opacity: 0.4;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,14 +49,16 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+    line-height: 1.15;
   }
 
   .inspiredText,
   .developedBy {
-    margin: 0.5rem 0;
+    margin: 0.15rem 0;
   }
 
   .iconContainer {
+    margin-top: 0.5rem;
     justify-content: center;
   }
 }

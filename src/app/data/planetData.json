@@ -31,7 +31,7 @@
 		"planetName": "Hoth",
 		"description": "The icy planet covered in ice and snow year-round, making it the perfect match for snowy conditions.",
 		"color": {
-			"primary": "#8DA2AE",
+			"primary": "#39657F",
 			"headline": "#6DB3DC"
 		}
 	},
@@ -69,6 +69,15 @@
 		"color": {
 			"primary": "#C15A51",
 			"headline": "#F4BE9C"
+		}
+	},
+	"clear_scortching": {
+		"planet": "mustafar",
+		"planetName": "Mustafar",
+		"description": "A volcanic planet with rivers of lava and a smoky, ash-filled atmosphere due to constant volcanic activity.",
+		"color": {
+			"primary": "#AC5861",
+			"headline": "#B47A80"
 		}
 	},
 	"clear_hot": {
@@ -121,7 +130,7 @@
 		"planetName": "Hoth",
 		"description": "The icy planet covered in ice and snow year-round, making it the perfect match for snowy conditions.",
 		"color": {
-			"primary": "#8DA2AE",
+			"primary": "#39657F",
 			"headline": "#6DB3DC"
 		}
 	},

@@ -28,7 +28,9 @@ export const getWeatherDescription = (weather: string, temp: number) => {
 	// Handle clear or cloudy conditions based on temperature
 	if (weatherCondition === "clear" || weatherCondition === "clouds") {
 		const tempF = convertKelvinToFahrenheit(temp);
-		if (tempF >= 90) {
+		if (tempF >= 99) {
+			return planetDataTyped["clear_scortching"];
+		} else if (tempF >= 85) {
 			return planetDataTyped["clear_hot"];
 		} else if (tempF >= 76) {
 			return planetDataTyped["clear_warm"];

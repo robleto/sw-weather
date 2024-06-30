@@ -60,7 +60,7 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 					className={weatherStyles.mightAs}
 					style={{ color: planetColors.primary }}
 				>
-					You might as well be on
+					{weatherData.name} feels like being on
 				</p>
 				<h2
 					className={weatherStyles.planetName}
