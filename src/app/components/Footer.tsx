@@ -33,7 +33,7 @@ const Footer: React.FC = () => (
 	<footer className={styles.footer}>
 		<div className={styles.footerText}>
 			<p className={styles.inspiredText}>
-				Inspired by another{" "}
+				Inspired by a{" "}
 				<a
 					href="https://www.tomscott.com/weather/starwars/"
 					target="_blank"
