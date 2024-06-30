@@ -1,18 +1,65 @@
+
 .footer {
   background-color: rgba(8, 7, 5, 0.5);
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   width: 100vw;
   padding: 0.75rem 1.5rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   position: fixed;
   bottom: 0;
-  font-size: clamp(1vw, 13px, 3vw);
-  z-index: 1000; /* Ensure the footer is above other elements */
+  opacity: .4;
+  font-size: 13px;
+  z-index: 100; /* Ensure the footer is above other elements */
 }
 
-.footer p {
-  color: #FAFAFA;
-  opacity: 0.3
+.footerText {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.inspiredText {
+  flex: 1;
+}
+
+.developedBy {
+  display: flex;
+  align-items: center;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+
+.socialIcon {
+  width: 24px;
+  height: 24px;
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .footer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footerText {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .inspiredText,
+  .developedBy {
+    margin: 0.5rem 0;
+  }
+
+  .iconContainer {
+    justify-content: center;
+  }
 }
