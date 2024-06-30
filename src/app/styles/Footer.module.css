@@ -11,6 +11,7 @@
 }
 
 .footerText {
+  color: #FAFAFA;
   opacity: 0.4;
   display: flex;
   justify-content: space-between;
