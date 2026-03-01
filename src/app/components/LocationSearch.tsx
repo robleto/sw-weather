@@ -140,6 +140,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 		if (event.key === "Escape") {
 			setCandidates([]);
 			setActiveIndex(-1);
+			setMessage("");
 			return;
 		}
 
@@ -195,7 +196,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 			/>
 
 			{isLoading && (
-				<div className={styles.searchStatus} aria-live="polite">
+				<div className={styles.searchStatus} aria-live="polite" role="status">
 					Resolving location…
 				</div>
 			)}
@@ -215,6 +216,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 								className={`${styles.candidateButton} ${
 									activeIndex === index ? styles.candidateButtonActive : ""
 								}`}
+								onMouseDown={(event) => event.preventDefault()}
 								onClick={() => handleCandidateClick(candidate)}
 								onMouseEnter={() => setActiveIndex(index)}
 							>
@@ -226,7 +228,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 			)}
 
 			{message && (
-				<div className={styles.searchStatus} aria-live="polite">
+				<div className={styles.searchStatus} aria-live="polite" role="status">
 					{message}
 					{isApiError && (
 						<button

@@ -40,7 +40,9 @@ function normalizeCandidate(item: OpenWeatherGeoResponse): LocationCandidate {
 function dedupeCandidates(candidates: LocationCandidate[]): LocationCandidate[] {
 	const seen = new Set<string>();
 	return candidates.filter((candidate) => {
-		const key = `${candidate.name}:${candidate.regionOrState}:${candidate.country}:${candidate.lat}:${candidate.lon}`;
+		const roundedLat = candidate.lat.toFixed(4);
+		const roundedLon = candidate.lon.toFixed(4);
+		const key = `${candidate.name.toLowerCase()}:${candidate.regionOrState.toLowerCase()}:${candidate.country.toLowerCase()}:${roundedLat}:${roundedLon}`;
 		if (seen.has(key)) {
 			return false;
 		}
