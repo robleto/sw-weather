@@ -97,3 +97,31 @@
   color: #1f2330;
   cursor: pointer;
 }
+
+/* ── Hero variant: wider, taller input rendered in the center of the page ─ */
+.heroSearch {
+  width: min(90vw, 480px);
+}
+
+.heroSearch .input_field {
+  height: 48px;
+  font-size: 16px;
+  padding: 0 18px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #e8f4ff;
+  border: 1.5px solid rgba(160, 200, 255, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.heroSearch .input_field::placeholder {
+  color: rgba(160, 200, 255, 0.55);
+}
+
+.heroSearch .input_field:focus {
+  outline: none;
+  border-color: rgba(160, 200, 255, 0.85);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 0 3px rgba(100, 160, 255, 0.25);
+}

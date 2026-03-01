@@ -15,9 +15,10 @@ weather-icons.min.css);
   display: flex;
   flex-direction: column;
   padding-top: 52px;
+  overflow: hidden; /* contain pseudo-element hyperspace streaks */
 }
+
 .navHeader {
-  background-color: #222;
   padding: 0.5rem 1rem;
   width: 100%;
   display: flex;
@@ -29,7 +30,17 @@ weather-icons.min.css);
   top: 0;
   left: 0;
   min-height: 52px;
-  z-index: 100; /* Ensure the header is above other elements */
+  z-index: 300; /* above planet sphere (z-index: 200) */
+  transition: background 0.4s ease;
+  background-color: #222;
+}
+
+/* transparent bar during idle / warp — title is visible but nav recedes */
+.navHeader[data-phase="idle"],
+.navHeader[data-phase="warping"] {
+  background-color: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .title {
@@ -46,4 +57,116 @@ weather-icons.min.css);
 
 .pageStatusError {
   color: #ffd4d4;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HYPERSPACE HERO  —  idle state: centred CTA over the star-warp background
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.hyperspaceHero {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* no background — the .default class on .main provides the starfield */
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+  padding: 2rem 1.5rem;
+  max-width: 560px;
+  width: 100%;
+  position: relative;
+  z-index: 20;
+  /* soft outer glow so text reads over the streaks */
+  filter: drop-shadow(0 0 32px rgba(10, 20, 60, 0.7));
+}
+
+.heroEyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(160, 200, 255, 0.65);
+}
+
+.heroHeading {
+  margin: 0;
+  font-family: "Poiret One", sans-serif;
+  font-size: clamp(2rem, 5.5vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: #e8f4ff;
+  text-shadow:
+    0 0 60px rgba(100, 160, 255, 0.55),
+    0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+.heroSubtext {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(200, 220, 255, 0.6);
+  line-height: 1.5;
+}
+
+.heroError {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #ffd4d4;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PLANET ZOOM SPHERE  —  warping state: circle scales from dot → full screen
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.planetZoomSphere {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* 150vmax guarantees coverage on any viewport at scale(1) */
+  width: 150vmax;
+  height: 150vmax;
+  border-radius: 50%;
+  z-index: 200;
+  pointer-events: none;
+  /* Generic approaching-planet sphere */
+  background: radial-gradient(
+    circle at 38% 38%,
+    #5a9bff 0%,
+    #1d4fc4 22%,
+    #0a1e6e 50%,
+    #020a28 75%,
+    #000408 100%
+  );
+  box-shadow:
+    0 0 80px 20px rgba(60, 110, 255, 0.45),
+    inset 0 0 120px 40px rgba(0, 10, 60, 0.7);
+  transform: translate(-50%, -50%) scale(0.015);
+  animation: planetZoomIn 1.8s cubic-bezier(0.25, 0.1, 0.8, 1) forwards;
+}
+
+@keyframes planetZoomIn {
+  0%   { transform: translate(-50%, -50%) scale(0.015); opacity: 0; }
+  8%   { opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1);     opacity: 1; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LANDED  —  planet background fades in beneath the sphere
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Smooth reveal after sphere unmounts */
+.main[data-phase="landed"] {
+  animation: backgroundReveal 0.6s ease-out forwards;
+}
+
+@keyframes backgroundReveal {
+  from { opacity: 0.6; }
+  to   { opacity: 1;   }
 }

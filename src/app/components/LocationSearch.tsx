@@ -14,6 +14,8 @@ interface LocationSearchProps {
 		lon: number;
 		displayName: string;
 	}) => void;
+	/** Optional extra class applied to the root form element */
+	className?: string;
 }
 
 const NO_RESULTS_MESSAGE =
@@ -25,6 +27,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 	value,
 	onValueChange,
 	onLocationResolved,
+	className,
 }) => {
 	const [candidates, setCandidates] = useState<LocationCandidate[]>([]);
 	const [activeIndex, setActiveIndex] = useState<number>(-1);
@@ -171,7 +174,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 	};
 
 	return (
-		<form className={styles.weatherLocation} onSubmit={(e) => e.preventDefault()}>
+		<form className={`${styles.weatherLocation}${className ? ` ${className}` : ''}`} onSubmit={(e) => e.preventDefault()}>
 			<label htmlFor="locationQuery" className={styles.srOnly}>
 				Search by city, state, country, ZIP, or coordinates
 			</label>

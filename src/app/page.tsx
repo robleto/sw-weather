@@ -1,6 +1,7 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./styles/page.module.css";
+import locationSearchStyles from "./styles/LocationSearch.module.css";
 import planetStyles from "./styles/planetStyles.module.css";
 import { fetchWeatherByCoordinates } from "./utils/fetchWeather";
 import { getWeatherDescription } from "./utils/weatherDescriptions";
@@ -10,7 +11,10 @@ import Footer from "./components/Footer";
 import { geocodeLocation } from "@/lib/location/geocode";
 import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
 
-// Define the type for weather data
+// ─── types ────────────────────────────────────────────────────────────────────
+
+type AppPhase = "idle" | "warping" | "landed";
+
 interface WeatherData {
   name: string;
   main: {
@@ -23,111 +27,220 @@ interface WeatherData {
   ];
 }
 
+// ─── component ────────────────────────────────────────────────────────────────
+
 const Home = () => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [locationQuery, setLocationQuery] = useState("");
-  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [appPhase, setAppPhase] = useState<AppPhase>("idle");
   const [pageError, setPageError] = useState<string | null>(null);
 
-  const fetchDataByCoordinates = useCallback(async (lat: number, lon: number) => {
-    setIsPageLoading(true);
-    setPageError(null);
+  // Tracks whether the planet zoom animation has fired onAnimationEnd
+  const warpAnimDoneRef = useRef(false);
 
-    try {
-      const data = await fetchWeatherByCoordinates(lat, lon);
-      setWeatherData(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setPageError("We couldn't load weather right now. Please try again.");
-    } finally {
-      setIsPageLoading(false);
-    }
+  // ── fetch ──────────────────────────────────────────────────────────────────
+
+  const fetchDataByCoordinates = useCallback(
+    async (lat: number, lon: number) => {
+      setPageError(null);
+      try {
+        const data = await fetchWeatherByCoordinates(lat, lon);
+        setWeatherData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setPageError("We couldn't load weather right now. Please try again.");
+        // Return to idle so the hero is shown again
+        setAppPhase("idle");
+        warpAnimDoneRef.current = false;
+      }
+    },
+    []
+  );
+
+  // ── warp trigger ──────────────────────────────────────────────────────────
+
+  /**
+   * Kick off the hyper-warp sequence: show the planet zoom sphere,
+   * and simultaneously start fetching data.  The landed state is entered
+   * from handleWarpAnimationEnd once the sphere animation completes.
+   */
+  const startWarp = useCallback(
+    (lat: number, lon: number) => {
+      warpAnimDoneRef.current = false;
+      setWeatherData(null);
+      setAppPhase("warping");
+      fetchDataByCoordinates(lat, lon);
+    },
+    [fetchDataByCoordinates]
+  );
+
+  /**
+   * Called by onAnimationEnd on the planet sphere div.
+   * We always move to "landed" here — if data hasn't arrived yet a loading
+   * indicator is shown until it does.
+   */
+  const handleWarpAnimationEnd = useCallback(() => {
+    warpAnimDoneRef.current = true;
+    setAppPhase("landed");
   }, []);
 
-  const resolveInitialLocation = useCallback(async (query: string) => {
-    const parsed = parseLocationQuery(query);
+  // ── initial location (URL ?city= param) ──────────────────────────────────
 
-    if (parsed.kind === "coordinates") {
-      await fetchDataByCoordinates(parsed.lat, parsed.lon);
-      return;
-    }
+  const resolveInitialLocation = useCallback(
+    async (query: string) => {
+      const parsed = parseLocationQuery(query);
 
-    if (parsed.kind === "geocode") {
-      const candidates = await geocodeLocation(parsed.query);
-      if (candidates.length > 0) {
-        await fetchDataByCoordinates(candidates[0].lat, candidates[0].lon);
+      if (parsed.kind === "coordinates") {
+        startWarp(parsed.lat, parsed.lon);
+        return;
       }
-    }
-  }, [fetchDataByCoordinates]);
+
+      if (parsed.kind === "geocode") {
+        const candidates = await geocodeLocation(parsed.query);
+        if (candidates.length > 0) {
+          startWarp(candidates[0].lat, candidates[0].lon);
+        }
+      }
+    },
+    [startWarp]
+  );
+
+  // ── mount: geolocation or URL param ───────────────────────────────────────
 
   useEffect(() => {
     const cityFromQuery = new URLSearchParams(window.location.search).get(
       "city"
     );
+
     if (cityFromQuery) {
       setLocationQuery(cityFromQuery);
       resolveInitialLocation(cityFromQuery).catch((error) => {
         console.error("Error resolving initial location:", error);
         setPageError("We couldn't resolve that location from the URL.");
-        setIsPageLoading(false);
+        setAppPhase("idle");
       });
-    } else if ("geolocation" in navigator) {
+      return;
+    }
+
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          fetchDataByCoordinates(latitude, longitude);
+          startWarp(latitude, longitude);
         },
         (error) => {
-          console.error("Error getting geolocation:", error);
-          setIsPageLoading(false);
-          setPageError("Location access was denied. Search for a city to continue.");
+          // Permission denied or error — stay on idle hero so user can search
+          console.error("Geolocation denied:", error);
+          setAppPhase("idle");
         }
       );
     } else {
-      setIsPageLoading(false);
-      setPageError("Geolocation isn't available. Search for a city to continue.");
+      setAppPhase("idle");
     }
-  }, [fetchDataByCoordinates, resolveInitialLocation]);
+  }, [startWarp, resolveInitialLocation]);
+
+  // ─── derived display values ────────────────────────────────────────────────
 
   const weatherInfo = weatherData
-		? getWeatherDescription(
-				weatherData.weather[0].main,
-				weatherData.main.temp
-		  )
-		: {
-				planet: "default",
-				planetName: "default",
-				description: "",
-				color: { primary: "#000000", headline: "#000000" },
-		  };
+    ? getWeatherDescription(
+        weatherData.weather[0].main,
+        weatherData.main.temp
+      )
+    : {
+        planet: "default",
+        planetName: "default",
+        description: "",
+        color: { primary: "#000000", headline: "#000000" },
+      };
 
-  const widgetClass = planetStyles[weatherInfo.planet];
+  // Idle/warping → hyperspace background; landed → planet theme
+  const bgClass =
+    appPhase === "landed"
+      ? (planetStyles[weatherInfo.planet] ?? planetStyles.default)
+      : planetStyles.default;
+
+  // ─── render ───────────────────────────────────────────────────────────────
 
   return (
-    <main className={`${styles.main} ${widgetClass}`}>
-      <nav className={styles.navHeader}>
+    <main className={`${styles.main} ${bgClass}`} data-phase={appPhase}>
+
+      {/* ── Fixed nav ─────────────────────────────────────────────────────── */}
+      <nav className={styles.navHeader} data-phase={appPhase}>
         <h1 className={styles.title}>Star Wars Weather</h1>
-        <LocationSearch
-          value={locationQuery}
-          onValueChange={setLocationQuery}
-          onLocationResolved={({ lat, lon, displayName }) => {
-            setLocationQuery(displayName);
-            fetchDataByCoordinates(lat, lon);
-          }}
-        />
+        {/* Search input moves to the nav only once weather is showing */}
+        {appPhase === "landed" && (
+          <LocationSearch
+            value={locationQuery}
+            onValueChange={setLocationQuery}
+            onLocationResolved={({ lat, lon, displayName }) => {
+              setLocationQuery(displayName);
+              startWarp(lat, lon);
+            }}
+          />
+        )}
       </nav>
-      {isPageLoading && (
-        <div className={styles.pageStatus} aria-live="polite">
-          Loading weather…
+
+      {/* ── IDLE: hyperspace hero ─────────────────────────────────────────── */}
+      {appPhase === "idle" && (
+        <div className={styles.hyperspaceHero}>
+          <div className={styles.heroContent}>
+            <p className={styles.heroEyebrow}>
+              A long time ago, in a galaxy far, far away…
+            </p>
+            <h2 className={styles.heroHeading}>
+              Where in the galaxy are you?
+            </h2>
+            <p className={styles.heroSubtext}>
+              Enter your location to discover your Star Wars weather forecast
+            </p>
+            <LocationSearch
+              className={locationSearchStyles.heroSearch}
+              value={locationQuery}
+              onValueChange={setLocationQuery}
+              onLocationResolved={({ lat, lon, displayName }) => {
+                setLocationQuery(displayName);
+                startWarp(lat, lon);
+              }}
+            />
+            {pageError && (
+              <p className={styles.heroError} role="alert">
+                {pageError}
+              </p>
+            )}
+          </div>
         </div>
       )}
-      {pageError && !isPageLoading && (
-        <div className={`${styles.pageStatus} ${styles.pageStatusError}`} aria-live="polite">
-          {pageError}
+
+      {/* ── WARPING: planet zoom sphere ───────────────────────────────────── */}
+      {appPhase === "warping" && (
+        <div className={styles.hyperspaceHero} aria-hidden="true">
+          <div
+            className={styles.planetZoomSphere}
+            onAnimationEnd={handleWarpAnimationEnd}
+          />
         </div>
       )}
-      <WeatherDetails weatherData={weatherData} weatherInfo={weatherInfo} />
-      <Footer />
+
+      {/* ── LANDED: weather details ───────────────────────────────────────── */}
+      {appPhase === "landed" && (
+        <>
+          {!weatherData && !pageError && (
+            <div className={styles.pageStatus} aria-live="polite">
+              Loading weather…
+            </div>
+          )}
+          {pageError && (
+            <div
+              className={`${styles.pageStatus} ${styles.pageStatusError}`}
+              aria-live="polite"
+            >
+              {pageError}
+            </div>
+          )}
+          <WeatherDetails weatherData={weatherData} weatherInfo={weatherInfo} />
+          <Footer />
+        </>
+      )}
     </main>
   );
 };
