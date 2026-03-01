@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./styles/page.module.css";
 import locationSearchStyles from "./styles/LocationSearch.module.css";
 import planetStyles from "./styles/planetStyles.module.css";
@@ -13,7 +13,7 @@ import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
 
 // ─── types ────────────────────────────────────────────────────────────────────
 
-type AppPhase = "idle" | "warping" | "landed";
+type AppPhase = "idle" | "landed";
 
 interface WeatherData {
   name: string;
@@ -35,13 +35,12 @@ const Home = () => {
   const [appPhase, setAppPhase] = useState<AppPhase>("idle");
   const [pageError, setPageError] = useState<string | null>(null);
 
-  // Tracks whether the planet zoom animation has fired onAnimationEnd
-  const warpAnimDoneRef = useRef(false);
+  // ── fetch + land ──────────────────────────────────────────────────────────
 
-  // ── fetch ──────────────────────────────────────────────────────────────────
-
-  const fetchDataByCoordinates = useCallback(
+  const goToLocation = useCallback(
     async (lat: number, lon: number) => {
+      setWeatherData(null);
+      setAppPhase("landed");
       setPageError(null);
       try {
         const data = await fetchWeatherByCoordinates(lat, lon);
@@ -49,40 +48,11 @@ const Home = () => {
       } catch (error) {
         console.error("Error fetching data:", error);
         setPageError("We couldn't load weather right now. Please try again.");
-        // Return to idle so the hero is shown again
         setAppPhase("idle");
-        warpAnimDoneRef.current = false;
       }
     },
     []
   );
-
-  // ── warp trigger ──────────────────────────────────────────────────────────
-
-  /**
-   * Kick off the hyper-warp sequence: show the planet zoom sphere,
-   * and simultaneously start fetching data.  The landed state is entered
-   * from handleWarpAnimationEnd once the sphere animation completes.
-   */
-  const startWarp = useCallback(
-    (lat: number, lon: number) => {
-      warpAnimDoneRef.current = false;
-      setWeatherData(null);
-      setAppPhase("warping");
-      fetchDataByCoordinates(lat, lon);
-    },
-    [fetchDataByCoordinates]
-  );
-
-  /**
-   * Called by onAnimationEnd on the planet sphere div.
-   * We always move to "landed" here — if data hasn't arrived yet a loading
-   * indicator is shown until it does.
-   */
-  const handleWarpAnimationEnd = useCallback(() => {
-    warpAnimDoneRef.current = true;
-    setAppPhase("landed");
-  }, []);
 
   // ── initial location (URL ?city= param) ──────────────────────────────────
 
@@ -91,18 +61,18 @@ const Home = () => {
       const parsed = parseLocationQuery(query);
 
       if (parsed.kind === "coordinates") {
-        startWarp(parsed.lat, parsed.lon);
+        goToLocation(parsed.lat, parsed.lon);
         return;
       }
 
       if (parsed.kind === "geocode") {
         const candidates = await geocodeLocation(parsed.query);
         if (candidates.length > 0) {
-          startWarp(candidates[0].lat, candidates[0].lon);
+          goToLocation(candidates[0].lat, candidates[0].lon);
         }
       }
     },
-    [startWarp]
+    [goToLocation]
   );
 
   // ── mount: geolocation or URL param ───────────────────────────────────────
@@ -126,10 +96,9 @@ const Home = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          startWarp(latitude, longitude);
+          goToLocation(latitude, longitude);
         },
         (error) => {
-          // Permission denied or error — stay on idle hero so user can search
           console.error("Geolocation denied:", error);
           setAppPhase("idle");
         }
@@ -137,7 +106,7 @@ const Home = () => {
     } else {
       setAppPhase("idle");
     }
-  }, [startWarp, resolveInitialLocation]);
+  }, [goToLocation, resolveInitialLocation]);
 
   // ─── derived display values ────────────────────────────────────────────────
 
@@ -153,7 +122,7 @@ const Home = () => {
         color: { primary: "#000000", headline: "#000000" },
       };
 
-  // Idle/warping → hyperspace background; landed → planet theme
+  // idle → hyperspace background; landed → planet theme
   const bgClass =
     appPhase === "landed"
       ? (planetStyles[weatherInfo.planet] ?? planetStyles.default)
@@ -174,7 +143,7 @@ const Home = () => {
             onValueChange={setLocationQuery}
             onLocationResolved={({ lat, lon, displayName }) => {
               setLocationQuery(displayName);
-              startWarp(lat, lon);
+              goToLocation(lat, lon);
             }}
           />
         )}
@@ -199,7 +168,7 @@ const Home = () => {
               onValueChange={setLocationQuery}
               onLocationResolved={({ lat, lon, displayName }) => {
                 setLocationQuery(displayName);
-                startWarp(lat, lon);
+                goToLocation(lat, lon);
               }}
             />
             {pageError && (
@@ -208,16 +177,6 @@ const Home = () => {
               </p>
             )}
           </div>
-        </div>
-      )}
-
-      {/* ── WARPING: planet zoom sphere ───────────────────────────────────── */}
-      {appPhase === "warping" && (
-        <div className={styles.hyperspaceHero} aria-hidden="true">
-          <div
-            className={styles.planetZoomSphere}
-            onAnimationEnd={handleWarpAnimationEnd}
-          />
         </div>
       )}
 
