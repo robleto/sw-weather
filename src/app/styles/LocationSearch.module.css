@@ -1,0 +1,98 @@
+.weatherLocation {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  width: 260px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.weatherLocation button {
+  background: #41485a;
+  color: #fff;
+}
+
+.weatherLocation input:focus {
+  outline: none;
+}
+
+.input_field {
+  width: 100%;
+  border-radius: 20px;
+  border: none;
+  height: 28px;
+  margin-right: 0;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  background-color: #e4e8f1;
+}
+
+.candidateList {
+  width: 100%;
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 4px;
+  background: #e4e8f1;
+  border-radius: 10px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.candidateButton {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: #1f2330;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.candidateButton:hover {
+  background: #d5dbea;
+}
+
+.candidateButtonActive {
+  background: #d5dbea;
+}
+
+.searchStatus {
+  width: 100%;
+  margin-top: 6px;
+  color: #e4e8f1;
+  font-size: 12px;
+  text-align: center;
+}
+
+.retryButton {
+  margin-left: 8px;
+  border: none;
+  border-radius: 8px;
+  padding: 3px 8px;
+  background: #e4e8f1;
+  color: #1f2330;
+  cursor: pointer;
+}
+
+.search_button {
+  width: 80px;
+  height: 28px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 80%;
+}

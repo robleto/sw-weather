@@ -15,10 +15,23 @@ interface PlanetData {
 }
 
 const planetDataTyped: PlanetData = planetData as PlanetData;
+const FALLBACK_KEY = "clear_temperate";
+
+const WEATHER_ALIASES: Record<string, keyof PlanetData> = {
+	dust: "haze",
+	sand: "haze",
+	ash: "smoke",
+	squall: "thunderstorm",
+	tornado: "thunderstorm",
+};
 
 export const getWeatherDescription = (weather: string, temp: number) => {
 	const weatherCondition = weather.toLowerCase();
-	console.log("Weather condition received from API:", weatherCondition); // Debug log
+	const mappedCondition = WEATHER_ALIASES[weatherCondition];
+
+	if (mappedCondition && mappedCondition in planetDataTyped) {
+		return planetDataTyped[mappedCondition];
+	}
 
 	// Handle specific weather conditions
 	if (weatherCondition in planetDataTyped) {
@@ -29,7 +42,7 @@ export const getWeatherDescription = (weather: string, temp: number) => {
 	if (weatherCondition === "clear" || weatherCondition === "clouds") {
 		const tempF = convertKelvinToFahrenheit(temp);
 		if (tempF >= 99) {
-			return planetDataTyped["clear_scortching"];
+			return planetDataTyped["clear_scorching"];
 		} else if (tempF >= 85) {
 			return planetDataTyped["clear_hot"];
 		} else if (tempF >= 76) {
@@ -47,15 +60,13 @@ export const getWeatherDescription = (weather: string, temp: number) => {
 		}
 	}
 
-	console.warn(
-		`Weather condition "${weatherCondition}" not found in planetData.`
-	);
-	return {
-		planet: "unknown",
-		planetName: "Unknown",
-		description: "Unknown weather condition",
-		color: { primary: "#000000", headline: "#000000" },
-	};
+	if (process.env.NODE_ENV !== "production") {
+		console.warn(
+			`Weather condition "${weatherCondition}" not found in planetData. Using fallback.`
+		);
+	}
+
+	return planetDataTyped[FALLBACK_KEY];
 };
 
 const convertKelvinToFahrenheit = (kelvin: number): number => {

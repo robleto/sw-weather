@@ -1,12 +1,14 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./styles/page.module.css";
 import planetStyles from "./styles/planetStyles.module.css";
-import { fetchWeather, fetchWeatherByCoordinates } from "./utils/fetchWeather";
+import { fetchWeatherByCoordinates } from "./utils/fetchWeather";
 import { getWeatherDescription } from "./utils/weatherDescriptions";
-import WeatherForm from "./components/Header";
+import LocationSearch from "./components/LocationSearch";
 import WeatherDetails from "./components/WeatherDetails";
 import Footer from "./components/Footer";
+import { geocodeLocation } from "@/lib/location/geocode";
+import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
 
 // Define the type for weather data
 interface WeatherData {
@@ -21,53 +23,71 @@ interface WeatherData {
   ];
 }
 
-interface PlanetColor {
-	primary: string;
-	headline: string;
-}
-
-interface WeatherDetailsProps {
-	weatherData: WeatherData | null;
-	weatherInfo: {
-		planet: string;
-		planetName: string;
-		description: string;
-		color: PlanetColor;
-	};
-}
-
 const Home = () => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  const [city, setCity] = useState("");
+  const [locationQuery, setLocationQuery] = useState("");
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [pageError, setPageError] = useState<string | null>(null);
 
-  async function fetchData(cityName: string) {
+  const fetchDataByCoordinates = useCallback(async (lat: number, lon: number) => {
+    setIsPageLoading(true);
+    setPageError(null);
+
     try {
-      const data = await fetchWeather(cityName);
+      const data = await fetchWeatherByCoordinates(lat, lon);
       setWeatherData(data);
     } catch (error) {
       console.error("Error fetching data:", error);
+      setPageError("We couldn't load weather right now. Please try again.");
+    } finally {
+      setIsPageLoading(false);
     }
-  }
+  }, []);
+
+  const resolveInitialLocation = useCallback(async (query: string) => {
+    const parsed = parseLocationQuery(query);
+
+    if (parsed.kind === "coordinates") {
+      await fetchDataByCoordinates(parsed.lat, parsed.lon);
+      return;
+    }
+
+    if (parsed.kind === "geocode") {
+      const candidates = await geocodeLocation(parsed.query);
+      if (candidates.length > 0) {
+        await fetchDataByCoordinates(candidates[0].lat, candidates[0].lon);
+      }
+    }
+  }, [fetchDataByCoordinates]);
 
   useEffect(() => {
     const cityFromQuery = new URLSearchParams(window.location.search).get(
       "city"
     );
     if (cityFromQuery) {
-      setCity(cityFromQuery);
-      fetchData(cityFromQuery);
+      setLocationQuery(cityFromQuery);
+      resolveInitialLocation(cityFromQuery).catch((error) => {
+        console.error("Error resolving initial location:", error);
+        setPageError("We couldn't resolve that location from the URL.");
+        setIsPageLoading(false);
+      });
     } else if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          fetchWeatherByCoordinates(latitude, longitude).then(setWeatherData);
+          fetchDataByCoordinates(latitude, longitude);
         },
         (error) => {
           console.error("Error getting geolocation:", error);
+          setIsPageLoading(false);
+          setPageError("Location access was denied. Search for a city to continue.");
         }
       );
+    } else {
+      setIsPageLoading(false);
+      setPageError("Geolocation isn't available. Search for a city to continue.");
     }
-  }, []);
+  }, [fetchDataByCoordinates, resolveInitialLocation]);
 
   const weatherInfo = weatherData
 		? getWeatherDescription(
@@ -87,8 +107,25 @@ const Home = () => {
     <main className={`${styles.main} ${widgetClass}`}>
       <nav className={styles.navHeader}>
         <h1 className={styles.title}>Star Wars Weather</h1>
-        <WeatherForm city={city} setCity={setCity} fetchData={fetchData} />
+        <LocationSearch
+          value={locationQuery}
+          onValueChange={setLocationQuery}
+          onLocationResolved={({ lat, lon, displayName }) => {
+            setLocationQuery(displayName);
+            fetchDataByCoordinates(lat, lon);
+          }}
+        />
       </nav>
+      {isPageLoading && (
+        <div className={styles.pageStatus} aria-live="polite">
+          Loading weather…
+        </div>
+      )}
+      {pageError && !isPageLoading && (
+        <div className={`${styles.pageStatus} ${styles.pageStatusError}`} aria-live="polite">
+          {pageError}
+        </div>
+      )}
       <WeatherDetails weatherData={weatherData} weatherInfo={weatherInfo} />
       <Footer />
     </main>

@@ -3,11 +3,41 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const siteName = "Star Wars Weather";
+const description =
+  "Experience accurate weather forecasts with a Star Wars twist. Discover which planet your local weather feels like today.";
 
 export const metadata: Metadata = {
-	title: "Star Wars Weather",
-	description:
-		"Experience accurate weather forecasts for your city with a fun twist, showing you which Star Wars planet that most resembles like Hoth, Tatooine, and Endor. Get your forecast now!",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: siteName,
+    template: `%s | ${siteName}`,
+  },
+  description,
+  applicationName: siteName,
+  keywords: [
+    "weather",
+    "star wars",
+    "forecast",
+    "weather app",
+    "location weather",
+  ],
+  openGraph: {
+    title: siteName,
+    description,
+    type: "website",
+    url: "/",
+    siteName,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteName,
+    description,
+  },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({

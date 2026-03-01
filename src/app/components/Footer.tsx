@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import styles from "../styles/Footer.module.css";
 
 const socialMediaIcons = [
@@ -60,9 +61,11 @@ const Footer: React.FC = () => (
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						<img
+						<Image
 							src={icon.src}
 							alt={icon.alt}
+							width={24}
+							height={24}
 							className={styles.socialIcon}
 						/>
 					</a>

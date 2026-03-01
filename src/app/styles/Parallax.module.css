@@ -23,6 +23,11 @@
   align-self: end;
 }
 
+.weatherImage {
+  object-fit: contain;
+  object-position: right bottom;
+}
+
 .layer0 {
   z-index: -1;
 }

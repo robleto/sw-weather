@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import weatherStyles from "../styles/WeatherDetails.module.css";
 import parallaxStyles from "../styles/Parallax.module.css";
 import { convertKelvinToFahrenheit } from "../utils/temperature";
@@ -83,12 +84,14 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 							parallaxStyles[`layer${index}`]
 						}`}
 					>
-						<img
+						<Image
 							src={`/images/${weatherInfo.planet}/${
 								weatherInfo.planet
 							}-${index + 1}.svg`}
 							alt={`${weatherInfo.planet}-${index + 1}`}
-							className={`${parallaxStyles.weatherImage}`}
+							fill
+							sizes="100vw"
+							className={parallaxStyles.weatherImage}
 						/>
 					</div>
 				))}

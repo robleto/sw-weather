@@ -1,11 +1,25 @@
 import { NextResponse } from "next/server";
-import axios from "axios";
 
-const OPENWEATHERMAP_API_KEY = process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY;
+const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
+
+function isValidLatitude(value: number): boolean {
+	return Number.isFinite(value) && value >= -90 && value <= 90;
+}
+
+function isValidLongitude(value: number): boolean {
+	return Number.isFinite(value) && value >= -180 && value <= 180;
+}
 
 export async function GET(request: Request) {
+	if (!OPENWEATHERMAP_API_KEY) {
+		return NextResponse.json(
+			{ error: "Weather service is not configured." },
+			{ status: 500 }
+		);
+	}
+
 	const { searchParams } = new URL(request.url);
-	const address = searchParams.get("address");
+	const address = searchParams.get("address")?.trim();
 	const lat = searchParams.get("lat");
 	const lon = searchParams.get("lon");
 
@@ -14,6 +28,16 @@ export async function GET(request: Request) {
 	if (address) {
 		url += `&q=${address}`;
 	} else if (lat && lon) {
+		const latNum = Number(lat);
+		const lonNum = Number(lon);
+
+		if (!isValidLatitude(latNum) || !isValidLongitude(lonNum)) {
+			return NextResponse.json(
+				{ error: "Invalid coordinates." },
+				{ status: 400 }
+			);
+		}
+
 		url += `&lat=${lat}&lon=${lon}`;
 	} else {
 		return NextResponse.json(
@@ -23,15 +47,39 @@ export async function GET(request: Request) {
 	}
 
 	try {
-		console.log(`Requesting weather data from URL: ${url}`);
-		const response = await axios.get(url);
-		const data = response.data;
-		return NextResponse.json({ data });
+		const response = await fetch(url, {
+			headers: { Accept: "application/json" },
+			cache: "no-store",
+		});
+
+		if (!response.ok) {
+			if (response.status === 404) {
+				return NextResponse.json(
+					{ error: "Location not found." },
+					{ status: 404 }
+				);
+			}
+
+			return NextResponse.json(
+				{ error: "Error fetching weather data" },
+				{ status: 502 }
+			);
+		}
+
+		const data = await response.json();
+		return NextResponse.json(
+			{ data },
+			{
+				headers: {
+					"Cache-Control": "public, max-age=120, stale-while-revalidate=300",
+				},
+			}
+		);
 	} catch (error) {
 		console.error("Error fetching weather data:", error);
 		return NextResponse.json(
 			{ error: "Error fetching weather data" },
-			{ status: 500 }
+			{ status: 502 }
 		);
 	}
 }

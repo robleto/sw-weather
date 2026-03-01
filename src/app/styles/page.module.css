@@ -30,3 +30,15 @@ weather-icons.min.css);
 .title {
   color: #fafafa;
 }
+
+.pageStatus {
+  margin-top: 56px;
+  text-align: center;
+  color: #fafafa;
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+.pageStatusError {
+  color: #ffd4d4;
+}

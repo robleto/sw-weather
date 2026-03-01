@@ -1,5 +1,3 @@
-import axios from "axios";
-
 interface WeatherData {
 	name: string;
 	main: {
@@ -12,17 +10,15 @@ interface WeatherData {
 	];
 }
 
-export async function fetchWeather(cityName: string): Promise<WeatherData> {
-	const response = await axios.get(`/api/weather?address=${cityName}`);
-	return response.data.data as WeatherData;
-}
-
 export async function fetchWeatherByCoordinates(
 	latitude: number,
 	longitude: number
 ): Promise<WeatherData> {
-	const response = await axios.get(
-		`/api/weather?lat=${latitude}&lon=${longitude}`
-	);
-	return response.data.data as WeatherData;
+	const response = await fetch(`/api/weather?lat=${latitude}&lon=${longitude}`);
+	if (!response.ok) {
+		throw new Error(`Weather request failed (${response.status})`);
+	}
+
+	const payload = (await response.json()) as { data: WeatherData };
+	return payload.data;
 }
