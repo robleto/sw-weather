@@ -14,8 +14,8 @@ interface LocationSearchProps {
 		lon: number;
 		displayName: string;
 	}) => void;
-	/** Optional extra class applied to the root form element */
 	className?: string;
+	variant?: "default" | "hero";
 }
 
 const NO_RESULTS_MESSAGE =
@@ -28,6 +28,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 	onValueChange,
 	onLocationResolved,
 	className,
+	variant = "default",
 }) => {
 	const [candidates, setCandidates] = useState<LocationCandidate[]>([]);
 	const [activeIndex, setActiveIndex] = useState<number>(-1);
@@ -151,7 +152,6 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 		if (event.key === "Escape") {
 			setCandidates([]);
 			setActiveIndex(-1);
-			setMessage("");
 			return;
 		}
 
@@ -187,7 +187,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 				Search by city, state, country, ZIP, or coordinates
 			</label>
 			<input
-				className={styles.input_field}
+				className={`${styles.input_field} ${variant === "hero" ? styles.input_field_hero : ""}`}
 				placeholder="Enter City, ZIP, or lat,lon"
 				type="text"
 				id="locationQuery"
@@ -227,7 +227,6 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 								className={`${styles.candidateButton} ${
 									activeIndex === index ? styles.candidateButtonActive : ""
 								}`}
-								onMouseDown={(event) => event.preventDefault()}
 								onClick={() => handleCandidateClick(candidate)}
 								onMouseEnter={() => setActiveIndex(index)}
 							>

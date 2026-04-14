@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./styles/page.module.css";
 import locationSearchStyles from "./styles/LocationSearch.module.css";
 import planetStyles from "./styles/planetStyles.module.css";
@@ -8,25 +8,24 @@ import { getWeatherDescription } from "./utils/weatherDescriptions";
 import LocationSearch from "./components/LocationSearch";
 import WeatherDetails from "./components/WeatherDetails";
 import Footer from "./components/Footer";
-import HyperspaceStars from "./components/HyperspaceStars";
 import { geocodeLocation } from "@/lib/location/geocode";
 import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
 
 // ─── types ────────────────────────────────────────────────────────────────────
 
-type AppPhase = "idle" | "landed";
+type AppPhase = "idle" | "warping" | "landed";
 
 interface WeatherData {
   name: string;
-  main: {
-    temp: number;
-  };
-  weather: [
-    {
-      main: string;
-    }
-  ];
+  main: { temp: number };
+  weather: [{ main: string }];
 }
+
+// ─── constants ────────────────────────────────────────────────────────────────
+
+const STAR_COUNT = 72;
+// Minimum warp duration so the effect has time to land
+const MIN_WARP_MS = 1400;
 
 // ─── component ────────────────────────────────────────────────────────────────
 
@@ -36,26 +35,44 @@ const Home = () => {
   const [appPhase, setAppPhase] = useState<AppPhase>("idle");
   const [pageError, setPageError] = useState<string | null>(null);
 
-  // ── fetch + land ──────────────────────────────────────────────────────────
-
-  const goToLocation = useCallback(
-    async (lat: number, lon: number) => {
-      setWeatherData(null);
-      setAppPhase("landed");
-      setPageError(null);
-      try {
-        const data = await fetchWeatherByCoordinates(lat, lon);
-        setWeatherData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setPageError("We couldn't load weather right now. Please try again.");
-        setAppPhase("idle");
-      }
-    },
+  // Stable star configs — generated once, never change
+  const stars = useMemo(() =>
+    Array.from({ length: STAR_COUNT }, (_, i) => ({
+      // Evenly distribute angles with a small random jitter for organic feel
+      angle: (i / STAR_COUNT) * 360 + (Math.random() - 0.5) * 3,
+      duration: 1.2 + Math.random() * 1.6,
+      // Negative delay staggers starts so stars are already mid-flight on load
+      delay: -(Math.random() * 3),
+    })),
     []
   );
 
-  // ── initial location (URL ?city= param) ──────────────────────────────────
+  // ── fetch + warp ──────────────────────────────────────────────────────────
+
+  const goToLocation = useCallback(async (lat: number, lon: number) => {
+    setAppPhase("warping");
+    setPageError(null);
+
+    const reducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    try {
+      const [data] = await Promise.all([
+        fetchWeatherByCoordinates(lat, lon),
+        // Hold warp for minimum duration — skip for reduced motion
+        reducedMotion ? Promise.resolve() : new Promise((r) => setTimeout(r, MIN_WARP_MS)),
+      ]);
+      setWeatherData(data as WeatherData);
+      setAppPhase("landed");
+    } catch (error) {
+      console.error("Error fetching weather:", error);
+      setPageError("We couldn't load weather right now. Please try again.");
+      setAppPhase("idle");
+    }
+  }, []);
+
+  // ── initial location (URL ?city= param or geolocation) ───────────────────
 
   const resolveInitialLocation = useCallback(
     async (query: string) => {
@@ -76,37 +93,8 @@ const Home = () => {
     [goToLocation]
   );
 
-  // ── geolocation button handler ────────────────────────────────────────────
-
-  const [isGeolocating, setIsGeolocating] = useState(false);
-
-  const handleGeolocate = useCallback(() => {
-    if (!("geolocation" in navigator)) {
-      setPageError("Geolocation is not supported by your browser.");
-      return;
-    }
-    setIsGeolocating(true);
-    setPageError(null);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setIsGeolocating(false);
-        goToLocation(latitude, longitude);
-      },
-      (error) => {
-        console.error("Geolocation denied:", error);
-        setIsGeolocating(false);
-        setPageError("Location access denied. Please search manually.");
-      }
-    );
-  }, [goToLocation]);
-
-  // ── mount: URL ?city= param, then geolocation after hero is visible ───────
-
   useEffect(() => {
-    const cityFromQuery = new URLSearchParams(window.location.search).get(
-      "city"
-    );
+    const cityFromQuery = new URLSearchParams(window.location.search).get("city");
 
     if (cityFromQuery) {
       setLocationQuery(cityFromQuery);
@@ -118,44 +106,34 @@ const Home = () => {
       return;
     }
 
-    // Brief delay so user sees the hyperspace hero before auto-geolocating
-    const timer = setTimeout(() => {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            goToLocation(latitude, longitude);
-          },
-          (error) => {
-            console.error("Geolocation denied:", error);
-            // Stay on idle — user can search manually or click "Use my location"
-          }
-        );
-      }
-    }, 1200);
-
-    return () => clearTimeout(timer);
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => goToLocation(coords.latitude, coords.longitude),
+        (error) => {
+          console.error("Geolocation denied:", error);
+          setAppPhase("idle");
+        }
+      );
+    } else {
+      setAppPhase("idle");
+    }
   }, [goToLocation, resolveInitialLocation]);
 
-  // ─── derived display values ────────────────────────────────────────────────
+  // ─── derived values ───────────────────────────────────────────────────────
 
   const weatherInfo = weatherData
-    ? getWeatherDescription(
-        weatherData.weather[0].main,
-        weatherData.main.temp
-      )
+    ? getWeatherDescription(weatherData.weather[0].main, weatherData.main.temp)
     : {
         planet: "default",
         planetName: "default",
         description: "",
-        color: { primary: "#000000", headline: "#000000" },
+        color: { primary: "#0a0c14", headline: "#0a0c14" },
       };
 
-  // idle → hyperspace background; landed → planet theme
   const bgClass =
     appPhase === "landed"
       ? (planetStyles[weatherInfo.planet] ?? planetStyles.default)
-      : planetStyles.default;
+      : "";
 
   // ─── render ───────────────────────────────────────────────────────────────
 
@@ -165,8 +143,8 @@ const Home = () => {
       {/* ── Fixed nav ─────────────────────────────────────────────────────── */}
       <nav className={styles.navHeader} data-phase={appPhase}>
         <h1 className={styles.title}>Star Wars Weather</h1>
-        {/* Search input moves to the nav only once weather is showing */}
-        {appPhase === "landed" && (
+        {/* Search in nav during warp + landed; hero has its own search during idle */}
+        {appPhase !== "idle" && (
           <LocationSearch
             value={locationQuery}
             onValueChange={setLocationQuery}
@@ -178,58 +156,72 @@ const Home = () => {
         )}
       </nav>
 
-      {/* ── IDLE: hyperspace hero ─────────────────────────────────────────── */}
-      {appPhase === "idle" && (
-        <div className={styles.hyperspaceHero}>
-          <HyperspaceStars />
-          <div className={styles.heroContent}>
-            <p className={styles.heroEyebrow}>
-              A long time ago, in a galaxy far, far away…
-            </p>
-            <h2 className={styles.heroHeading}>
-              Where in the galaxy are you?
-            </h2>
-            <p className={styles.heroSubtext}>
-              Enter your location to discover your Star Wars weather forecast
-            </p>
-            <LocationSearch
-              className={locationSearchStyles.heroSearch}
-              value={locationQuery}
-              onValueChange={setLocationQuery}
-              onLocationResolved={({ lat, lon, displayName }) => {
-                setLocationQuery(displayName);
-                goToLocation(lat, lon);
-              }}
-            />
-            <button
-              type="button"
-              className={styles.geolocateButton}
-              onClick={handleGeolocate}
-              disabled={isGeolocating}
-            >
-              {isGeolocating ? "Locating…" : "Use my location"}
-            </button>
-            {pageError && (
-              <p className={styles.heroError} role="alert">
-                {pageError}
-              </p>
-            )}
+      {/* ── Hyperspace starfield — idle + warping ──────────────────────────── */}
+      {appPhase !== "landed" && (
+        <div className={styles.hyperspaceHero} aria-hidden="true">
+          <div
+            className={styles.starfield}
+            data-warping={appPhase === "warping" ? "" : undefined}
+          >
+            {stars.map((star, i) => (
+              <div
+                key={i}
+                className={styles.star}
+                style={
+                  {
+                    "--angle": `${star.angle}deg`,
+                    "--duration": `${star.duration}s`,
+                    "--delay": `${star.delay}s`,
+                  } as React.CSSProperties
+                }
+              />
+            ))}
           </div>
         </div>
       )}
 
-      {/* ── LANDED: weather details ───────────────────────────────────────── */}
+      {/* ── IDLE: hero copy + centered search ─────────────────────────────── */}
+      {appPhase === "idle" && (
+        <div className={styles.heroContent}>
+          <p className={styles.heroEyebrow}>
+            A long time ago, in a galaxy far, far away…
+          </p>
+          <h2 className={styles.heroHeading}>Where in the galaxy are you?</h2>
+          <p className={styles.heroSubtext}>
+            Enter your location to discover your Star Wars planet
+          </p>
+          <LocationSearch
+            className={locationSearchStyles.heroSearch}
+            variant="hero"
+            value={locationQuery}
+            onValueChange={setLocationQuery}
+            onLocationResolved={({ lat, lon, displayName }) => {
+              setLocationQuery(displayName);
+              goToLocation(lat, lon);
+            }}
+          />
+          {pageError && (
+            <p className={styles.heroError} role="alert">
+              {pageError}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* ── WARPING: anticipation copy ─────────────────────────────────────── */}
+      {appPhase === "warping" && (
+        <div className={styles.warpStatus} aria-live="polite" role="status">
+          Scanning the galaxy…
+        </div>
+      )}
+
+      {/* ── LANDED: weather details ────────────────────────────────────────── */}
       {appPhase === "landed" && (
         <>
-          {!weatherData && !pageError && (
-            <div className={styles.pageStatus} aria-live="polite">
-              Loading weather…
-            </div>
-          )}
           {pageError && (
             <div
               className={`${styles.pageStatus} ${styles.pageStatusError}`}
-              aria-live="polite"
+              role="alert"
             >
               {pageError}
             </div>
