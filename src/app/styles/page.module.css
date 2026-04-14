@@ -49,12 +49,11 @@
 .hyperspaceHero {
   position: fixed;
   inset: 0;
-  background: #000010;
   z-index: 10;
-  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* no background — the .default class on .main provides the starfield */
 }
 
 /* ── Star streaks ──────────────────────────────────────────────────── */
