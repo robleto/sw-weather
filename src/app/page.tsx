@@ -8,6 +8,7 @@ import { getWeatherDescription } from "./utils/weatherDescriptions";
 import LocationSearch from "./components/LocationSearch";
 import WeatherDetails from "./components/WeatherDetails";
 import Footer from "./components/Footer";
+import HyperspaceStars from "./components/HyperspaceStars";
 import { geocodeLocation } from "@/lib/location/geocode";
 import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
 
@@ -100,7 +101,7 @@ const Home = () => {
     );
   }, [goToLocation]);
 
-  // ── mount: URL ?city= param only (no auto-geolocation) ───────────────────
+  // ── mount: URL ?city= param, then geolocation after hero is visible ───────
 
   useEffect(() => {
     const cityFromQuery = new URLSearchParams(window.location.search).get(
@@ -114,8 +115,27 @@ const Home = () => {
         setPageError("We couldn't resolve that location from the URL.");
         setAppPhase("idle");
       });
+      return;
     }
-  }, [resolveInitialLocation]);
+
+    // Brief delay so user sees the hyperspace hero before auto-geolocating
+    const timer = setTimeout(() => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            goToLocation(latitude, longitude);
+          },
+          (error) => {
+            console.error("Geolocation denied:", error);
+            // Stay on idle — user can search manually or click "Use my location"
+          }
+        );
+      }
+    }, 1200);
+
+    return () => clearTimeout(timer);
+  }, [goToLocation, resolveInitialLocation]);
 
   // ─── derived display values ────────────────────────────────────────────────
 
@@ -160,6 +180,8 @@ const Home = () => {
 
       {/* ── IDLE: hyperspace hero ─────────────────────────────────────────── */}
       {appPhase === "idle" && (
+        <>
+        <HyperspaceStars />
         <div className={styles.hyperspaceHero}>
           <div className={styles.heroContent}>
             <p className={styles.heroEyebrow}>
@@ -195,6 +217,7 @@ const Home = () => {
             )}
           </div>
         </div>
+        </>
       )}
 
       {/* ── LANDED: weather details ───────────────────────────────────────── */}

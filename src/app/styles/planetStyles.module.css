@@ -177,40 +177,16 @@
   );
 }
 
-/* Layer 2 – streaking lines that scale outward from the vanishing point */
+/* Layer 2 – subtle center glow (streaks provided by HyperspaceStars component) */
 .default::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 300%;
-  height: 300%;
-  margin-left: -150%;
-  margin-top: -150%;
+  inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-image:
-    /* thin blue-white spokes */
-    repeating-conic-gradient(
-      from 0deg at 50% 50%,
-      transparent       0deg  1.4deg,
-      rgba(160,200,255,0.70) 1.4deg 1.65deg,
-      transparent       1.65deg 3.4deg,
-      rgba(200,225,255,0.35) 3.4deg 3.6deg,
-      transparent       3.6deg 5deg
-    ),
-    /* soft core glow */
-    radial-gradient(
-      ellipse 25% 35% at 50% 50%,
-      rgba(80, 150, 255, 0.30) 0%,
-      transparent 100%
-    );
-  transform-origin: center center;
-  animation: hyperspaceStreaks 2.8s linear infinite;
-}
-
-@keyframes hyperspaceStreaks {
-  0%   { transform: scale(0.04); opacity: 1;   }
-  75%  {                         opacity: 0.85; }
-  100% { transform: scale(1.6);  opacity: 0;   }
+  background: radial-gradient(
+    ellipse 40% 40% at 50% 50%,
+    rgba(60, 100, 200, 0.12) 0%,
+    transparent 100%
+  );
 }
