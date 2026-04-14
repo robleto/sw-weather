@@ -162,7 +162,7 @@
   /* background is rendered by ::before so content sits above the animation */
 }
 
-/* Layer 1 – deep-space base gradient */
+/* Layer 1 – near-black deep space */
 .default::before {
   content: '';
   position: absolute;
@@ -171,22 +171,8 @@
   pointer-events: none;
   background: radial-gradient(
     ellipse at 50% 50%,
-    #0d1b4a 0%,
-    #060c1e 50%,
-    #020408 100%
-  );
-}
-
-/* Layer 2 – subtle center glow (streaks provided by HyperspaceStars component) */
-.default::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse 40% 40% at 50% 50%,
-    rgba(60, 100, 200, 0.12) 0%,
-    transparent 100%
+    #050d20 0%,
+    #020609 60%,
+    #010203 100%
   );
 }

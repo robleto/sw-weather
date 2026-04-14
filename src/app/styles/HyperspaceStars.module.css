@@ -1,7 +1,7 @@
 .star {
   position: absolute;
   width: 1px;
-  background: rgba(220, 235, 255, 0.9);
+  background: rgba(200, 220, 255, 0.7);
   border-radius: 1px;
   transform-origin: center center;
   animation: blink linear infinite both;
@@ -9,7 +9,7 @@
 
 @keyframes blink {
   0%   { opacity: 0; }
-  15%  { opacity: 1; }
-  80%  { opacity: 0.8; }
+  20%  { opacity: 0.9; }
+  75%  { opacity: 0.7; }
   100% { opacity: 0; }
 }
