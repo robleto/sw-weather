@@ -180,9 +180,8 @@ const Home = () => {
 
       {/* ── IDLE: hyperspace hero ─────────────────────────────────────────── */}
       {appPhase === "idle" && (
-        <>
-        <HyperspaceStars />
         <div className={styles.hyperspaceHero}>
+          <HyperspaceStars />
           <div className={styles.heroContent}>
             <p className={styles.heroEyebrow}>
               A long time ago, in a galaxy far, far away…
@@ -217,7 +216,6 @@ const Home = () => {
             )}
           </div>
         </div>
-        </>
       )}
 
       {/* ── LANDED: weather details ───────────────────────────────────────── */}

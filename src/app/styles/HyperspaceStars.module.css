@@ -1,27 +1,15 @@
-.starfield {
-  position: fixed;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-  overflow: hidden;
-}
-
 .star {
   position: absolute;
-  width: 1.5px;
+  width: 1px;
+  background: rgba(220, 235, 255, 0.9);
   border-radius: 1px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(200, 225, 255, 0.9) 40%,
-    rgba(255, 255, 255, 0.7) 100%
-  );
-  animation: streakPulse linear infinite;
+  transform-origin: center center;
+  animation: blink linear infinite both;
 }
 
-@keyframes streakPulse {
+@keyframes blink {
   0%   { opacity: 0; }
   15%  { opacity: 1; }
-  80%  { opacity: 0.85; }
+  80%  { opacity: 0.8; }
   100% { opacity: 0; }
 }
