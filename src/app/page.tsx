@@ -75,7 +75,32 @@ const Home = () => {
     [goToLocation]
   );
 
-  // ── mount: geolocation or URL param ───────────────────────────────────────
+  // ── geolocation button handler ────────────────────────────────────────────
+
+  const [isGeolocating, setIsGeolocating] = useState(false);
+
+  const handleGeolocate = useCallback(() => {
+    if (!("geolocation" in navigator)) {
+      setPageError("Geolocation is not supported by your browser.");
+      return;
+    }
+    setIsGeolocating(true);
+    setPageError(null);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setIsGeolocating(false);
+        goToLocation(latitude, longitude);
+      },
+      (error) => {
+        console.error("Geolocation denied:", error);
+        setIsGeolocating(false);
+        setPageError("Location access denied. Please search manually.");
+      }
+    );
+  }, [goToLocation]);
+
+  // ── mount: URL ?city= param only (no auto-geolocation) ───────────────────
 
   useEffect(() => {
     const cityFromQuery = new URLSearchParams(window.location.search).get(
@@ -89,24 +114,8 @@ const Home = () => {
         setPageError("We couldn't resolve that location from the URL.");
         setAppPhase("idle");
       });
-      return;
     }
-
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          goToLocation(latitude, longitude);
-        },
-        (error) => {
-          console.error("Geolocation denied:", error);
-          setAppPhase("idle");
-        }
-      );
-    } else {
-      setAppPhase("idle");
-    }
-  }, [goToLocation, resolveInitialLocation]);
+  }, [resolveInitialLocation]);
 
   // ─── derived display values ────────────────────────────────────────────────
 
@@ -171,6 +180,14 @@ const Home = () => {
                 goToLocation(lat, lon);
               }}
             />
+            <button
+              type="button"
+              className={styles.geolocateButton}
+              onClick={handleGeolocate}
+              disabled={isGeolocating}
+            >
+              {isGeolocating ? "Locating…" : "Use my location"}
+            </button>
             {pageError && (
               <p className={styles.heroError} role="alert">
                 {pageError}

@@ -121,6 +121,29 @@ weather-icons.min.css);
   color: #ffd4d4;
 }
 
+.geolocateButton {
+  background: transparent;
+  border: none;
+  color: rgba(160, 200, 255, 0.6);
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 4px 8px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.geolocateButton:hover {
+  color: rgba(160, 200, 255, 0.9);
+}
+
+.geolocateButton:disabled {
+  cursor: default;
+  color: rgba(160, 200, 255, 0.35);
+  text-decoration: none;
+}
+
 /* ══════════════════════════════════════════════════════════════════════════
    LANDED  —  planet background fades in
    ══════════════════════════════════════════════════════════════════════════ */
