@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "../styles/LocationSearch.module.css";
 import { geocodeLocation } from "@/lib/location/geocode";
 import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
@@ -36,6 +36,10 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const [retryTick, setRetryTick] = useState(0);
 
+	// Stable ref so the geocoding effect doesn't re-run on every parent render
+	const onLocationResolvedRef = useRef(onLocationResolved);
+	onLocationResolvedRef.current = onLocationResolved;
+
 	const trimmedValue = useMemo(() => value.trim(), [value]);
 
 	useEffect(() => {
@@ -69,7 +73,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 					setCandidates([]);
 					setActiveIndex(-1);
 					setIsLoading(false);
-					onLocationResolved({
+					onLocationResolvedRef.current({
 						lat: parsed.lat,
 						lon: parsed.lon,
 						displayName: `${parsed.lat}, ${parsed.lon}`,
@@ -88,13 +92,15 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 					setCandidates([]);
 					setActiveIndex(-1);
 					setMessage(NO_RESULTS_MESSAGE);
+					setIsLoading(false);
 					return;
 				}
 
 				if (results.length === 1) {
 					setCandidates([]);
 					setActiveIndex(-1);
-					onLocationResolved({
+					setIsLoading(false);
+					onLocationResolvedRef.current({
 						lat: results[0].lat,
 						lon: results[0].lon,
 						displayName: results[0].displayName,
@@ -122,7 +128,9 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 			cancelled = true;
 			window.clearTimeout(timeout);
 		};
-	}, [trimmedValue, onLocationResolved, retryTick]);
+		// onLocationResolved intentionally omitted — accessed via ref
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [trimmedValue, retryTick]);
 
 	const handleCandidateClick = (candidate: LocationCandidate) => {
 		setCandidates([]);
@@ -130,7 +138,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 		setMessage("");
 		setIsApiError(false);
 		onValueChange(candidate.displayName);
-		onLocationResolved({
+		onLocationResolvedRef.current({
 			lat: candidate.lat,
 			lon: candidate.lon,
 			displayName: candidate.displayName,

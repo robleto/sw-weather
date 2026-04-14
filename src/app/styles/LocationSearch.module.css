@@ -2,7 +2,7 @@
   position: relative;
   display: block;
   border-radius: 20px;
-  width: 280px;
+  width: min(260px, 50vw);
 }
 
 .srOnly {
@@ -17,18 +17,17 @@
 }
 
 .weatherLocation input:focus {
-  outline: 2px solid #d5dbea;
-  outline-offset: 1px;
+  outline: 2px solid rgba(160, 200, 255, 0.85);
+  outline-offset: 2px;
 }
 
 .input_field {
   width: 100%;
   border-radius: 14px;
   border: none;
-  height: 34px;
-  margin-right: 0;
-  text-align: left;
-  padding: 0 12px;
+  min-height: 44px;
+  padding: 0 14px;
+  text-align: center;
   font-size: 14px;
   color: #333;
   background-color: #e4e8f1;
@@ -61,6 +60,7 @@
   padding: 8px 10px;
   border-radius: 8px;
   cursor: pointer;
+  min-height: 44px;
 }
 
 .candidateButton:hover {

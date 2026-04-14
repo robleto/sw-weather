@@ -7,8 +7,8 @@
   align-items: center;
   padding: 10vh 5vw;
   text-align: center;
-  position: relative; /* Ensure positioning context for absolute elements */
-  overflow: hidden; /* Prevent layers from overflowing */
+  position: relative;
+  overflow: hidden;
 }
 
 .weatherDetails {
@@ -18,77 +18,73 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
-  font-size: clamp(2vw, 16px, 5vw);
+  gap: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  font-kerning: normal;
   text-align: center;
-  z-index: 100; /* Ensure text is above parallax layers */
+  z-index: 100;
 }
 
+/* ── Orienting metadata — where are we? ─────────────────────────────── */
 .location {
-  font-size: 150%;
-}
-
-.tempForecast {
-  font-size: 300%;
-}
-
-.mightAs {
-    margin-bottom: -5vw;
-   font-size: 130%;
-}
-
-.planetName {
-  font-size: 425%;
-  letter-spacing: 2.5vw;
+  font-size: 0.8125rem;        /* 13px — label territory */
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  opacity: 0.65;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Primary data — the readout ─────────────────────────────────────── */
+.tempForecast {
+  font-size: clamp(2rem, 5.5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;    /* Tight for large display figures */
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 1.75rem;     /* Big gap — narrative shift incoming */
+}
+
+/* ── Narrative bridge — the whisper before the reveal ───────────────── */
+.mightAs {
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: 0.25rem;     /* Tight — belongs with the planet name */
+}
+
+/* ── The reveal — theatrical climax ─────────────────────────────────── */
+.planetName {
+  font-family: var(--font-poiret), sans-serif;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  letter-spacing: 0.12em;     /* Fixed em — not vw */
+  text-transform: uppercase;
+  line-height: 1;
   max-width: 90vw;
   word-wrap: break-word;
+  margin-bottom: 1.25rem;
 }
 
+/* ── Body copy — comfortable reading ────────────────────────────────── */
 .planetDesc {
-  display: none;
-  line-height: 1.15;
-}
-
-.icon_and_weatherInfo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4vw;
-  margin-top: 5vw;
-}
-
-.temperature {
-  font-size: 5vw;
-  color: white;
-}
-
-.place {
-  text-align: center;
-  font-size: 3.5vw;
-  margin-top: 7vw;
-  color: white;
-}
-
-.weatherCondition {
-  color: white;
-}
-
-.date {
-  text-align: center;
-  font-size: 2vw;
-  margin-top: 2vw;
-  color: white;
+  font-size: 1rem;             /* 16px minimum — no exceptions */
+  line-height: 1.65;           /* Slightly open for light-on-dark */
+  max-width: 58ch;
+  opacity: 0.85;
 }
 
 @media (max-width: 500px) {
-
   .weatherSection {
     padding-top: 10vh;
   }
 
   .weatherDetails {
     margin-top: 6vh;
-    font-size: clamp(1.5vw, 16px, 3.25vw);
+  }
+
+  /* Reduce letter-spacing so long planet names don't overflow */
+  .planetName {
+    letter-spacing: 0.06em;
   }
 }

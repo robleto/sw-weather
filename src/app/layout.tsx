@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Exo_2, Poiret_One } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const exo2 = Exo_2({ subsets: ["latin"], variable: "--font-exo2" });
+const poiretOne = Poiret_One({ subsets: ["latin"], weight: "400", variable: "--font-poiret" });
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const siteName = "Star Wars Weather";
 const description =
@@ -47,7 +48,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${exo2.variable} ${poiretOne.variable}`}>{children}</body>
     </html>
   );
 }

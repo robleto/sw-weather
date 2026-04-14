@@ -1,12 +1,7 @@
 
-@import url(https://fonts.googleapis.com/css?family=Poiret+One);
-@import url(https://fonts.googleapis.com/css?family=Exo+2);
-@import url(https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/
-weather-icons.min.css);
-
 .main {
-  font-size: clamp(14px, 16px, 5vw);
-  font-family: "Exo 2", sans-serif;
+  font-size: clamp(0.875rem, 5vw, 1rem);
+  font-family: var(--font-exo2), sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
@@ -15,8 +10,10 @@ weather-icons.min.css);
   display: flex;
   flex-direction: column;
   padding-top: 52px;
-  overflow: hidden; /* contain pseudo-element hyperspace streaks */
+  overflow: hidden;
 }
+
+/* ── Fixed nav ─────────────────────────────────────────────────────── */
 
 .navHeader {
   padding: 0.5rem 1rem;
@@ -25,7 +22,6 @@ weather-icons.min.css);
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
-  text-align: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -45,35 +41,61 @@ weather-icons.min.css);
 
 .title {
   color: #fafafa;
+  font-size: 1rem;
 }
 
-.pageStatus {
-  margin-top: 0;
-  text-align: center;
-  color: #fafafa;
-  font-size: 14px;
-  padding: 8px 12px;
-}
-
-.pageStatusError {
-  color: #ffd4d4;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   HYPERSPACE HERO  —  idle state: centred CTA over the star-warp background
-   ══════════════════════════════════════════════════════════════════════════ */
+/* ── Hyperspace background ─────────────────────────────────────────── */
 
 .hyperspaceHero {
   position: fixed;
   inset: 0;
+  background: #000010;
   z-index: 10;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* no background — the .default class on .main provides the starfield */
 }
 
+/* ── Star streaks ──────────────────────────────────────────────────── */
+
+.starfield {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 1px;
+  background: rgba(200, 220, 255, 0.9);
+  transform-origin: 0 50%;
+  rotate: var(--angle);
+  opacity: 0;
+  animation: shootStar var(--duration) var(--delay) linear infinite;
+}
+
+@keyframes shootStar {
+  0% {
+    transform: translateX(30px) scaleX(1);
+    opacity: 0;
+  }
+  12% { opacity: 1; }
+  80% { opacity: 0.7; }
+  100% {
+    transform: translateX(120vmax) scaleX(60);
+    opacity: 0;
+  }
+}
+
+/* ── Idle hero content ─────────────────────────────────────────────── */
+
 .heroContent {
+  position: relative;
+  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -82,9 +104,6 @@ weather-icons.min.css);
   padding: 2rem 1.5rem;
   max-width: 560px;
   width: 100%;
-  position: relative;
-  z-index: 20;
-  /* soft outer glow so text reads over the streaks */
   filter: drop-shadow(0 0 32px rgba(10, 20, 60, 0.7));
 }
 
@@ -98,7 +117,7 @@ weather-icons.min.css);
 
 .heroHeading {
   margin: 0;
-  font-family: "Poiret One", sans-serif;
+  font-family: var(--font-poiret), sans-serif;
   font-size: clamp(2rem, 5.5vw, 3.5rem);
   font-weight: 400;
   line-height: 1.15;
@@ -121,10 +140,21 @@ weather-icons.min.css);
   color: #ffd4d4;
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   LANDED  —  planet background fades in
-   ══════════════════════════════════════════════════════════════════════════ */
+/* ── Landed state ──────────────────────────────────────────────────── */
 
+.pageStatus {
+  margin-top: 0;
+  text-align: center;
+  color: #fafafa;
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+.pageStatusError {
+  color: #ffd4d4;
+}
+
+/* Planet fades in after landing */
 .main[data-phase="landed"] {
   animation: backgroundReveal 0.6s ease-out forwards;
 }
@@ -132,4 +162,18 @@ weather-icons.min.css);
 @keyframes backgroundReveal {
   from { opacity: 0.6; }
   to   { opacity: 1;   }
+}
+
+/* ── Reduced motion ────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .star {
+    animation: none;
+    opacity: 0.25;
+    transform: translateX(60vmax) scaleX(1);
+  }
+
+  .main[data-phase="landed"] {
+    animation: none;
+  }
 }

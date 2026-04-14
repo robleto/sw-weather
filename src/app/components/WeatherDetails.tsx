@@ -48,15 +48,12 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 				>
 					Today&apos;s Forecast for {weatherData.name}
 				</p>
-				<h3
+				<p
 					className={weatherStyles.tempForecast}
 					style={{ color: planetColors.headline }}
 				>
-					{convertKelvinToFahrenheit(weatherData.main.temp).toFixed(
-						0
-					)}
-					°F and {weatherData.weather[0].main}
-				</h3>
+					{convertKelvinToFahrenheit(weatherData.main.temp).toFixed(0)}°F and {weatherData.weather[0].main}
+				</p>
 				<p
 					className={weatherStyles.mightAs}
 					style={{ color: planetColors.primary }}
@@ -85,10 +82,9 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 						}`}
 					>
 						<Image
-							src={`/images/${weatherInfo.planet}/${
-								weatherInfo.planet
-							}-${index + 1}.svg`}
-							alt={`${weatherInfo.planet}-${index + 1}`}
+							src={`/images/${weatherInfo.planet}/${weatherInfo.planet}-${index + 1}.svg`}
+							alt=""
+							role="presentation"
 							fill
 							sizes="100vw"
 							className={parallaxStyles.weatherImage}

@@ -17,14 +17,8 @@ type AppPhase = "idle" | "landed";
 
 interface WeatherData {
   name: string;
-  main: {
-    temp: number;
-  };
-  weather: [
-    {
-      main: string;
-    }
-  ];
+  main: { temp: number };
+  weather: [{ main: string }];
 }
 
 // ─── component ────────────────────────────────────────────────────────────────
@@ -54,7 +48,7 @@ const Home = () => {
     []
   );
 
-  // ── initial location (URL ?city= param) ──────────────────────────────────
+  // ── initial location (URL ?city= param or geolocation) ───────────────────
 
   const resolveInitialLocation = useCallback(
     async (query: string) => {
