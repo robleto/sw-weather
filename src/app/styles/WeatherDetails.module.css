@@ -72,6 +72,7 @@
   line-height: 1.65;           /* Slightly open for light-on-dark */
   max-width: 58ch;
   opacity: 0.85;
+  text-wrap: balance;
 }
 
 @media (max-width: 500px) {

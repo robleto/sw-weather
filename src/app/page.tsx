@@ -18,7 +18,7 @@ type AppPhase = "idle" | "warping" | "landed";
 interface WeatherData {
   name: string;
   main: { temp: number };
-  weather: [{ main: string }];
+  weather: [{ main: string; description: string }];
 }
 
 // ─── constants ────────────────────────────────────────────────────────────────
@@ -122,7 +122,7 @@ const Home = () => {
   // ─── derived values ───────────────────────────────────────────────────────
 
   const weatherInfo = weatherData
-    ? getWeatherDescription(weatherData.weather[0].main, weatherData.main.temp)
+    ? getWeatherDescription(weatherData.weather[0].main, weatherData.main.temp, weatherData.weather[0].description)
     : {
         planet: "default",
         planetName: "default",
@@ -142,7 +142,10 @@ const Home = () => {
 
       {/* ── Fixed nav ─────────────────────────────────────────────────────── */}
       <nav className={styles.navHeader} data-phase={appPhase}>
-        <h1 className={styles.title}>Star Wars Weather</h1>
+        <h1 className={styles.title}>
+          <img src="/SW-Weather-Logo.svg" alt="" aria-hidden="true" className={styles.titleLogo} />
+          Star Wars Weather
+        </h1>
         {/* Search in nav during warp + landed; hero has its own search during idle */}
         {appPhase !== "idle" && (
           <LocationSearch

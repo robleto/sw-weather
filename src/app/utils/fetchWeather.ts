@@ -6,6 +6,7 @@ interface WeatherData {
 	weather: [
 		{
 			main: string;
+			description: string;
 		}
 	];
 }

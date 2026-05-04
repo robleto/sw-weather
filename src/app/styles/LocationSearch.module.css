@@ -37,6 +37,9 @@
 }
 
 .candidateList {
+  position: absolute;
+  top: 100%;
+  left: 0;
   width: 100%;
   list-style: none;
   margin: 4px 0 0;
@@ -45,6 +48,7 @@
   border-radius: 10px;
   max-height: 180px;
   overflow-y: auto;
+  z-index: 100;
 }
 
 .candidateButton {

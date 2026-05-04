@@ -3,144 +3,132 @@
 		"planet": "exegol",
 		"planetName": "Exegol",
 		"description": "A storm-wracked world with relentless lightning, heavy rain, and violent weather.",
-		"color": {
-			"primary": "#9589A4",
-			"headline": "#686788"
-		}
+		"color": { "primary": "#9589A4", "headline": "#686788" }
 	},
 	"drizzle": {
 		"planet": "dagobah",
 		"planetName": "Dagobah",
 		"description": "A swampy, mist-laden world with a damp atmosphere that matches steady light rain.",
-		"color": {
-			"primary": "#48542D",
-			"headline": "#6C7858"
-		}
+		"color": { "primary": "#48542D", "headline": "#6C7858" }
 	},
 	"rain": {
 		"planet": "kamino",
 		"planetName": "Kamino",
 		"description": "A water planet that experiences frequent, heavy rainfall.",
-		"color": {
-			"primary": "#868D9F",
-			"headline": "#C9CFB9"
-		}
+		"color": { "primary": "#868D9F", "headline": "#C9CFB9" }
 	},
 	"snow": {
 		"planet": "hoth",
 		"planetName": "Hoth",
-		"description": "The icy planet covered in ice and snow year-round, making it the perfect match for snowy conditions.",
-		"color": {
-			"primary": "#39657F",
-			"headline": "#6DB3DC"
-		}
+		"description": "The icy planet covered in ice and snow year-round, making it the perfect match for heavy snow.",
+		"color": { "primary": "#39657F", "headline": "#6DB3DC" }
+	},
+	"snow_light": {
+		"planet": "kijimi",
+		"planetName": "Kijimi",
+		"description": "A cold mountain world with ancient cities dusted in light snowfall.",
+		"color": { "primary": "#8AA3B5", "headline": "#C8DDE8" }
 	},
 	"mist": {
 		"planet": "endor",
 		"planetName": "Endor",
 		"description": "A forest moon with cool, humid air and frequent mist through dense woodland.",
-		"color": {
-			"primary": "#6B8A60",
-			"headline": "#BCD2B5"
-		}
+		"color": { "primary": "#6B8A60", "headline": "#BCD2B5" }
 	},
 	"smoke": {
 		"planet": "mustafar",
 		"planetName": "Mustafar",
 		"description": "A volcanic world of lava rivers and an ash-filled, smoky sky.",
-		"color": {
-			"primary": "#AC5861",
-			"headline": "#B47A80"
-		}
+		"color": { "primary": "#AC5861", "headline": "#B47A80" }
 	},
 	"haze": {
 		"planet": "niamos",
 		"planetName": "Niamos",
 		"description": "A sunny, tropical beach planet known for its vibrant resorts and relaxing atmosphere.",
-		"color": {
-			"primary": "#7B9684",
-			"headline": "#DBDFBF"
-		}
+		"color": { "primary": "#7B9684", "headline": "#DBDFBF" }
 	},
 	"fog": {
+		"planet": "mortis",
+		"planetName": "Mortis",
+		"description": "A realm between worlds, shrouded in thick fog and an otherworldly stillness.",
+		"color": { "primary": "#7A7090", "headline": "#B0A8C8" }
+	},
+	"jakku": {
+		"planet": "jakku",
+		"planetName": "Jakku",
+		"description": "A desert scrapyard world with endless dunes and dust-choked skies.",
+		"color": { "primary": "#A8895A", "headline": "#E8D09A" }
+	},
+	"clouds_warm": {
+		"planet": "at-attin",
+		"planetName": "At-Attin",
+		"description": "A rumored paradise world — warm and hazy beneath a blanket of soft clouds.",
+		"color": { "primary": "#7A9E8A", "headline": "#C8E0D0" }
+	},
+	"clouds_temperate": {
+		"planet": "yavin",
+		"planetName": "Yavin 4",
+		"description": "A jungle moon draped in warm humidity and overcast tropical skies.",
+		"color": { "primary": "#6B7A4A", "headline": "#B8C890" }
+	},
+	"clouds_cool": {
+		"planet": "ghorman",
+		"planetName": "Ghorman",
+		"description": "A temperate trade world of grey overcast skies and quiet, cultural streets.",
+		"color": { "primary": "#7A8090", "headline": "#B8C0C8" }
+	},
+	"clouds_cold": {
 		"planet": "bespin",
 		"planetName": "Bespin",
-		"description": "Known for cloud cover, with lower atmospheric layers that feel dense and foggy.",
-		"color": {
-			"primary": "#C15A51",
-			"headline": "#F4BE9C"
-		}
+		"description": "Cloud City drifts through cold upper atmosphere, wrapped in dense cloud cover.",
+		"color": { "primary": "#C15A51", "headline": "#F4BE9C" }
 	},
 	"clear_scorching": {
 		"planet": "mustafar",
 		"planetName": "Mustafar",
 		"description": "An extremely hot volcanic world with blistering heat and fiery terrain.",
-		"color": {
-			"primary": "#AC5861",
-			"headline": "#B47A80"
-		}
+		"color": { "primary": "#AC5861", "headline": "#B47A80" }
 	},
 	"clear_hot": {
 		"planet": "tatooine",
 		"planetName": "Tatooine",
 		"description": "The desert planet with twin suns is known for its scorching heat and clear skies.",
-		"color": {
-			"primary": "#944505",
-			"headline": "#FDC683"
-		}
+		"color": { "primary": "#944505", "headline": "#FDC683" }
 	},
 	"clear_warm": {
 		"planet": "scarif",
 		"planetName": "Scarif",
 		"description": "A warm tropical world with clear skies and bright coastal weather.",
-		"color": {
-			"primary": "#237691",
-			"headline": "#95E1F6"
-		}
+		"color": { "primary": "#237691", "headline": "#95E1F6" }
 	},
 	"clear_temperate": {
 		"planet": "naboo",
 		"planetName": "Naboo",
 		"description": "A balanced, temperate climate with clear skies and calm conditions.",
-		"color": {
-			"primary": "#7A609B",
-			"headline": "#B5C0EE"
-		}
+		"color": { "primary": "#7A609B", "headline": "#B5C0EE" }
 	},
 	"clear_cool": {
-		"planet": "ahch-to",
-		"planetName": "Ahch To",
-		"description": "A remote ocean world with clear air, cool temperatures, and windswept islands.",
-		"color": {
-			"primary": "#5F749E",
-			"headline": "#C4D8E8"
-		}
+		"planet": "alderaan",
+		"planetName": "Alderaan",
+		"description": "A peaceful, beautiful world of rolling hills and crisp, clear air.",
+		"color": { "primary": "#5F749E", "headline": "#C4D8E8" }
 	},
 	"clear_chilly": {
 		"planet": "kashyyyk",
 		"planetName": "Kashyyyk",
 		"description": "A forested world that feels brisk and chilly beneath towering canopies.",
-		"color": {
-			"primary": "#6C7F74",
-			"headline": "#7C9688"
-		}
+		"color": { "primary": "#6C7F74", "headline": "#7C9688" }
 	},
 	"clear_cold": {
 		"planet": "hoth",
 		"planetName": "Hoth",
-		"description": "The icy planet covered in ice and snow year-round, making it the perfect match for snowy conditions.",
-		"color": {
-			"primary": "#39657F",
-			"headline": "#6DB3DC"
-		}
+		"description": "A frozen wasteland of biting cold and clear, pale skies.",
+		"color": { "primary": "#39657F", "headline": "#6DB3DC" }
 	},
 	"clear_freezing": {
 		"planet": "ilum",
 		"planetName": "Ilum",
 		"description": "A frigid, crystal-lined world with clear skies and severe cold.",
-		"color": {
-			"primary": "#A4B3C1",
-			"headline": "#A9CEEF"
-		}
+		"color": { "primary": "#A4B3C1", "headline": "#A9CEEF" }
 	}
 }

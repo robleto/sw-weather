@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import weatherStyles from "../styles/WeatherDetails.module.css";
 import parallaxStyles from "../styles/Parallax.module.css";
@@ -35,16 +35,19 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 	weatherData,
 	weatherInfo,
 }) => {
+	const [imgError, setImgError] = useState(false);
+
 	if (!weatherData) return null;
 
 	const planetColors = weatherInfo.color;
+	const secondaryStyle = { color: planetColors.headline, opacity: 0.78 };
 
 	return (
 		<section className={weatherStyles.weatherSection}>
 			<div className={weatherStyles.weatherDetails}>
 				<p
 					className={weatherStyles.location}
-					style={{ color: planetColors.primary }}
+					style={secondaryStyle}
 				>
 					Today&apos;s Forecast for {weatherData.name}
 				</p>
@@ -56,7 +59,7 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 				</p>
 				<p
 					className={weatherStyles.mightAs}
-					style={{ color: planetColors.primary }}
+					style={secondaryStyle}
 				>
 					{weatherData.name} feels like being on
 				</p>
@@ -68,30 +71,23 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 				</h2>
 				<p
 					className={weatherStyles.planetDesc}
-					style={{ color: planetColors.primary }}
+					style={secondaryStyle}
 				>
 					{weatherInfo.description}
 				</p>
 			</div>
-			<div className={parallaxStyles.imageContainer}>
-				{[...Array(6)].map((_, index) => (
-					<div
-						key={index}
-						className={`${parallaxStyles.parallaxLayer} ${
-							parallaxStyles[`layer${index}`]
-						}`}
-					>
-						<Image
-							src={`/images/${weatherInfo.planet}/${weatherInfo.planet}-${index + 1}.svg`}
-							alt=""
-							role="presentation"
-							fill
-							sizes="100vw"
-							className={parallaxStyles.weatherImage}
-						/>
-					</div>
-				))}
-			</div>
+			{!imgError && (
+				<div className={parallaxStyles.imageContainer}>
+					<Image
+						src={`/planets/${weatherInfo.planet}.png`}
+						alt={weatherInfo.planetName}
+						fill
+						sizes="100vw"
+						className={parallaxStyles.planetImage}
+						onError={() => setImgError(true)}
+					/>
+				</div>
+			)}
 		</section>
 	);
 };
