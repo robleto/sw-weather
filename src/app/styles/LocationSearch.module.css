@@ -1,11 +1,8 @@
 .weatherLocation {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: block;
   border-radius: 20px;
-  width: min(260px, 50vw);
+  width: 280px;
 }
 
 .srOnly {
@@ -20,17 +17,18 @@
 }
 
 .weatherLocation input:focus {
-  outline: 2px solid rgba(160, 200, 255, 0.85);
-  outline-offset: 2px;
+  outline: 2px solid #d5dbea;
+  outline-offset: 1px;
 }
 
 .input_field {
   width: 100%;
-  border-radius: 20px;
+  border-radius: 14px;
   border: none;
-  min-height: 44px;
-  padding: 0 14px;
-  text-align: center;
+  height: 34px;
+  margin-right: 0;
+  text-align: left;
+  padding: 0 12px;
   font-size: 14px;
   color: #333;
   background-color: #e4e8f1;
@@ -38,17 +36,20 @@
 
 .candidateList {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 6px);
   left: 0;
+  right: 0;
+  z-index: 250;
   width: 100%;
   list-style: none;
-  margin: 4px 0 0;
+  margin: 0;
   padding: 4px;
-  background: #e4e8f1;
+  background: #3b4154;
   border-radius: 10px;
+  border: 2px solid #d5dbea;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
   max-height: 180px;
   overflow-y: auto;
-  z-index: 100;
 }
 
 .candidateButton {
@@ -56,27 +57,35 @@
   text-align: left;
   border: none;
   background: transparent;
-  color: #1f2330;
-  padding: 10px 12px;
+  color: #f1f4fb;
+  padding: 8px 10px;
   border-radius: 8px;
   cursor: pointer;
-  min-height: 44px;
 }
 
 .candidateButton:hover {
-  background: #d5dbea;
+  background: #525a73;
 }
 
 .candidateButtonActive {
-  background: #d5dbea;
+  background: #5e6681;
 }
 
 .searchStatus {
-  width: 100%;
-  margin-top: 6px;
-  color: #e4e8f1;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 240;
+  margin: 0;
+  color: #f1f4fb;
   font-size: 12px;
   text-align: center;
+  background: #3b4154;
+  border: 2px solid #d5dbea;
+  border-radius: 10px;
+  padding: 8px 10px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
 }
 
 .retryButton {
@@ -89,30 +98,30 @@
   cursor: pointer;
 }
 
-/* ── Hero variant: wide form wrapper ── */
+/* ── Hero variant: wider, taller input rendered in the center of the page ─ */
 .heroSearch {
   width: min(90vw, 480px);
 }
 
-/* ── Hero input — applied directly to the input element via variant prop ── */
-.input_field_hero {
-  min-height: 52px;
+.heroSearch .input_field {
+  height: 48px;
   font-size: 16px;
-  padding: 0 20px;
-  border-radius: 26px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #e8f4ff;
-  border: 2px solid rgba(120, 170, 255, 0.9);
-  text-align: left;
-}
-
-.input_field_hero::placeholder {
-  color: rgba(160, 200, 255, 0.6);
-}
-
-.input_field_hero:focus {
-  outline: none;
-  border-color: #7eb3ff;
+  padding: 0 18px;
+  border-radius: 24px;
   background: rgba(255, 255, 255, 0.12);
+  color: #e8f4ff;
+  border: 1.5px solid rgba(160, 200, 255, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.heroSearch .input_field::placeholder {
+  color: rgba(160, 200, 255, 0.55);
+}
+
+.heroSearch .input_field:focus {
+  outline: none;
+  border-color: rgba(160, 200, 255, 0.85);
+  background: rgba(255, 255, 255, 0.18);
   box-shadow: 0 0 0 3px rgba(100, 160, 255, 0.25);
 }

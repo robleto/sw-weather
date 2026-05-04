@@ -1,7 +1,12 @@
 
+@import url(https://fonts.googleapis.com/css?family=Poiret+One);
+@import url(https://fonts.googleapis.com/css?family=Exo+2);
+@import url(https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/
+weather-icons.min.css);
+
 .main {
-  font-size: clamp(0.875rem, 5vw, 1rem);
-  font-family: var(--font-exo2), sans-serif;
+  font-size: clamp(14px, 16px, 5vw);
+  font-family: "Exo 2", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
@@ -9,11 +14,9 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  /* Dark base prevents flash between warp and planet reveal */
-  background: #000010;
+  padding-top: 52px;
+  overflow: hidden; /* contain pseudo-element hyperspace streaks */
 }
-
-/* ── Fixed nav ─────────────────────────────────────────────────────── */
 
 .navHeader {
   padding: 0.5rem 1rem;
@@ -22,16 +25,17 @@
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
+  text-align: center;
   position: fixed;
   top: 0;
   left: 0;
   min-height: 52px;
-  z-index: 300;
+  z-index: 300; /* above planet sphere (z-index: 200) */
   transition: background 0.4s ease;
   background-color: #222;
 }
 
-/* Transparent during idle/warp — title visible, nav recedes */
+/* transparent bar during idle / warp — title is visible but nav recedes */
 .navHeader[data-phase="idle"],
 .navHeader[data-phase="warping"] {
   background-color: rgba(0, 0, 0, 0.35);
@@ -40,81 +44,48 @@
 }
 
 .title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   color: #fafafa;
-  font-size: 1rem;
 }
 
-.titleLogo {
-  height: 32px;
-  width: auto;
-  filter: brightness(0) invert(1);
+.pageStatus {
+  margin-top: 0;
+  text-align: center;
+  color: #fafafa;
+  font-size: 14px;
+  padding: 8px 12px;
 }
 
-/* ── Hyperspace background ─────────────────────────────────────────── */
+.pageStatusError {
+  color: #ffd4d4;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HYPERSPACE HERO  —  idle state: centred CTA over the star-warp background
+   ══════════════════════════════════════════════════════════════════════════ */
 
 .hyperspaceHero {
   position: fixed;
   inset: 0;
-  background: #000010;
   z-index: 10;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* no background — the .default class on .main provides the starfield */
 }
-
-/* ── Star streaks ──────────────────────────────────────────────────── */
-
-.starfield {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.star {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 2px;
-  height: 1px;
-  background: rgba(200, 220, 255, 0.9);
-  transform-origin: 0 50%;
-  rotate: var(--angle);
-  opacity: 0;
-  animation: shootStar var(--duration) var(--delay) linear infinite;
-}
-
-@keyframes shootStar {
-  0% {
-    transform: translateX(30px) scaleX(1);
-    opacity: 0;
-  }
-  12% { opacity: 1; }
-  80% { opacity: 0.7; }
-  100% {
-    transform: translateX(120vmax) scaleX(60);
-    opacity: 0;
-  }
-}
-
-/* Accelerate during warp — stars triple speed */
-.starfield[data-warping] .star {
-  animation-duration: calc(var(--duration) * 0.3);
-}
-
-/* ── Idle hero content ─────────────────────────────────────────────── */
 
 .heroContent {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
   gap: 1.25rem;
   padding: 2rem 1.5rem;
+  max-width: 560px;
+  width: 100%;
+  position: relative;
+  z-index: 20;
+  /* soft outer glow so text reads over the streaks */
+  filter: drop-shadow(0 0 32px rgba(10, 20, 60, 0.7));
 }
 
 .heroEyebrow {
@@ -127,14 +98,14 @@
 
 .heroHeading {
   margin: 0;
-  font-family: var(--font-poiret), sans-serif;
+  font-family: "Poiret One", sans-serif;
   font-size: clamp(2rem, 5.5vw, 3.5rem);
   font-weight: 400;
   line-height: 1.15;
   color: #e8f4ff;
   text-shadow:
-    0 0 60px rgba(100, 160, 255, 0.5),
-    0 2px 12px rgba(0, 0, 0, 0.9);
+    0 0 60px rgba(100, 160, 255, 0.55),
+    0 2px 10px rgba(0, 0, 0, 0.9);
 }
 
 .heroSubtext {
@@ -150,55 +121,15 @@
   color: #ffd4d4;
 }
 
-/* ── Warp status ───────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════════
+   LANDED  —  planet background fades in
+   ══════════════════════════════════════════════════════════════════════════ */
 
-.warpStatus {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(180, 210, 255, 0.65);
-  font-size: 0.9rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-/* ── Landed state ──────────────────────────────────────────────────── */
-
-.pageStatus {
-  margin-top: 56px;
-  text-align: center;
-  color: #fafafa;
-  font-size: 14px;
-  padding: 8px 12px;
-}
-
-.pageStatusError {
-  color: #ffd4d4;
-}
-
-/* Planet fades in after warp */
 .main[data-phase="landed"] {
-  animation: planetReveal 0.6s ease-out forwards;
+  animation: backgroundReveal 0.6s ease-out forwards;
 }
 
-@keyframes planetReveal {
-  from { opacity: 0.4; }
-  to   { opacity: 1; }
-}
-
-/* ── Reduced motion ────────────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-  .star {
-    animation: none;
-    opacity: 0.25;
-    transform: translateX(60vmax) scaleX(1);
-  }
-
-  .main[data-phase="landed"] {
-    animation: none;
-  }
+@keyframes backgroundReveal {
+  from { opacity: 0.6; }
+  to   { opacity: 1;   }
 }

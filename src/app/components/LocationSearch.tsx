@@ -14,8 +14,8 @@ interface LocationSearchProps {
 		lon: number;
 		displayName: string;
 	}) => void;
+	/** Optional extra class applied to the root form element */
 	className?: string;
-	variant?: "default" | "hero";
 }
 
 const NO_RESULTS_MESSAGE =
@@ -28,7 +28,6 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 	onValueChange,
 	onLocationResolved,
 	className,
-	variant = "default",
 }) => {
 	const [candidates, setCandidates] = useState<LocationCandidate[]>([]);
 	const [activeIndex, setActiveIndex] = useState<number>(-1);
@@ -37,13 +36,25 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const [retryTick, setRetryTick] = useState(0);
 
-	// Stable ref so the geocoding effect doesn't re-run on every parent render
+	// Keep a stable ref to the latest callback so the geocoding effect doesn't
+	// need to list it as a dependency (avoids re-running on every parent render).
 	const onLocationResolvedRef = useRef(onLocationResolved);
 	onLocationResolvedRef.current = onLocationResolved;
+
+	// When the user picks a candidate we call onValueChange to update the input.
+	// That change would normally re-trigger the geocoding effect — skip it.
+	const skipNextEffectRef = useRef(false);
 
 	const trimmedValue = useMemo(() => value.trim(), [value]);
 
 	useEffect(() => {
+		// Candidate was just selected; the value change is intentional — don't geocode.
+		if (skipNextEffectRef.current) {
+			skipNextEffectRef.current = false;
+			setIsLoading(false);
+			return;
+		}
+
 		if (!trimmedValue) {
 			setCandidates([]);
 			setActiveIndex(-1);
@@ -85,9 +96,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 
 			try {
 				const results = await geocodeLocation(parsed.query);
-				if (cancelled) {
-					return;
-				}
+				if (cancelled) return;
 
 				if (results.length === 0) {
 					setCandidates([]);
@@ -117,6 +126,9 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 					setActiveIndex(-1);
 					setMessage(API_ERROR_MESSAGE);
 					setIsApiError(true);
+					if (process.env.NODE_ENV !== "production") {
+						console.error("[LocationSearch] geocodeLocation failed for:", trimmedValue);
+					}
 				}
 			} finally {
 				if (!cancelled) {
@@ -134,6 +146,8 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 	}, [trimmedValue, retryTick]);
 
 	const handleCandidateClick = (candidate: LocationCandidate) => {
+		// Signal the next effect run (caused by onValueChange below) to skip geocoding
+		skipNextEffectRef.current = true;
 		setCandidates([]);
 		setActiveIndex(-1);
 		setMessage("");
@@ -152,6 +166,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 		if (event.key === "Escape") {
 			setCandidates([]);
 			setActiveIndex(-1);
+			setMessage("");
 			return;
 		}
 
@@ -187,7 +202,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 				Search by city, state, country, ZIP, or coordinates
 			</label>
 			<input
-				className={`${styles.input_field} ${variant === "hero" ? styles.input_field_hero : ""}`}
+				className={styles.input_field}
 				placeholder="Enter City, ZIP, or lat,lon"
 				type="text"
 				id="locationQuery"
@@ -227,6 +242,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 								className={`${styles.candidateButton} ${
 									activeIndex === index ? styles.candidateButtonActive : ""
 								}`}
+								onMouseDown={(event) => event.preventDefault()}
 								onClick={() => handleCandidateClick(candidate)}
 								onMouseEnter={() => setActiveIndex(index)}
 							>

@@ -159,20 +159,4 @@
 .default {
   position: relative;
   overflow: hidden;
-  /* background is rendered by ::before so content sits above the animation */
-}
-
-/* Layer 1 – near-black deep space */
-.default::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse at 50% 50%,
-    #050d20 0%,
-    #020609 60%,
-    #010203 100%
-  );
 }
