@@ -47,8 +47,8 @@ weather-icons.min.css);
   color: #fafafa;
 }
 
-/* ── Star Chart trigger — sits in the nav once weather is showing ─────── */
-.starChartButton {
+/* ── Weather Twins trigger — sits in the nav once weather is showing ──── */
+.weatherTwinsButton {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
@@ -66,11 +66,11 @@ weather-icons.min.css);
   transition: background 160ms ease;
 }
 
-.starChartButton:hover {
+.weatherTwinsButton:hover {
   background: rgba(255, 255, 255, 0.18);
 }
 
-.starChartCount {
+.weatherTwinsCount {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +85,7 @@ weather-icons.min.css);
 }
 
 @media (max-width: 560px) {
-  .starChartButton {
+  .weatherTwinsButton {
     padding: 0.35rem 0.6rem;
     font-size: 0.6875rem;
   }

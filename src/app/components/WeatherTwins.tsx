@@ -2,22 +2,22 @@
 
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
-import styles from "../styles/StarChart.module.css";
+import styles from "../styles/WeatherTwins.module.css";
 import PlanetPicker from "./PlanetPicker";
-import { SLOTS, SLOT_GROUP_ORDER, SLOT_RANGE_HINT, getSlot } from "@/lib/starchart/slots";
-import { resolveWorld } from "@/lib/starchart/resolve";
-import { getWorld } from "@/lib/starchart/worlds";
-import type { SlotId, StarChartOverrides, WorldId } from "@/lib/starchart/types";
+import { SLOTS, SLOT_GROUP_ORDER, SLOT_RANGE_HINT, getSlot } from "@/lib/weathertwins/slots";
+import { resolveWorld } from "@/lib/weathertwins/resolve";
+import { getWorld } from "@/lib/weathertwins/worlds";
+import type { SlotId, WeatherTwinsOverrides, WorldId } from "@/lib/weathertwins/types";
 
-interface StarChartProps {
-	overrides: StarChartOverrides;
+interface WeatherTwinsProps {
+	overrides: WeatherTwinsOverrides;
 	onToggleWorld: (slotId: SlotId, worldId: WorldId) => void;
 	onResetSlot: (slotId: SlotId) => void;
 	onResetAll: () => void;
 	onClose: () => void;
 }
 
-const StarChart: React.FC<StarChartProps> = ({
+const WeatherTwins: React.FC<WeatherTwinsProps> = ({
 	overrides,
 	onToggleWorld,
 	onResetSlot,
@@ -50,7 +50,7 @@ const StarChart: React.FC<StarChartProps> = ({
 	const customizedCount = Object.keys(overrides).length;
 
 	return (
-		<div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Star Chart">
+		<div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Weather Twins">
 			{backdropWorldId && (
 				<div className={styles.backdrop} key={backdropWorldId}>
 					<Image
@@ -68,8 +68,8 @@ const StarChart: React.FC<StarChartProps> = ({
 			<div className={styles.content}>
 				<header className={styles.header}>
 					<div>
-						<p className={styles.eyebrow}>Your Star Chart</p>
-						<h2 className={styles.title}>Choose your weather twins</h2>
+						<p className={styles.eyebrow}>Your Weather Twins</p>
+						<h2 className={styles.title}>Reassign any condition</h2>
 					</div>
 					<button type="button" className={styles.closeButton} onClick={onClose}>
 						Close
@@ -165,4 +165,4 @@ const StarChart: React.FC<StarChartProps> = ({
 	);
 };
 
-export default StarChart;
+export default WeatherTwins;

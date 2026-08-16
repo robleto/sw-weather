@@ -29,12 +29,12 @@ export interface World {
 /** A weather bucket the app can land in. One slot resolves to one world. */
 export type SlotId = string;
 
-/** Slots are grouped purely for display in the Star Chart. */
+/** Slots are grouped purely for display in Weather Twins. */
 export type SlotGroup = "Precipitation" | "Cloud cover" | "Clear skies" | "Atmosphere";
 
 export interface Slot {
 	id: SlotId;
-	/** Human label shown in the Star Chart, e.g. "Heavy snow". */
+	/** Human label shown in Weather Twins, e.g. "Heavy snow". */
 	label: string;
 	group: SlotGroup;
 	/** The world used when the user has not customized this slot. */
@@ -52,7 +52,7 @@ export interface Slot {
  * does, one is chosen per resolution so the surprise of the free experience
  * survives customization.
  */
-export type StarChartOverrides = Record<SlotId, WorldId[]>;
+export type WeatherTwinsOverrides = Record<SlotId, WorldId[]>;
 
 /** A fully resolved slot, ready to render. */
 export interface ResolvedWorld {

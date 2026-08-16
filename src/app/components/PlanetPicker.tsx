@@ -3,8 +3,8 @@
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import styles from "../styles/PlanetPicker.module.css";
-import { WORLDS } from "@/lib/starchart/worlds";
-import type { Climate, Slot, WorldId } from "@/lib/starchart/types";
+import { WORLDS } from "@/lib/weathertwins/worlds";
+import type { Climate, Slot, WorldId } from "@/lib/weathertwins/types";
 
 const CLIMATE_LABELS: Record<Climate, string> = {
 	desert: "Desert",

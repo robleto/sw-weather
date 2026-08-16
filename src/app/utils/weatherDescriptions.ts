@@ -1,11 +1,11 @@
-import { FALLBACK_SLOT_ID, getSlot } from "@/lib/starchart/slots";
-import type { SlotId } from "@/lib/starchart/types";
+import { FALLBACK_SLOT_ID, getSlot } from "@/lib/weathertwins/slots";
+import type { SlotId } from "@/lib/weathertwins/types";
 
 /**
- * Maps an OpenWeather condition + temperature to a Star Chart slot id.
+ * Maps an OpenWeather condition + temperature to a Weather Twins slot id.
  *
  * This deliberately stops at the slot. Which *world* a slot displays is a
- * separate question owned by the Star Chart (see lib/starchart/resolve.ts),
+ * separate question owned by Weather Twins (see lib/weathertwins/resolve.ts),
  * because the user can reassign it.
  */
 
@@ -60,7 +60,7 @@ export const getSlotForWeather = (
 
 	if (process.env.NODE_ENV !== "production") {
 		console.warn(
-			`Weather condition "${condition}" has no Star Chart slot. Using fallback.`
+			`Weather condition "${condition}" has no Weather Twins slot. Using fallback.`
 		);
 	}
 

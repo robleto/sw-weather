@@ -7,10 +7,10 @@ import { fetchWeatherByCoordinates } from "./utils/fetchWeather";
 import { getSlotForWeather } from "./utils/weatherDescriptions";
 import LocationSearch from "./components/LocationSearch";
 import WeatherDetails from "./components/WeatherDetails";
-import StarChart from "./components/StarChart";
+import WeatherTwins from "./components/WeatherTwins";
 import Footer from "./components/Footer";
-import { useStarChart } from "./hooks/useStarChart";
-import { resolveWorld } from "@/lib/starchart/resolve";
+import { useWeatherTwins } from "./hooks/useWeatherTwins";
+import { resolveWorld } from "@/lib/weathertwins/resolve";
 import { geocodeLocation } from "@/lib/location/geocode";
 import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
 
@@ -38,9 +38,9 @@ const Home = () => {
   const [appPhase, setAppPhase] = useState<AppPhase>("idle");
   const [pageError, setPageError] = useState<string | null>(null);
   const [isWeatherLoading, setIsWeatherLoading] = useState(false);
-  const [isStarChartOpen, setIsStarChartOpen] = useState(false);
+  const [isWeatherTwinsOpen, setIsWeatherTwinsOpen] = useState(false);
 
-  const starChart = useStarChart();
+  const weatherTwins = useWeatherTwins();
 
   // ── fetch + land ──────────────────────────────────────────────────────────
 
@@ -122,14 +122,14 @@ const Home = () => {
 
   // ─── derived display values ────────────────────────────────────────────────
 
-  // Weather picks the slot; the Star Chart decides which world that slot shows.
+  // Weather picks the slot; Weather Twins decides which world that slot shows.
   const weatherInfo = weatherData
     ? resolveWorld(
         getSlotForWeather(
           weatherData.weather[0].main,
           weatherData.main.temp
         ),
-        starChart.overrides
+        weatherTwins.overrides
       )
     : {
         slotId: "",
@@ -167,13 +167,13 @@ const Home = () => {
             />
             <button
               type="button"
-              className={styles.starChartButton}
-              onClick={() => setIsStarChartOpen(true)}
+              className={styles.weatherTwinsButton}
+              onClick={() => setIsWeatherTwinsOpen(true)}
             >
-              Star Chart
-              {starChart.customizedCount > 0 && (
-                <span className={styles.starChartCount}>
-                  {starChart.customizedCount}
+              Weather Twins
+              {weatherTwins.customizedCount > 0 && (
+                <span className={styles.weatherTwinsCount}>
+                  {weatherTwins.customizedCount}
                 </span>
               )}
             </button>
@@ -233,14 +233,14 @@ const Home = () => {
         </>
       )}
 
-      {/* ── Star Chart overlay ────────────────────────────────────────────── */}
-      {isStarChartOpen && (
-        <StarChart
-          overrides={starChart.overrides}
-          onToggleWorld={starChart.toggleWorld}
-          onResetSlot={starChart.resetSlot}
-          onResetAll={starChart.resetAll}
-          onClose={() => setIsStarChartOpen(false)}
+      {/* ── Weather Twins overlay ─────────────────────────────────────────── */}
+      {isWeatherTwinsOpen && (
+        <WeatherTwins
+          overrides={weatherTwins.overrides}
+          onToggleWorld={weatherTwins.toggleWorld}
+          onResetSlot={weatherTwins.resetSlot}
+          onResetAll={weatherTwins.resetAll}
+          onClose={() => setIsWeatherTwinsOpen(false)}
         />
       )}
     </main>

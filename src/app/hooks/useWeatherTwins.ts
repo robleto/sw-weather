@@ -1,17 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { clearOverrides, loadOverrides, saveOverrides } from "@/lib/starchart/storage";
-import type { SlotId, StarChartOverrides, WorldId } from "@/lib/starchart/types";
+import { clearOverrides, loadOverrides, saveOverrides } from "@/lib/weathertwins/storage";
+import type { SlotId, WeatherTwinsOverrides, WorldId } from "@/lib/weathertwins/types";
 
 /**
- * Owns the user's Star Chart (their slot -> world assignments).
+ * Owns the user's Weather Twins (their slot -> world assignments).
  *
  * Starts empty and hydrates from storage in an effect rather than during
  * render, so the server and first client render agree.
  */
-export const useStarChart = () => {
-	const [overrides, setOverrides] = useState<StarChartOverrides>({});
+export const useWeatherTwins = () => {
+	const [overrides, setOverrides] = useState<WeatherTwinsOverrides>({});
 	const [hydrated, setHydrated] = useState(false);
 
 	useEffect(() => {
@@ -19,7 +19,7 @@ export const useStarChart = () => {
 		setHydrated(true);
 	}, []);
 
-	const persist = useCallback((next: StarChartOverrides) => {
+	const persist = useCallback((next: WeatherTwinsOverrides) => {
 		setOverrides(next);
 		saveOverrides(next);
 	}, []);
