@@ -1,6 +1,6 @@
 import Foundation
 
-/// A Star Wars planet mapped to a real-world weather condition/temperature,
+/// A fictional world mapped to a real-world weather condition/temperature,
 /// as loaded from the bundled PlanetData.json.
 struct PlanetInfo: Decodable {
     struct PlanetColor: Decodable {

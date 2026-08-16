@@ -48,7 +48,7 @@ struct FooterView: View {
 
     private var inspiredLine: AttributedString {
         var result = AttributedString("Inspired by a ")
-        var link = AttributedString("SW Weather")
+        var link = AttributedString("weather site")
         link.link = URL(string: "https://www.tomscott.com/weather/starwars/")
         link.underlineStyle = .single
         result += link

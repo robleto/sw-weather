@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>SW Weather</string>
+	<string>Otherworld</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -21,7 +21,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Star Wars Weather uses your location to show today's forecast and match it to a planet.</string>
+	<string>Otherworld Weather uses your location to show today's forecast and match it to a world.</string>
 	<key>OPENWEATHERMAP_API_KEY</key>
 	<string>$(OPENWEATHERMAP_API_KEY)</string>
 	<key>UIAppFonts</key>

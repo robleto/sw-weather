@@ -9,7 +9,7 @@ struct HyperspaceHeroView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            Text("A long time ago, in a galaxy far, far away…")
+            Text("Somewhere out there, it feels just like this…")
                 .font(.system(size: 12, weight: .medium))
                 .tracking(2.5)
                 .textCase(.uppercase)
@@ -22,7 +22,7 @@ struct HyperspaceHeroView: View {
                 .foregroundStyle(Color(hex: "#e8f4ff"))
                 .shadow(color: Color(hex: "#64a0ff").opacity(0.55), radius: 24)
 
-            Text("Enter your location to discover your Star Wars weather forecast")
+            Text("Enter your location to discover today's weather twin")
                 .font(.system(size: 16))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(Color(hex: "#c8dcff").opacity(0.6))
