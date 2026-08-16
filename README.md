@@ -1,10 +1,10 @@
-# Otherworld Weather
+# Galactic Weather
 
 Weather data presented in a highly graphic interface, shown in relation to worlds beyond our own.
 
-![Otherworld Weather](https://cdn.dribbble.com/userupload/16210951/file/original-d45b3cc6d42962dbb33d5e2667d71ca6.png?resize=1504x1178)
+![Galactic Weather](https://cdn.dribbble.com/userupload/16210951/file/original-d45b3cc6d42962dbb33d5e2667d71ca6.png?resize=1504x1178)
 
-Otherworld Weather is a Next.js app that matches real-world weather conditions to a fictional world — today's "weather twin."
+Galactic Weather is a Next.js app that matches real-world weather conditions to a fictional world — today's "weather twin."
 
 ## Local Development
 
@@ -33,6 +33,7 @@ Open [http://localhost:3000](http://localhost:3000).
 - `OPENWEATHERMAP_API_KEY` (required): server-only key used by:
   - `GET /api/weather`
   - `GET /api/geocode`
+- `NEXT_PUBLIC_SITE_URL` (production): set to `https://galacticweather.app` in the deployment environment; used for metadata/Open Graph URLs and falls back to `http://localhost:3000` otherwise.
 
 Important migration note:
 

@@ -2,7 +2,7 @@ import { getSlot } from "./slots";
 import { isKnownWorld } from "./worlds";
 import type { StarChartOverrides } from "./types";
 
-const STORAGE_KEY = "otherworld:starchart:v1";
+const STORAGE_KEY = "galacticweather:starchart:v1";
 
 /**
  * Drop anything we don't recognize. Stored charts outlive deploys, so a slot

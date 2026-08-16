@@ -153,7 +153,7 @@ const Home = () => {
 
       {/* ── Fixed nav ─────────────────────────────────────────────────────── */}
       <nav className={styles.navHeader} data-phase={appPhase}>
-        <h1 className={styles.title}>Otherworld Weather</h1>
+        <h1 className={styles.title}>Galactic Weather</h1>
         {/* Search input moves to the nav only once weather is showing */}
         {appPhase === "landed" && (
           <>
