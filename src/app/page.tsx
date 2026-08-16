@@ -4,10 +4,13 @@ import styles from "./styles/page.module.css";
 import locationSearchStyles from "./styles/LocationSearch.module.css";
 import planetStyles from "./styles/planetStyles.module.css";
 import { fetchWeatherByCoordinates } from "./utils/fetchWeather";
-import { getWeatherDescription } from "./utils/weatherDescriptions";
+import { getSlotForWeather } from "./utils/weatherDescriptions";
 import LocationSearch from "./components/LocationSearch";
 import WeatherDetails from "./components/WeatherDetails";
+import StarChart from "./components/StarChart";
 import Footer from "./components/Footer";
+import { useStarChart } from "./hooks/useStarChart";
+import { resolveWorld } from "@/lib/starchart/resolve";
 import { geocodeLocation } from "@/lib/location/geocode";
 import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
 
@@ -35,6 +38,9 @@ const Home = () => {
   const [appPhase, setAppPhase] = useState<AppPhase>("idle");
   const [pageError, setPageError] = useState<string | null>(null);
   const [isWeatherLoading, setIsWeatherLoading] = useState(false);
+  const [isStarChartOpen, setIsStarChartOpen] = useState(false);
+
+  const starChart = useStarChart();
 
   // ── fetch + land ──────────────────────────────────────────────────────────
 
@@ -116,17 +122,22 @@ const Home = () => {
 
   // ─── derived display values ────────────────────────────────────────────────
 
+  // Weather picks the slot; the Star Chart decides which world that slot shows.
   const weatherInfo = weatherData
-    ? getWeatherDescription(
-        weatherData.weather[0].main,
-        weatherData.main.temp
+    ? resolveWorld(
+        getSlotForWeather(
+          weatherData.weather[0].main,
+          weatherData.main.temp
+        ),
+        starChart.overrides
       )
     : {
+        slotId: "",
         planet: "default",
         planetName: "default",
-        layers: 0,
         description: "",
         color: { primary: "#000000", headline: "#000000" },
+        customized: false,
       };
 
   // idle → hyperspace background; landed → planet theme
@@ -145,14 +156,28 @@ const Home = () => {
         <h1 className={styles.title}>Galactic Weather</h1>
         {/* Search input moves to the nav only once weather is showing */}
         {appPhase === "landed" && (
-          <LocationSearch
-            value={locationQuery}
-            onValueChange={setLocationQuery}
-            onLocationResolved={({ lat, lon, displayName }) => {
-              setLocationQuery(displayName);
-              goToLocation(lat, lon);
-            }}
-          />
+          <>
+            <LocationSearch
+              value={locationQuery}
+              onValueChange={setLocationQuery}
+              onLocationResolved={({ lat, lon, displayName }) => {
+                setLocationQuery(displayName);
+                goToLocation(lat, lon);
+              }}
+            />
+            <button
+              type="button"
+              className={styles.starChartButton}
+              onClick={() => setIsStarChartOpen(true)}
+            >
+              Star Chart
+              {starChart.customizedCount > 0 && (
+                <span className={styles.starChartCount}>
+                  {starChart.customizedCount}
+                </span>
+              )}
+            </button>
+          </>
         )}
       </nav>
 
@@ -206,6 +231,17 @@ const Home = () => {
           <WeatherDetails weatherData={weatherData} weatherInfo={weatherInfo} />
           <Footer />
         </>
+      )}
+
+      {/* ── Star Chart overlay ────────────────────────────────────────────── */}
+      {isStarChartOpen && (
+        <StarChart
+          overrides={starChart.overrides}
+          onToggleWorld={starChart.toggleWorld}
+          onResetSlot={starChart.resetSlot}
+          onResetAll={starChart.resetAll}
+          onClose={() => setIsStarChartOpen(false)}
+        />
       )}
     </main>
   );

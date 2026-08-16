@@ -153,6 +153,42 @@
   ); /* Example style for Tatooine (very hot) */
 }
 
+/*
+ * The 7 worlds below have no hand-authored gradient (unlike the ones
+ * above). Each is a plain 2-stop vertical gradient synthesized directly
+ * from that world's own color.primary -> color.headline (see worlds.ts),
+ * matching the same fallback PlanetTheme.swift uses on iOS so both
+ * platforms render these worlds identically.
+ */
+
+.at-attin {
+  background: linear-gradient(180deg, #7a9e8a 0%, #c8e0d0 100%);
+}
+
+.ghorman {
+  background: linear-gradient(180deg, #7a8090 0%, #b8c0c8 100%);
+}
+
+.jakku {
+  background: linear-gradient(180deg, #a8895a 0%, #e8d09a 100%);
+}
+
+.kijimi {
+  background: linear-gradient(180deg, #8aa3b5 0%, #c8dde8 100%);
+}
+
+.mortis {
+  background: linear-gradient(180deg, #7a7090 0%, #b0a8c8 100%);
+}
+
+.nur {
+  background: linear-gradient(180deg, #4a5a6b 0%, #9db2c4 100%);
+}
+
+.yavin {
+  background: linear-gradient(180deg, #6b7a4a 0%, #b8c890 100%);
+}
+
 
 /* ── Hyperspace default state ──────────────────────────────────────────── */
 

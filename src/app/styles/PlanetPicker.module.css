@@ -1,0 +1,214 @@
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  max-height: 62vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem clamp(1rem, 4vw, 2rem) 1rem;
+  background: rgba(10, 14, 22, 0.94);
+  backdrop-filter: blur(18px);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.55);
+  animation: slideUp 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(18%); opacity: 0; }
+  to   { transform: translateY(0);   opacity: 1; }
+}
+
+.sheetHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: 0.2rem;
+}
+
+.slotLabel {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.closeButton {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.hint {
+  font-size: 0.8125rem;
+  opacity: 0.6;
+  margin: 0.5rem 0 0.875rem;
+}
+
+/* ── Filters ─────────────────────────────────────────────────────────── */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-bottom: 1rem;
+}
+
+.chipRow {
+  display: flex;
+  gap: 0.375rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scrollbar-width: none;
+}
+
+.chipRow::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 140ms ease;
+}
+
+.chip:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.chipActive {
+  background: rgba(255, 255, 255, 0.9);
+  color: #0a0e16;
+  border-color: transparent;
+}
+
+.search {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 0.55rem 0.85rem;
+  color: inherit;
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+.search::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ── World grid ──────────────────────────────────────────────────────── */
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0.5rem;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.75rem;
+}
+
+.worldCard {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+}
+
+.thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: border-color 140ms ease, transform 140ms ease;
+}
+
+.worldCard:hover .thumb,
+.worldCard:focus-visible .thumb {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.worldCardSelected .thumb {
+  border-color: #8fc7ff;
+}
+
+.thumbImage {
+  object-fit: cover;
+}
+
+.worldName {
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+}
+
+.worldCardSelected .worldName {
+  color: #8fc7ff;
+}
+
+.defaultBadge {
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.emptyState {
+  font-size: 0.875rem;
+  opacity: 0.6;
+  padding: 1rem 0;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────── */
+.sheetFooter {
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+}
+
+.resetButton {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.resetButton:disabled {
+  opacity: 0.35;
+  cursor: default;
+}

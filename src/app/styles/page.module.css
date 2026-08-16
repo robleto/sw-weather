@@ -47,6 +47,50 @@ weather-icons.min.css);
   color: #fafafa;
 }
 
+/* ── Star Chart trigger — sits in the nav once weather is showing ─────── */
+.starChartButton {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fafafa;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 160ms ease;
+}
+
+.starChartButton:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.starChartCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.1rem;
+  height: 1.1rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: #8fc7ff;
+  color: #0a0e16;
+  font-size: 0.625rem;
+  font-weight: 700;
+}
+
+@media (max-width: 560px) {
+  .starChartButton {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.6875rem;
+  }
+}
+
 .pageStatus {
   margin-top: 0;
   text-align: center;
