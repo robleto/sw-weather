@@ -1,4 +1,4 @@
-name: StarWarsWeather
+name: otherworldweather
 options:
   bundleIdPrefix: com.robleto
   deploymentTarget:
@@ -8,15 +8,15 @@ configFiles:
   Debug: Config/Secrets.xcconfig
   Release: Config/Secrets.xcconfig
 targets:
-  StarWarsWeather:
+  otherworldweather:
     type: application
     platform: iOS
     deploymentTarget: "17.0"
     sources:
-      - path: StarWarsWeather
+      - path: otherworldweather
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.robleto.starwarsweather
+        PRODUCT_BUNDLE_IDENTIFIER: com.robleto.otherworldweather
         DEVELOPMENT_TEAM: WNJ76895SD
         CODE_SIGN_STYLE: Automatic
         SWIFT_VERSION: "5.0"
@@ -24,12 +24,12 @@ targets:
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         GENERATE_INFOPLIST_FILE: NO
-        INFOPLIST_FILE: StarWarsWeather/Info.plist
+        INFOPLIST_FILE: otherworldweather/Info.plist
         ENABLE_PREVIEWS: YES
     info:
-      path: StarWarsWeather/Info.plist
+      path: otherworldweather/Info.plist
       properties:
-        CFBundleDisplayName: "SW Weather"
+        CFBundleDisplayName: "Otherworld"
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
@@ -42,7 +42,7 @@ targets:
         # "All interface orientations must be supported unless the app
         # requires full screen."
         UIRequiresFullScreen: true
-        NSLocationWhenInUseUsageDescription: "Star Wars Weather uses your location to show today's forecast and match it to a planet."
+        NSLocationWhenInUseUsageDescription: "Otherworld Weather uses your location to show today's forecast and match it to a world."
         OPENWEATHERMAP_API_KEY: "$(OPENWEATHERMAP_API_KEY)"
         UIAppFonts:
           - PoiretOne-Regular.ttf
