@@ -9,12 +9,12 @@
       "localizations" : [
         {
           "description" : "Unlock every Star Chart slot, assign several worlds to one condition, and search any location.",
-          "displayName" : "Otherworld Premium",
+          "displayName" : "Galactic Weather Premium",
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.robleto.otherworldweather.premium",
-      "referenceName" : "Otherworld Premium",
+      "productID" : "com.robleto.galacticweather.premium",
+      "referenceName" : "Galactic Weather Premium",
       "type" : "NonConsumable"
     }
   ],

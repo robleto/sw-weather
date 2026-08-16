@@ -7,7 +7,7 @@ import Foundation
 /// equivalent uses `localStorage` and stays entirely local to one browser.
 /// Port of the web app's `src/lib/starchart/storage.ts`.
 enum StarChartStorage {
-    private static let storageKey = "otherworld:starchart:v1"
+    private static let storageKey = "galacticweather:starchart:v1"
 
     /// Drop anything we don't recognize. Stored charts outlive app updates, so
     /// a slot or world removed in a later release must not break the whole

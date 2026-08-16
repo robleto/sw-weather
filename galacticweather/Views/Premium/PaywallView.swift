@@ -8,7 +8,7 @@ enum PaywallContext {
 
     var headline: String {
         switch self {
-        case .general: return "Otherworld Premium"
+        case .general: return "Galactic Weather Premium"
         case .starChartSlot: return "Unlock every condition"
         case .multiAssign: return "Assign several worlds"
         }

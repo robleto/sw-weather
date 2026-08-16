@@ -14,7 +14,7 @@ import StoreKit
 @MainActor
 final class PremiumStore {
     static let shared = PremiumStore()
-    static let productID = "com.robleto.otherworldweather.premium"
+    static let productID = "com.robleto.galacticweather.premium"
 
     private(set) var isPremium: Bool = false
     private(set) var product: Product?

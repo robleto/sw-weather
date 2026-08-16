@@ -1,4 +1,4 @@
-name: otherworldweather
+name: galacticweather
 options:
   bundleIdPrefix: com.robleto
   deploymentTarget:
@@ -8,15 +8,15 @@ configFiles:
   Debug: Config/Secrets.xcconfig
   Release: Config/Secrets.xcconfig
 targets:
-  otherworldweather:
+  galacticweather:
     type: application
     platform: iOS
     deploymentTarget: "17.0"
     sources:
-      - path: otherworldweather
+      - path: galacticweather
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.robleto.otherworldweather
+        PRODUCT_BUNDLE_IDENTIFIER: com.robleto.galacticweather
         DEVELOPMENT_TEAM: WNJ76895SD
         CODE_SIGN_STYLE: Automatic
         SWIFT_VERSION: "5.0"
@@ -24,13 +24,13 @@ targets:
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         GENERATE_INFOPLIST_FILE: NO
-        INFOPLIST_FILE: otherworldweather/Info.plist
+        INFOPLIST_FILE: galacticweather/Info.plist
         ENABLE_PREVIEWS: YES
-        CODE_SIGN_ENTITLEMENTS: Config/otherworldweather.entitlements
+        CODE_SIGN_ENTITLEMENTS: Config/galacticweather.entitlements
     info:
-      path: otherworldweather/Info.plist
+      path: galacticweather/Info.plist
       properties:
-        CFBundleDisplayName: "Otherworld"
+        CFBundleDisplayName: "Galactic Weather"
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
@@ -43,19 +43,19 @@ targets:
         # "All interface orientations must be supported unless the app
         # requires full screen."
         UIRequiresFullScreen: true
-        NSLocationWhenInUseUsageDescription: "Otherworld Weather uses your location to show today's forecast and match it to a world."
+        NSLocationWhenInUseUsageDescription: "Galactic Weather uses your location to show today's forecast and match it to a world."
         OPENWEATHERMAP_API_KEY: "$(OPENWEATHERMAP_API_KEY)"
         UIAppFonts:
           - PoiretOne-Regular.ttf
           - RussoOne-Regular.ttf
 fileGroups:
-  - Config/otherworldweather.entitlements
+  - Config/galacticweather.entitlements
   - StoreKitConfig/Products.storekit
 schemes:
-  otherworldweather:
+  galacticweather:
     build:
       targets:
-        otherworldweather: all
+        galacticweather: all
     run:
       config: Debug
       storeKitConfiguration: StoreKitConfig/Products.storekit
