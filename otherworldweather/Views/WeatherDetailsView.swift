@@ -23,7 +23,7 @@ struct WeatherDetailsView: View {
                     .font(.custom("RussoOne-Regular", size: 36))
                     .foregroundStyle(headline)
 
-                Text("\(weatherData.name) feels like being on")
+                Text("Today's Weather Twin")
                     .font(.system(size: 13))
                     .tracking(1.5)
                     .textCase(.uppercase)
