@@ -5,9 +5,9 @@ import "./globals.css";
 const exo2 = Exo_2({ subsets: ["latin"], variable: "--font-exo2" });
 const poiretOne = Poiret_One({ subsets: ["latin"], weight: "400", variable: "--font-poiret" });
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-const siteName = "Star Wars Weather";
+const siteName = "Otherworld Weather";
 const description =
-  "Experience accurate weather forecasts with a Star Wars twist. Discover which planet your local weather feels like today.";
+  "Find your weather's twin. Otherworld Weather matches today's local forecast to a world beyond our own.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -19,10 +19,11 @@ export const metadata: Metadata = {
   applicationName: siteName,
   keywords: [
     "weather",
-    "star wars",
     "forecast",
     "weather app",
     "location weather",
+    "weather twin",
+    "otherworld weather",
   ],
   openGraph: {
     title: siteName,
@@ -30,13 +31,13 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName,
-    images: [{ url: "/SWweather.png", width: 1200, height: 627, alt: siteName }],
+    images: [{ url: "/otherworld-weather.png", width: 1200, height: 627, alt: siteName }],
   },
   twitter: {
     card: "summary_large_image",
     title: siteName,
     description,
-    images: ["/SWweather.png"],
+    images: ["/otherworld-weather.png"],
   },
   alternates: {
     canonical: "/",

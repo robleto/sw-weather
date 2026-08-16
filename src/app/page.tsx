@@ -142,7 +142,7 @@ const Home = () => {
 
       {/* ── Fixed nav ─────────────────────────────────────────────────────── */}
       <nav className={styles.navHeader} data-phase={appPhase}>
-        <h1 className={styles.title}>Star Wars Weather</h1>
+        <h1 className={styles.title}>Otherworld Weather</h1>
         {/* Search input moves to the nav only once weather is showing */}
         {appPhase === "landed" && (
           <LocationSearch
@@ -161,13 +161,13 @@ const Home = () => {
         <div className={styles.hyperspaceHero}>
           <div className={styles.heroContent}>
             <p className={styles.heroEyebrow}>
-              A long time ago, in a galaxy far, far away…
+              Somewhere out there, it feels just like this…
             </p>
             <h2 className={styles.heroHeading}>
               Where in the galaxy are you?
             </h2>
             <p className={styles.heroSubtext}>
-              Enter your location to discover your Star Wars weather forecast
+              Enter your location to discover today&rsquo;s weather twin
             </p>
             <LocationSearch
               className={locationSearchStyles.heroSearch}

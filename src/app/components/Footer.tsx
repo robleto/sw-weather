@@ -40,7 +40,7 @@ const Footer: React.FC = () => (
 					target="_blank"
 					rel="noopener noreferrer"
 				>
-					SW Weather
+					weather site
 				</a> from long ago.
 			</p>
 			<p className={styles.developedBy}>

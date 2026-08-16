@@ -1,10 +1,10 @@
-# Star Wars Weather
+# Otherworld Weather
 
-Weather data presented in a highly graphic interface shown in relation to various planets from the Star Wars saga.
+Weather data presented in a highly graphic interface, shown in relation to worlds beyond our own.
 
-![Star Wars weather](https://cdn.dribbble.com/userupload/16210951/file/original-d45b3cc6d42962dbb33d5e2667d71ca6.png?resize=1504x1178)
+![Otherworld Weather](https://cdn.dribbble.com/userupload/16210951/file/original-d45b3cc6d42962dbb33d5e2667d71ca6.png?resize=1504x1178)
 
-StarWarsWeather is a Next.js app that maps real-world weather conditions to Star Wars planets.
+Otherworld Weather is a Next.js app that matches real-world weather conditions to a fictional world — today's "weather twin."
 
 ## Local Development
 
