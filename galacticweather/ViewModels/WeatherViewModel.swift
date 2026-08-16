@@ -20,6 +20,15 @@ final class WeatherViewModel {
     private(set) var pageError: String?
     private(set) var isWeatherLoading = false
     private(set) var isResolvingLocation = false
+    private(set) var currentLat: Double?
+    private(set) var currentLon: Double?
+
+    /// The currently-landed location, suitable for saving. `nil` until a
+    /// fetch has actually succeeded (not just been requested).
+    var landedLocation: (lat: Double, lon: Double, displayName: String)? {
+        guard let currentLat, let currentLon, let weatherData else { return nil }
+        return (currentLat, currentLon, weatherData.name)
+    }
 
     private let weatherService: WeatherService
     private let locationManager: LocationManager
@@ -68,6 +77,8 @@ final class WeatherViewModel {
 
         do {
             weatherData = try await weatherService.fetchWeather(lat: lat, lon: lon)
+            currentLat = lat
+            currentLon = lon
         } catch {
             pageError = "We couldn't load weather right now. Please try again."
             appPhase = .idle

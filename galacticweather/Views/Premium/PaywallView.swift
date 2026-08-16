@@ -5,12 +5,14 @@ enum PaywallContext {
     case general
     case starChartSlot   // tapped a locked Star Chart condition
     case multiAssign     // tried to put a second world on one condition
+    case savedLocations  // opened Saved Locations while free
 
     var headline: String {
         switch self {
         case .general: return "Galactic Weather Premium"
         case .starChartSlot: return "Unlock every condition"
         case .multiAssign: return "Assign several worlds"
+        case .savedLocations: return "Keep your favorite skies"
         }
     }
 
@@ -22,6 +24,8 @@ enum PaywallContext {
             return "You've used your one free condition. Premium opens all 22."
         case .multiAssign:
             return "Give one condition a handful of worlds and let them rotate, one per day."
+        case .savedLocations:
+            return "Premium saves up to \(PremiumGate.maxSavedLocations) locations and syncs them across your devices."
         }
     }
 }
@@ -49,6 +53,11 @@ private struct PaywallFeature: Identifiable {
             symbol: "paintpalette",
             title: "The full world library",
             detail: "Every world unlocked, including ones no condition uses by default."
+        ),
+        PaywallFeature(
+            symbol: "bookmark.fill",
+            title: "Saved locations",
+            detail: "Bookmark up to \(PremiumGate.maxSavedLocations) favorite spots and jump back with one tap, synced across your devices."
         )
     ]
 }

@@ -40,6 +40,13 @@ enum PremiumGate {
     // behind the paywall, so nobody can see what they'd be buying. Saved
     // locations are the premium hook here; looking one up is not.
 
+    /// Bookmarking a location for quick return — unlike searching for one —
+    /// is entirely premium.
+    static var canUseSavedLocations: Bool { isPremium }
+
+    /// Keeps the iCloud KVS payload small and the list itself easy to scan.
+    static let maxSavedLocations = 20
+
     /// Copy shown on locked affordances. Keep it short — these render inside pills.
     static let multiAssignUpsell = "Rotate several worlds daily"
 }

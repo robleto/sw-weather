@@ -10,7 +10,9 @@ struct ContentView: View {
     @State private var weatherViewModel: WeatherViewModel
     @State private var searchViewModel: LocationSearchViewModel
     @State private var starChartViewModel = StarChartViewModel()
+    @State private var savedLocationsViewModel = SavedLocationsViewModel()
     @State private var isStarChartOpen = false
+    @State private var isSavedLocationsOpen = false
 
     init() {
         let weatherViewModel = WeatherViewModel()
@@ -66,6 +68,12 @@ struct ContentView: View {
         .fullScreenCover(isPresented: $isStarChartOpen) {
             StarChartView(viewModel: starChartViewModel)
         }
+        .sheet(isPresented: $isSavedLocationsOpen) {
+            SavedLocationsView(viewModel: savedLocationsViewModel, weatherViewModel: weatherViewModel)
+                .presentationDetents([.fraction(0.7), .large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(Color(hex: "#0a0e16"))
+        }
     }
 
     /// Weather picks the slot; the Star Chart decides which world that slot
@@ -103,36 +111,61 @@ struct ContentView: View {
         }
     }
 
-    /// "Star Chart" trigger, shown once weather is showing — port of the web
-    /// app's nav-bar `starChartButton`.
+    /// Nav bar shown once weather is showing: "Saved" leading, "Star Chart"
+    /// trailing (port of the web app's nav-bar `starChartButton`).
     private var topBar: some View {
-        HStack {
+        HStack(spacing: 10) {
+            savedLocationsButton
             Spacer()
-            Button {
-                isStarChartOpen = true
-            } label: {
-                HStack(spacing: 6) {
-                    Text("Star Chart")
-                        .font(.system(size: 11, weight: .semibold))
-                        .tracking(1.2)
-                        .textCase(.uppercase)
-
-                    if starChartViewModel.customizedCount > 0 {
-                        Text("\(starChartViewModel.customizedCount)")
-                            .font(.system(size: 10, weight: .bold))
-                            .frame(minWidth: 18, minHeight: 18)
-                            .background(Circle().fill(Color(hex: "#8fc7ff")))
-                            .foregroundStyle(Color(hex: "#0a0e16"))
-                    }
-                }
-                .foregroundStyle(.white)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .background(Capsule().fill(.ultraThinMaterial))
-                .overlay(Capsule().strokeBorder(.white.opacity(0.22)))
-            }
+            starChartButton
         }
         .padding(.horizontal, 20)
+    }
+
+    private var savedLocationsButton: some View {
+        Button {
+            isSavedLocationsOpen = true
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "bookmark.fill")
+                    .font(.system(size: 11, weight: .semibold))
+                Text("Saved")
+                    .font(.system(size: 11, weight: .semibold))
+                    .tracking(1.2)
+                    .textCase(.uppercase)
+            }
+            .foregroundStyle(.white)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(Capsule().fill(.ultraThinMaterial))
+            .overlay(Capsule().strokeBorder(.white.opacity(0.22)))
+        }
+    }
+
+    private var starChartButton: some View {
+        Button {
+            isStarChartOpen = true
+        } label: {
+            HStack(spacing: 6) {
+                Text("Star Chart")
+                    .font(.system(size: 11, weight: .semibold))
+                    .tracking(1.2)
+                    .textCase(.uppercase)
+
+                if starChartViewModel.customizedCount > 0 {
+                    Text("\(starChartViewModel.customizedCount)")
+                        .font(.system(size: 10, weight: .bold))
+                        .frame(minWidth: 18, minHeight: 18)
+                        .background(Circle().fill(Color(hex: "#8fc7ff")))
+                        .foregroundStyle(Color(hex: "#0a0e16"))
+                }
+            }
+            .foregroundStyle(.white)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(Capsule().fill(.ultraThinMaterial))
+            .overlay(Capsule().strokeBorder(.white.opacity(0.22)))
+        }
     }
 
     @ViewBuilder
