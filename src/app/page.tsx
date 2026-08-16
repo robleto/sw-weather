@@ -167,7 +167,7 @@ const Home = () => {
               Where in the galaxy are you?
             </h2>
             <p className={styles.heroSubtext}>
-              Enter your location to discover today&rsquo;s weather twin
+              Enter your location to see which world it feels like today
             </p>
             <LocationSearch
               className={locationSearchStyles.heroSearch}
