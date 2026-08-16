@@ -58,10 +58,10 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 					{convertKelvinToFahrenheit(weatherData.main.temp).toFixed(0)}°F and {weatherData.weather[0].main}
 				</p>
 				<p
-					className={weatherStyles.twinLabel}
+					className={weatherStyles.feelsLike}
 					style={secondaryStyle}
 				>
-					Today&apos;s Weather Twin
+					{weatherData.name} feels like being on
 				</p>
 				<h2
 					className={weatherStyles.planetName}
