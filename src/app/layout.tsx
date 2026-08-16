@@ -31,14 +31,28 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName,
-    // Social card image intentionally omitted until original artwork exists.
-    // Re-add as: images: [{ url: "/og-card.png", width: 1200, height: 630, alt: siteName }]
-    // and switch the twitter card below back to "summary_large_image".
+    // 1.91:1 first — most platforms take the first usable image. The square
+    // is a fallback for clients that prefer 1:1 (iMessage, WhatsApp, Mastodon).
+    images: [
+      {
+        url: "/otherworld-weather.png",
+        width: 1200,
+        height: 630,
+        alt: "Otherworld Weather — today's forecast matched to another world",
+      },
+      {
+        url: "/og-card.png",
+        width: 1200,
+        height: 1200,
+        alt: "Otherworld Weather — today's forecast matched to another world",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: siteName,
     description,
+    images: ["/otherworld-weather.png"],
   },
   alternates: {
     canonical: "/",
