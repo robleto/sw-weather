@@ -22,7 +22,7 @@ struct HyperspaceHeroView: View {
                 .foregroundStyle(Color(hex: "#e8f4ff"))
                 .shadow(color: Color(hex: "#64a0ff").opacity(0.55), radius: 24)
 
-            Text("Enter your location to discover today's weather twin")
+            Text("Enter your location to see which world it feels like today")
                 .font(.system(size: 16))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(Color(hex: "#c8dcff").opacity(0.6))

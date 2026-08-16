@@ -6,10 +6,11 @@ import SwiftUI
 /// to the top half of the screen independent of the full-bleed photo.
 struct WeatherDetailsView: View {
     var weatherViewModel: WeatherViewModel
+    var weatherInfo: ResolvedWorld
 
     var body: some View {
         if let weatherData = weatherViewModel.weatherData {
-            let info = weatherViewModel.weatherInfo
+            let info = weatherInfo
             let headline = Color(hex: info.color.headline)
 
             VStack(spacing: 10) {

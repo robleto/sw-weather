@@ -1,0 +1,28 @@
+{
+  "identifier" : "3E7A1F92",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "5C1B7D40",
+      "localizations" : [
+        {
+          "description" : "Unlock every Star Chart slot, assign several worlds to one condition, and search any location.",
+          "displayName" : "Otherworld Premium",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.robleto.otherworldweather.premium",
+      "referenceName" : "Otherworld Premium",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+  },
+  "subscriptionGroups" : [],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

@@ -1,45 +1,21 @@
 import Foundation
 
-/// Port of the planet-mapping logic that turns a weather condition + temperature
-/// into a `PlanetInfo`, backed by the bundled PlanetData.json.
+/// Maps an OpenWeatherMap condition + temperature to a Star Chart slot id.
+///
+/// This deliberately stops at the slot. Which *world* a slot displays is a
+/// separate question owned by the Star Chart (see StarChart/Resolve.swift),
+/// because the user can reassign it. Port of the web app's
+/// `src/app/utils/weatherDescriptions.ts` (`getSlotForWeather`).
 enum WeatherDescriptionMapper {
-    /// Fallback key used when no more specific match is found.
-    private static let fallbackKey = "clear_temperate"
-
-    /// Aliases from a raw weather-condition string to a different lookup key.
-    private static let conditionAliases: [String: String] = [
+    private static let conditionAliases: [String: SlotId] = [
         "dust": "jakku",
         "sand": "jakku",
         "ash": "smoke",
         "squall": "thunderstorm",
-        "tornado": "thunderstorm"
+        "tornado": "thunderstorm",
     ]
 
-    /// The decoded planet data, keyed by lookup key. Parsed exactly once.
-    static let planetData: [String: PlanetInfo] = {
-        guard let url = Bundle.main.url(forResource: "PlanetData", withExtension: "json") else {
-            assertionFailure("PlanetData.json not found in bundle")
-            return [:]
-        }
-        do {
-            let data = try Data(contentsOf: url)
-            return try JSONDecoder().decode([String: PlanetInfo].self, from: data)
-        } catch {
-            assertionFailure("Failed to decode PlanetData.json: \(error)")
-            return [:]
-        }
-    }()
-
-    /// A small "idle/loading" default value for use before any weather has loaded.
-    static let idlePlanetInfo = PlanetInfo(
-        planet: "default",
-        planetName: "default",
-        description: "",
-        color: PlanetInfo.PlanetColor(primary: "#000000", headline: "#000000")
-    )
-
-    /// Picks a "clear" planet key from a Fahrenheit temperature.
-    private static func clearPlanetKey(forFahrenheit tempF: Double) -> String {
+    private static func clearSlot(forFahrenheit tempF: Double) -> SlotId {
         if tempF >= 99 { return "clear_scorching" }
         if tempF >= 85 { return "clear_hot" }
         if tempF >= 76 { return "clear_warm" }
@@ -50,8 +26,7 @@ enum WeatherDescriptionMapper {
         return "clear_freezing"
     }
 
-    /// Picks a "clouds" planet key from a Fahrenheit temperature.
-    private static func cloudsPlanetKey(forFahrenheit tempF: Double) -> String {
+    private static func cloudsSlot(forFahrenheit tempF: Double) -> SlotId {
         if tempF >= 76 { return "clouds_warm" }
         if tempF >= 66 { return "clouds_temperate" }
         if tempF >= 50 { return "clouds_cool" }
@@ -59,37 +34,24 @@ enum WeatherDescriptionMapper {
     }
 
     /// Main lookup: given a raw weather-condition string, a temperature in
-    /// Kelvin, and an optional weather description, returns the matching `PlanetInfo`.
-    static func describe(weatherMain: String, tempKelvin: Double, description: String = "") -> PlanetInfo {
+    /// Kelvin, and an optional weather description, returns the matching slot id.
+    static func getSlotForWeather(weatherMain: String, tempKelvin: Double, description: String = "") -> SlotId {
         let condition = weatherMain.lowercased()
         let tempF = kelvinToFahrenheit(tempKelvin)
-        let data = planetData
-        let fallback = data[fallbackKey] ?? idlePlanetInfo
 
-        if let alias = conditionAliases[condition], let aliased = data[alias] {
-            return aliased
+        if let alias = conditionAliases[condition], getSlot(alias) != nil {
+            return alias
         }
 
         if condition == "snow" {
-            let lowerDescription = description.lowercased()
-            let key = lowerDescription.contains("light") ? "snow_light" : "snow"
-            return data[key] ?? data["snow"] ?? fallback
+            return description.lowercased().contains("light") ? "snow_light" : "snow"
         }
 
-        if condition == "clouds" {
-            let key = cloudsPlanetKey(forFahrenheit: tempF)
-            return data[key] ?? fallback
-        }
+        if condition == "clouds" { return cloudsSlot(forFahrenheit: tempF) }
+        if condition == "clear" { return clearSlot(forFahrenheit: tempF) }
 
-        if condition == "clear" {
-            let key = clearPlanetKey(forFahrenheit: tempF)
-            return data[key] ?? fallback
-        }
+        if getSlot(condition) != nil { return condition }
 
-        if let direct = data[condition] {
-            return direct
-        }
-
-        return fallback
+        return FALLBACK_SLOT_ID
     }
 }

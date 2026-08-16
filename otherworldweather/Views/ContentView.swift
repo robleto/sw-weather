@@ -9,6 +9,8 @@ import SwiftUI
 struct ContentView: View {
     @State private var weatherViewModel: WeatherViewModel
     @State private var searchViewModel: LocationSearchViewModel
+    @State private var starChartViewModel = StarChartViewModel()
+    @State private var isStarChartOpen = false
 
     init() {
         let weatherViewModel = WeatherViewModel()
@@ -39,8 +41,13 @@ struct ContentView: View {
             }
 
             VStack(spacing: 0) {
+                if weatherViewModel.appPhase == .landed {
+                    topBar
+                        .padding(.top, 8)
+                }
+
                 topContent
-                    .padding(.top, 32)
+                    .padding(.top, weatherViewModel.appPhase == .landed ? 12 : 32)
 
                 Spacer(minLength: 0)
 
@@ -53,13 +60,26 @@ struct ContentView: View {
         .task {
             await weatherViewModel.resolveInitialLocation()
         }
+        .task {
+            await PremiumStore.shared.start()
+        }
+        .fullScreenCover(isPresented: $isStarChartOpen) {
+            StarChartView(viewModel: starChartViewModel)
+        }
+    }
+
+    /// Weather picks the slot; the Star Chart decides which world that slot
+    /// shows. Computed once here and threaded down, mirroring the web app's
+    /// `page.tsx` composition of `useStarChart` + `resolveWorld`.
+    private var weatherInfo: ResolvedWorld {
+        weatherViewModel.resolvedWorld(overrides: starChartViewModel.overrides)
     }
 
     private var landedPlanetImageName: String? {
         guard weatherViewModel.appPhase == .landed, weatherViewModel.weatherData != nil else {
             return nil
         }
-        return PlanetTheme.imageName(for: weatherViewModel.weatherInfo.planet)
+        return PlanetTheme.imageName(for: weatherInfo.planet)
     }
 
     @ViewBuilder
@@ -79,8 +99,40 @@ struct ContentView: View {
         case .idle:
             PlanetTheme.background(for: "default")
         case .landed:
-            PlanetTheme.background(for: weatherViewModel.weatherInfo.planet)
+            PlanetTheme.background(for: weatherInfo.planet)
         }
+    }
+
+    /// "Star Chart" trigger, shown once weather is showing — port of the web
+    /// app's nav-bar `starChartButton`.
+    private var topBar: some View {
+        HStack {
+            Spacer()
+            Button {
+                isStarChartOpen = true
+            } label: {
+                HStack(spacing: 6) {
+                    Text("Star Chart")
+                        .font(.system(size: 11, weight: .semibold))
+                        .tracking(1.2)
+                        .textCase(.uppercase)
+
+                    if starChartViewModel.customizedCount > 0 {
+                        Text("\(starChartViewModel.customizedCount)")
+                            .font(.system(size: 10, weight: .bold))
+                            .frame(minWidth: 18, minHeight: 18)
+                            .background(Circle().fill(Color(hex: "#8fc7ff")))
+                            .foregroundStyle(Color(hex: "#0a0e16"))
+                    }
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(Capsule().fill(.ultraThinMaterial))
+                .overlay(Capsule().strokeBorder(.white.opacity(0.22)))
+            }
+        }
+        .padding(.horizontal, 20)
     }
 
     @ViewBuilder
@@ -99,7 +151,7 @@ struct ContentView: View {
                     statusLine
                 }
 
-                WeatherDetailsView(weatherViewModel: weatherViewModel)
+                WeatherDetailsView(weatherViewModel: weatherViewModel, weatherInfo: weatherInfo)
             }
         }
     }
@@ -123,6 +175,9 @@ struct ContentView: View {
 
     private var bottomSearchBar: some View {
         HStack(alignment: .top, spacing: 10) {
+            // Search is available to everyone — see the note in `PremiumGate`.
+            // Without it, declining the location prompt leaves a free user with
+            // no way to reach any weather at all.
             LocationSearchView(
                 viewModel: searchViewModel,
                 query: $weatherViewModel.locationQuery,

@@ -26,6 +26,7 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: otherworldweather/Info.plist
         ENABLE_PREVIEWS: YES
+        CODE_SIGN_ENTITLEMENTS: Config/otherworldweather.entitlements
     info:
       path: otherworldweather/Info.plist
       properties:
@@ -47,3 +48,22 @@ targets:
         UIAppFonts:
           - PoiretOne-Regular.ttf
           - RussoOne-Regular.ttf
+fileGroups:
+  - Config/otherworldweather.entitlements
+  - StoreKitConfig/Products.storekit
+schemes:
+  otherworldweather:
+    build:
+      targets:
+        otherworldweather: all
+    run:
+      config: Debug
+      storeKitConfiguration: StoreKitConfig/Products.storekit
+    test:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release

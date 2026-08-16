@@ -34,15 +34,15 @@ enum PlanetTheme {
             idleBackgroundColor
         } else if let gradient = bespokeGradients[planet] {
             gradient
-        } else if let info = planetInfoByPlanetKey[planet] {
-            // Deliberate design fill-in: PlanetData.json planets with no
-            // hand-authored CSS gradient in the original app (kijimi, mortis,
-            // jakku, at-attin, yavin, ghorman, and any future planet key not
-            // covered by `bespokeGradients`) get a plain 2-stop vertical
-            // gradient synthesized directly from that planet's own
+        } else if let color = colorByPlanetKey[planet] {
+            // Deliberate design fill-in: worlds with no hand-authored CSS
+            // gradient in the original app (kijimi, mortis, jakku, at-attin,
+            // yavin, ghorman, and any future world not covered by
+            // `bespokeGradients`) get a plain 2-stop vertical gradient
+            // synthesized directly from that world's own
             // color.primary → color.headline.
             LinearGradient(
-                colors: [Color(hex: info.color.primary), Color(hex: info.color.headline)],
+                colors: [Color(hex: color.primary), Color(hex: color.headline)],
                 startPoint: .top,
                 endPoint: .bottom
             )
@@ -59,13 +59,12 @@ enum PlanetTheme {
 
     // MARK: - Data-driven fallback lookup
 
-    /// `PlanetInfo` keyed by planet key (e.g. "naboo"), built once from
-    /// `WeatherDescriptionMapper.planetData`'s values (which are keyed by
-    /// weather-condition string, not planet key).
-    private static let planetInfoByPlanetKey: [String: PlanetInfo] = {
-        var result: [String: PlanetInfo] = [:]
-        for info in WeatherDescriptionMapper.planetData.values {
-            result[info.planet] = info
+    /// `WorldColor` keyed by world id (e.g. "naboo"), built once from the
+    /// Star Chart's `WORLDS` catalog.
+    private static let colorByPlanetKey: [String: WorldColor] = {
+        var result: [String: WorldColor] = [:]
+        for world in WORLDS {
+            result[world.id] = world.color
         }
         return result
     }()

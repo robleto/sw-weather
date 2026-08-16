@@ -32,17 +32,21 @@ final class WeatherViewModel {
         self.locationManager = locationManager
     }
 
-    /// Planet display info derived from the current weather, or the mapper's
-    /// idle/default value before any weather has loaded.
-    var weatherInfo: PlanetInfo {
+    /// Resolves the world the current weather should show, honoring the
+    /// user's Star Chart customizations, or `ResolvedWorld.idle` before any
+    /// weather has loaded. Weather picks the slot (`getSlotForWeather`); the
+    /// Star Chart decides which world that slot shows (`resolveWorld`) —
+    /// mirrors the composition in the web app's `page.tsx`.
+    func resolvedWorld(overrides: StarChartOverrides) -> ResolvedWorld {
         guard let weatherData, let condition = weatherData.weather.first else {
-            return WeatherDescriptionMapper.idlePlanetInfo
+            return .idle
         }
-        return WeatherDescriptionMapper.describe(
+        let slotId = WeatherDescriptionMapper.getSlotForWeather(
             weatherMain: condition.main,
             tempKelvin: weatherData.main.temp,
             description: condition.description
         )
+        return resolveWorld(slotId: slotId, overrides: overrides)
     }
 
     /// Fetches weather for `lat`/`lon` and lands the app on the weather screen.
