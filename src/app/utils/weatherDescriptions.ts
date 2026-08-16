@@ -1,23 +1,15 @@
-import planetData from "../data/planetData.json";
+import { FALLBACK_SLOT_ID, getSlot } from "@/lib/starchart/slots";
+import type { SlotId } from "@/lib/starchart/types";
 
-interface PlanetColor {
-	primary: string;
-	headline: string;
-}
+/**
+ * Maps an OpenWeather condition + temperature to a Star Chart slot id.
+ *
+ * This deliberately stops at the slot. Which *world* a slot displays is a
+ * separate question owned by the Star Chart (see lib/starchart/resolve.ts),
+ * because the user can reassign it.
+ */
 
-interface PlanetData {
-	[key: string]: {
-		planet: string;
-		planetName: string;
-		description: string;
-		color: PlanetColor;
-	};
-}
-
-const planetDataTyped: PlanetData = planetData as PlanetData;
-const FALLBACK_KEY = "clear_temperate";
-
-const WEATHER_ALIASES: Record<string, keyof PlanetData> = {
+const WEATHER_ALIASES: Record<string, SlotId> = {
 	dust: "jakku",
 	sand: "jakku",
 	ash: "smoke",
@@ -25,11 +17,10 @@ const WEATHER_ALIASES: Record<string, keyof PlanetData> = {
 	tornado: "thunderstorm",
 };
 
-const convertKelvinToFahrenheit = (kelvin: number): number => {
-	return ((kelvin - 273.15) * 9) / 5 + 32;
-};
+export const convertKelvinToFahrenheit = (kelvin: number): number =>
+	((kelvin - 273.15) * 9) / 5 + 32;
 
-const getClearPlanet = (tempF: number): string => {
+const clearSlotForTemp = (tempF: number): SlotId => {
 	if (tempF >= 99) return "clear_scorching";
 	if (tempF >= 85) return "clear_hot";
 	if (tempF >= 76) return "clear_warm";
@@ -40,50 +31,38 @@ const getClearPlanet = (tempF: number): string => {
 	return "clear_freezing";
 };
 
-const getCloudsPlanet = (tempF: number): string => {
+const cloudsSlotForTemp = (tempF: number): SlotId => {
 	if (tempF >= 76) return "clouds_warm";
 	if (tempF >= 66) return "clouds_temperate";
 	if (tempF >= 50) return "clouds_cool";
 	return "clouds_cold";
 };
 
-export const getWeatherDescription = (weather: string, temp: number, description = "") => {
-	const weatherCondition = weather.toLowerCase();
+export const getSlotForWeather = (
+	weather: string,
+	temp: number,
+	description = ""
+): SlotId => {
+	const condition = weather.toLowerCase();
 	const tempF = convertKelvinToFahrenheit(temp);
 
-	// Aliases
-	const mappedCondition = WEATHER_ALIASES[weatherCondition];
-	if (mappedCondition && mappedCondition in planetDataTyped) {
-		return planetDataTyped[mappedCondition];
+	const aliased = WEATHER_ALIASES[condition];
+	if (aliased && getSlot(aliased)) return aliased;
+
+	if (condition === "snow") {
+		return description.toLowerCase().includes("light") ? "snow_light" : "snow";
 	}
 
-	// Snow — split light vs regular
-	if (weatherCondition === "snow") {
-		const isLight = description.toLowerCase().includes("light");
-		const key = isLight ? "snow_light" : "snow";
-		return planetDataTyped[key] ?? planetDataTyped["snow"];
-	}
+	if (condition === "clouds") return cloudsSlotForTemp(tempF);
+	if (condition === "clear") return clearSlotForTemp(tempF);
 
-	// Clouds — temperature-based track
-	if (weatherCondition === "clouds") {
-		const key = getCloudsPlanet(tempF);
-		return planetDataTyped[key] ?? planetDataTyped[FALLBACK_KEY];
-	}
-
-	// Clear — temperature-based track
-	if (weatherCondition === "clear") {
-		const key = getClearPlanet(tempF);
-		return planetDataTyped[key] ?? planetDataTyped[FALLBACK_KEY];
-	}
-
-	// Direct match
-	if (weatherCondition in planetDataTyped) {
-		return planetDataTyped[weatherCondition];
-	}
+	if (getSlot(condition)) return condition;
 
 	if (process.env.NODE_ENV !== "production") {
-		console.warn(`Weather condition "${weatherCondition}" not found in planetData. Using fallback.`);
+		console.warn(
+			`Weather condition "${condition}" has no Star Chart slot. Using fallback.`
+		);
 	}
 
-	return planetDataTyped[FALLBACK_KEY];
+	return FALLBACK_SLOT_ID;
 };
