@@ -14,7 +14,7 @@ import Foundation
 /// `@State`/`@Environment` wrapper for read-only checks — that's deliberate.
 @MainActor
 enum PremiumGate {
-    /// How many Star Chart slots a free user may have customized at once.
+    /// How many Weather Twins slots a free user may have customized at once.
     static let freeEditableSlotLimit = 1
 
     static var isPremium: Bool { PremiumStore.shared.isPremium }
@@ -23,7 +23,7 @@ enum PremiumGate {
     /// editable while they have spent no customization, and the slot they
     /// already customized stays editable so they can change their mind.
     /// Resetting a slot to canon frees the allowance again.
-    static func canEditSlot(_ slotId: SlotId, overrides: StarChartOverrides) -> Bool {
+    static func canEditSlot(_ slotId: SlotId, overrides: WeatherTwinsOverrides) -> Bool {
         if isPremium { return true }
         if overrides.keys.contains(slotId) { return true }
         return overrides.count < freeEditableSlotLimit

@@ -1,11 +1,11 @@
 import SwiftUI
 
-/// Full-screen Star Chart overlay: every weather slot the app can land in,
-/// grouped for browsing, each showing which world it currently resolves to.
-/// Tapping a slot opens `PlanetPickerView` to reassign it. Port of the web
-/// app's `src/app/components/StarChart.tsx`.
-struct StarChartView: View {
-    @Bindable var viewModel: StarChartViewModel
+/// Full-screen Weather Twins overlay: every weather slot the app can land
+/// in, grouped for browsing, each showing which world it currently resolves
+/// to. Tapping a slot opens `PlanetPickerView` to reassign it. Port of the
+/// web app's `src/app/components/WeatherTwins.tsx`.
+struct WeatherTwinsView: View {
+    @Bindable var viewModel: WeatherTwinsViewModel
     @Environment(\.dismiss) private var dismiss
 
     @State private var activeSlot: Slot?
@@ -87,7 +87,7 @@ struct StarChartView: View {
         }
         .foregroundStyle(Color(hex: "#f2f5fa"))
         .sheet(isPresented: $isPaywallOpen) {
-            PaywallView(context: .starChartSlot)
+            PaywallView(context: .weatherTwinsSlot)
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
         }
@@ -96,11 +96,11 @@ struct StarChartView: View {
     private var header: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("YOUR STAR CHART")
+                Text("YOUR WEATHER TWINS")
                     .font(.system(size: 12, weight: .medium))
                     .tracking(1.8)
                     .foregroundStyle(.white.opacity(0.6))
-                Text("Choose your weather twins")
+                Text("Reassign any condition")
                     .font(.custom("PoiretOne-Regular", size: 30))
                     .tracking(0.5)
             }

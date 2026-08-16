@@ -59,8 +59,8 @@ enum PlanetTheme {
 
     // MARK: - Data-driven fallback lookup
 
-    /// `WorldColor` keyed by world id (e.g. "naboo"), built once from the
-    /// Star Chart's `WORLDS` catalog.
+    /// `WorldColor` keyed by world id (e.g. "naboo"), built once from
+    /// Weather Twins' `WORLDS` catalog.
     private static let colorByPlanetKey: [String: WorldColor] = {
         var result: [String: WorldColor] = [:]
         for world in WORLDS {

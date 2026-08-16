@@ -1,9 +1,9 @@
 import Foundation
 
-/// Maps an OpenWeatherMap condition + temperature to a Star Chart slot id.
+/// Maps an OpenWeatherMap condition + temperature to a Weather Twins slot id.
 ///
 /// This deliberately stops at the slot. Which *world* a slot displays is a
-/// separate question owned by the Star Chart (see StarChart/Resolve.swift),
+/// separate question owned by Weather Twins (see WeatherTwins/Resolve.swift),
 /// because the user can reassign it. Port of the web app's
 /// `src/app/utils/weatherDescriptions.ts` (`getSlotForWeather`).
 enum WeatherDescriptionMapper {

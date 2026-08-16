@@ -42,11 +42,11 @@ final class WeatherViewModel {
     }
 
     /// Resolves the world the current weather should show, honoring the
-    /// user's Star Chart customizations, or `ResolvedWorld.idle` before any
-    /// weather has loaded. Weather picks the slot (`getSlotForWeather`); the
-    /// Star Chart decides which world that slot shows (`resolveWorld`) —
+    /// user's Weather Twins customizations, or `ResolvedWorld.idle` before
+    /// any weather has loaded. Weather picks the slot (`getSlotForWeather`);
+    /// Weather Twins decides which world that slot shows (`resolveWorld`) —
     /// mirrors the composition in the web app's `page.tsx`.
-    func resolvedWorld(overrides: StarChartOverrides) -> ResolvedWorld {
+    func resolvedWorld(overrides: WeatherTwinsOverrides) -> ResolvedWorld {
         guard let weatherData, let condition = weatherData.weather.first else {
             return .idle
         }

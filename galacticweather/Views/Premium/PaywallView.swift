@@ -3,14 +3,14 @@ import SwiftUI
 /// Where the user came from, so the headline speaks to what they just hit.
 enum PaywallContext {
     case general
-    case starChartSlot   // tapped a locked Star Chart condition
-    case multiAssign     // tried to put a second world on one condition
-    case savedLocations  // opened Saved Locations while free
+    case weatherTwinsSlot // tapped a locked Weather Twins condition
+    case multiAssign      // tried to put a second world on one condition
+    case savedLocations   // opened Saved Locations while free
 
     var headline: String {
         switch self {
         case .general: return "Galactic Weather Premium"
-        case .starChartSlot: return "Unlock every condition"
+        case .weatherTwinsSlot: return "Unlock every condition"
         case .multiAssign: return "Assign several worlds"
         case .savedLocations: return "Keep your favorite skies"
         }
@@ -20,7 +20,7 @@ enum PaywallContext {
         switch self {
         case .general:
             return "Make the whole sky yours."
-        case .starChartSlot:
+        case .weatherTwinsSlot:
             return "You've used your one free condition. Premium opens all 22."
         case .multiAssign:
             return "Give one condition a handful of worlds and let them rotate, one per day."
@@ -41,7 +41,7 @@ private struct PaywallFeature: Identifiable {
     static let all: [PaywallFeature] = [
         PaywallFeature(
             symbol: "sparkles",
-            title: "All 22 Star Chart conditions",
+            title: "All 22 Weather Twins conditions",
             detail: "Free includes one editable slot. Premium opens the whole chart."
         ),
         PaywallFeature(
@@ -245,7 +245,7 @@ struct PaywallView: View {
 }
 
 #Preview {
-    PaywallView(context: .starChartSlot)
+    PaywallView(context: .weatherTwinsSlot)
 }
 
 #Preview("General") {

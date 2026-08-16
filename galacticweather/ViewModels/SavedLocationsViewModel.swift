@@ -2,7 +2,7 @@ import Foundation
 import Observation
 
 /// Owns the user's saved locations and their persistence. Same shape as
-/// `StarChartViewModel`: a synchronous first read, plus a remote-change
+/// `WeatherTwinsViewModel`: a synchronous first read, plus a remote-change
 /// observer for when another device edits the list via iCloud.
 @Observable
 final class SavedLocationsViewModel {

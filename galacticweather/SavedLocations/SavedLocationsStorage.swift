@@ -3,7 +3,7 @@ import Foundation
 /// Persists the user's saved locations via iCloud's key-value store
 /// (`NSUbiquitousKeyValueStore`), mirrored to `UserDefaults` as a local,
 /// offline/no-iCloud-account fallback. Same sync strategy as
-/// `StarChartStorage`, so a list built on one device shows up on the next
+/// `WeatherTwinsStorage`, so a list built on one device shows up on the next
 /// with zero backend and no accounts.
 enum SavedLocationsStorage {
     private static let storageKey = "galacticweather:savedlocations:v1"

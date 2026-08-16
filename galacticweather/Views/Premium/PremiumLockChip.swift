@@ -2,7 +2,7 @@ import SwiftUI
 
 /// A tiny reusable pill that marks a locked, premium-only affordance.
 ///
-/// Used by Star Chart rows and the locked location-search field. Sized to
+/// Used by Weather Twins rows and the locked location-search field. Sized to
 /// drop straight into an `HStack` alongside other row content — it does not
 /// force its own width or add a `Spacer`, so the caller controls layout.
 struct PremiumLockChip: View {

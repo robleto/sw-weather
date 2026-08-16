@@ -1,22 +1,22 @@
 import Foundation
 import Observation
 
-/// Owns the user's Star Chart (their slot -> world assignments) and its
-/// persistence. Port of the web app's `src/app/hooks/useStarChart.ts`. The
+/// Owns the user's Weather Twins (their slot -> world assignments) and its
+/// persistence. Port of the web app's `src/app/hooks/useWeatherTwins.ts`. The
 /// first read is still synchronous (no hydration-race like the web app's
-/// `localStorage` effect), but the chart can now change underneath the app
-/// when another device edits it via iCloud — the remote-change observer
-/// below handles that.
+/// `localStorage` effect), but the assignments can now change underneath the
+/// app when another device edits them via iCloud — the remote-change
+/// observer below handles that.
 @Observable
-final class StarChartViewModel {
-    private(set) var overrides: StarChartOverrides
+final class WeatherTwinsViewModel {
+    private(set) var overrides: WeatherTwinsOverrides
 
     @ObservationIgnored private var remoteChangeObserver: NSObjectProtocol?
 
     init() {
-        overrides = StarChartStorage.load()
-        StarChartStorage.startSync()
-        remoteChangeObserver = StarChartStorage.observeRemoteChanges { [weak self] merged in
+        overrides = WeatherTwinsStorage.load()
+        WeatherTwinsStorage.startSync()
+        remoteChangeObserver = WeatherTwinsStorage.observeRemoteChanges { [weak self] merged in
             self?.overrides = merged
         }
     }
@@ -44,7 +44,7 @@ final class StarChartViewModel {
         } else {
             overrides[slotId] = unique
         }
-        StarChartStorage.save(overrides)
+        WeatherTwinsStorage.save(overrides)
     }
 
     /// The free-tier assignment path: replaces the slot's entire assignment
@@ -52,7 +52,7 @@ final class StarChartViewModel {
     @MainActor func assignSingleWorld(slotId: SlotId, worldId: WorldId) {
         guard canEdit(slotId) else { return }
         overrides[slotId] = [worldId]
-        StarChartStorage.save(overrides)
+        WeatherTwinsStorage.save(overrides)
     }
 
     /// Add or remove a single world from a slot, for multi-assign.
@@ -73,16 +73,16 @@ final class StarChartViewModel {
         } else {
             overrides[slotId] = assigned
         }
-        StarChartStorage.save(overrides)
+        WeatherTwinsStorage.save(overrides)
     }
 
     func resetSlot(_ slotId: SlotId) {
         overrides.removeValue(forKey: slotId)
-        StarChartStorage.save(overrides)
+        WeatherTwinsStorage.save(overrides)
     }
 
     func resetAll() {
         overrides = [:]
-        StarChartStorage.clear()
+        WeatherTwinsStorage.clear()
     }
 }

@@ -5,7 +5,7 @@ import SwiftUI
 /// sheet instead of a hand-rolled absolutely-positioned panel. The web
 /// version live-previews a world on mouse hover; there's no hover on iOS, so
 /// the equivalent feedback is immediate: tapping a card toggles it right
-/// away, and `StarChartView`'s backdrop (which stays on screen behind this
+/// away, and `WeatherTwinsView`'s backdrop (which stays on screen behind this
 /// sheet) updates the moment the assignment changes.
 struct PlanetPickerView: View {
     let slot: Slot

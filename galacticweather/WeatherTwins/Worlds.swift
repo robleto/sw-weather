@@ -5,7 +5,7 @@ import Foundation
 /// `id` must match the imageset name in Assets.xcassets/Planets. Descriptions
 /// here are the world's canonical copy — used whenever a world is assigned to
 /// a slot that has no slot-specific description of its own (see Slots.swift).
-/// Port of the web app's `src/lib/starchart/worlds.ts`.
+/// Port of the web app's `src/lib/weathertwins/worlds.ts`.
 let WORLDS: [World] = [
     World(
         id: "ahch-to",

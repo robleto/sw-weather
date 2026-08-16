@@ -9,9 +9,9 @@ import SwiftUI
 struct ContentView: View {
     @State private var weatherViewModel: WeatherViewModel
     @State private var searchViewModel: LocationSearchViewModel
-    @State private var starChartViewModel = StarChartViewModel()
+    @State private var weatherTwinsViewModel = WeatherTwinsViewModel()
     @State private var savedLocationsViewModel = SavedLocationsViewModel()
-    @State private var isStarChartOpen = false
+    @State private var isWeatherTwinsOpen = false
     @State private var isSavedLocationsOpen = false
 
     init() {
@@ -65,8 +65,8 @@ struct ContentView: View {
         .task {
             await PremiumStore.shared.start()
         }
-        .fullScreenCover(isPresented: $isStarChartOpen) {
-            StarChartView(viewModel: starChartViewModel)
+        .fullScreenCover(isPresented: $isWeatherTwinsOpen) {
+            WeatherTwinsView(viewModel: weatherTwinsViewModel)
         }
         .sheet(isPresented: $isSavedLocationsOpen) {
             SavedLocationsView(viewModel: savedLocationsViewModel, weatherViewModel: weatherViewModel)
@@ -76,11 +76,11 @@ struct ContentView: View {
         }
     }
 
-    /// Weather picks the slot; the Star Chart decides which world that slot
+    /// Weather picks the slot; Weather Twins decides which world that slot
     /// shows. Computed once here and threaded down, mirroring the web app's
-    /// `page.tsx` composition of `useStarChart` + `resolveWorld`.
+    /// `page.tsx` composition of `useWeatherTwins` + `resolveWorld`.
     private var weatherInfo: ResolvedWorld {
-        weatherViewModel.resolvedWorld(overrides: starChartViewModel.overrides)
+        weatherViewModel.resolvedWorld(overrides: weatherTwinsViewModel.overrides)
     }
 
     private var landedPlanetImageName: String? {
@@ -111,13 +111,13 @@ struct ContentView: View {
         }
     }
 
-    /// Nav bar shown once weather is showing: "Saved" leading, "Star Chart"
-    /// trailing (port of the web app's nav-bar `starChartButton`).
+    /// Nav bar shown once weather is showing: "Saved" leading, "Weather
+    /// Twins" trailing (port of the web app's nav-bar `weatherTwinsButton`).
     private var topBar: some View {
         HStack(spacing: 10) {
             savedLocationsButton
             Spacer()
-            starChartButton
+            weatherTwinsButton
         }
         .padding(.horizontal, 20)
     }
@@ -142,18 +142,18 @@ struct ContentView: View {
         }
     }
 
-    private var starChartButton: some View {
+    private var weatherTwinsButton: some View {
         Button {
-            isStarChartOpen = true
+            isWeatherTwinsOpen = true
         } label: {
             HStack(spacing: 6) {
-                Text("Star Chart")
+                Text("Weather Twins")
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(1.2)
                     .textCase(.uppercase)
 
-                if starChartViewModel.customizedCount > 0 {
-                    Text("\(starChartViewModel.customizedCount)")
+                if weatherTwinsViewModel.customizedCount > 0 {
+                    Text("\(weatherTwinsViewModel.customizedCount)")
                         .font(.system(size: 10, weight: .bold))
                         .frame(minWidth: 18, minHeight: 18)
                         .background(Circle().fill(Color(hex: "#8fc7ff")))
