@@ -34,6 +34,22 @@ const MAX_QUEUED = 20;
  * and it means the privacy policy's claim is enforced by the code rather than
  * by good intentions.
  */
+/**
+ * Whether signals should be tagged as test signals.
+ *
+ * The Swift SDK does this for itself — anything compiled in DEBUG is tagged,
+ * so running from Xcode can't pollute real data. The JavaScript SDK supports
+ * the same flag but sets it for nobody, which makes this the one place the two
+ * platforms would behave differently for the same act: putting the app ID in a
+ * local `.env.local` to check the wiring would write dev clicks into the real
+ * dataset, permanently, on the very metric this exists to measure.
+ *
+ * `next dev` runs with NODE_ENV "development"; `next build` sets "production".
+ * So local is test, the deployed site is real, matching iOS exactly.
+ */
+export const analyticsTestMode = (nodeEnv: string | undefined): boolean =>
+	nodeEnv !== "production";
+
 export const analyticsIsPermitted = (signals: {
 	doNotTrack?: string | null;
 	globalPrivacyControl?: boolean;
@@ -91,7 +107,11 @@ export const startAnalytics = async (): Promise<void> => {
 
 	try {
 		const { default: TelemetryDeck } = await import("@telemetrydeck/sdk");
-		const td = new TelemetryDeck({ appID, clientUser });
+		const td = new TelemetryDeck({
+			appID,
+			clientUser,
+			testMode: analyticsTestMode(process.env.NODE_ENV),
+		});
 		sink = (name, payload) => {
 			// The SDK returns a promise; a rejected one must not surface as an
 			// unhandled rejection in the user's console over a metric.

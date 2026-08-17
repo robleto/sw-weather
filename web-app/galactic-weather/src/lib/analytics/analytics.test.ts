@@ -9,7 +9,7 @@ import {
 	stampCountBucket,
 } from "./signals";
 import { resolveClientId, __testing as idTesting } from "./clientId";
-import { analyticsIsPermitted, track, __testing } from "./analytics";
+import { analyticsIsPermitted, analyticsTestMode, track, __testing } from "./analytics";
 
 /**
  * Cross-platform parity, same arrangement as `slotMatrix.test.ts`.
@@ -156,6 +156,20 @@ describe("opt-out signals", () => {
 	it("runs when neither is set", () => {
 		expect(analyticsIsPermitted({ doNotTrack: null })).toBe(true);
 		expect(analyticsIsPermitted({ doNotTrack: "0", globalPrivacyControl: false })).toBe(true);
+	});
+});
+
+describe("test mode", () => {
+	/**
+	 * The Swift SDK tags DEBUG builds by itself; the JS SDK sets this for
+	 * nobody. Without it, checking the wiring locally writes dev clicks into
+	 * real data on the one metric this exists to measure.
+	 */
+	it("tags everything but a production build as test signals", () => {
+		expect(analyticsTestMode("development")).toBe(true);
+		expect(analyticsTestMode("test")).toBe(true);
+		expect(analyticsTestMode(undefined)).toBe(true);
+		expect(analyticsTestMode("production")).toBe(false);
 	});
 });
 
