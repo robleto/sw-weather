@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { WORLDS } from "./worlds";
 import { resolveWorld } from "./resolve";
+import { RENAMED_SLOT_IDS, canonicalSlotId, getSlot } from "./slots";
+import { __testing as atlasTesting } from "./storage";
+import { __testing as passportTesting } from "@/lib/passport/storage";
 
 // ── text tone ───────────────────────────────────────────────────────────────
 
@@ -57,5 +60,57 @@ describe("text tone", () => {
 		const dark = WORLDS.filter((w) => w.textTone === "dark");
 		expect(dark.length).toBeGreaterThan(0);
 		expect(dark.length).toBeLessThan(WORLDS.length / 3);
+	});
+});
+
+// ── renamed slot ids ────────────────────────────────────────────────────────
+
+describe("slot id migration", () => {
+	/**
+	 * Slot ids key stored Atlas assignments and are stamped onto every Passport
+	 * sighting, so renaming one is a data migration rather than a refactor. Both
+	 * sanitizers drop unrecognized slots by design, which is exactly what makes
+	 * the failure silent: the assignment doesn't error, it just quietly reverts
+	 * to the slot's default.
+	 */
+	it("maps every historical id onto a slot that still exists", () => {
+		expect(Object.keys(RENAMED_SLOT_IDS).length).toBeGreaterThan(0);
+		for (const [oldId, newId] of Object.entries(RENAMED_SLOT_IDS)) {
+			expect(getSlot(oldId), `${oldId} should no longer be a live slot`).toBeUndefined();
+			expect(getSlot(newId), `${oldId} migrates to missing slot ${newId}`).toBeDefined();
+		}
+	});
+
+	it("renamed the franchise-named slot that analytics would have sent", () => {
+		// The specific reason this migration exists: every other slot id is
+		// generic weather vocabulary, and analytics sends slot ids precisely
+		// because of that. See shared/analytics-signals.json.
+		expect(canonicalSlotId("jakku")).toBe("dust");
+		expect(getSlot("dust")?.label).toBe("Dust & sand");
+	});
+
+	it("leaves ids that were never renamed alone", () => {
+		expect(canonicalSlotId("snow")).toBe("snow");
+		expect(canonicalSlotId("not_a_slot")).toBe("not_a_slot");
+	});
+
+	it("carries a stored assignment across the rename instead of dropping it", () => {
+		const migrated = atlasTesting.sanitize({ jakku: ["hoth"] });
+		expect(migrated).toEqual({ dust: ["hoth"] });
+	});
+
+	it("still drops assignments for slots that genuinely no longer exist", () => {
+		expect(atlasTesting.sanitize({ retired_slot: ["hoth"] })).toEqual({});
+	});
+
+	it("keeps the provenance line on a stamp earned under the old id", () => {
+		const stored = {
+			tatooine: {
+				wild: { date: "2026-01-05", city: "Cairo", slotId: "jakku", tempF: 91 },
+				count: 1,
+				lastSeen: "2026-01-05",
+			},
+		};
+		expect(passportTesting.sanitize(stored).tatooine.wild?.slotId).toBe("dust");
 	});
 });

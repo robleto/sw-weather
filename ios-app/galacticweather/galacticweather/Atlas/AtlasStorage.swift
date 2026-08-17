@@ -15,7 +15,11 @@ enum AtlasStorage {
     /// back to its default.
     private static func sanitize(_ raw: [String: [String]]) -> AtlasOverrides {
         var result: AtlasOverrides = [:]
-        for (slotId, worldIds) in raw {
+        for (storedId, worldIds) in raw {
+            // Migrate before the recognition check, or a renamed slot's
+            // assignment is discarded as unknown and silently reverts to its
+            // default.
+            let slotId = canonicalSlotId(storedId)
             guard getSlot(slotId) != nil else { continue }
             let known = worldIds.filter { isKnownWorld($0) }
             let unique = orderedUnique(known)
@@ -43,6 +47,10 @@ enum AtlasStorage {
         }
         return [:]
     }
+
+    /// Exposes the decode + sanitize path to tests without going through
+    /// iCloud. Mirrors `PassportStorage.decodeForTesting`.
+    static func decodeForTesting(_ data: Data) -> AtlasOverrides? { decode(data) }
 
     static func save(_ overrides: AtlasOverrides) {
         guard let data = try? JSONEncoder().encode(overrides) else { return }

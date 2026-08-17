@@ -1,4 +1,4 @@
-import { getSlot } from "./slots";
+import { canonicalSlotId, getSlot } from "./slots";
 import { isKnownWorld } from "./worlds";
 import type { AtlasOverrides } from "./types";
 
@@ -14,7 +14,10 @@ const sanitize = (raw: unknown): AtlasOverrides => {
 
 	const result: AtlasOverrides = {};
 
-	for (const [slotId, value] of Object.entries(raw as Record<string, unknown>)) {
+	for (const [storedId, value] of Object.entries(raw as Record<string, unknown>)) {
+		// Migrate before the recognition check, or a renamed slot's assignment
+		// is discarded as unknown and silently reverts to its default.
+		const slotId = canonicalSlotId(storedId);
 		if (!getSlot(slotId)) continue;
 		if (!Array.isArray(value)) continue;
 
@@ -60,3 +63,6 @@ export const clearOverrides = (): void => {
 		/* no-op */
 	}
 };
+
+/** Exported for tests, matching `lib/passport/storage.ts`. */
+export const __testing = { sanitize, STORAGE_KEY };

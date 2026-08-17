@@ -161,6 +161,15 @@ answer the same product question in generic weather vocabulary and carry none
 of the catalog's documented IP exposure. Stamp totals are bucketed rather than
 exact, because an exact count fingerprints a person once it gets large.
 
+**Renaming a slot id is a data migration, not a refactor.** Slot ids key stored
+Atlas assignments and are stamped onto every Passport sighting, and both
+sanitizers drop entries whose slot they don't recognize — so a bare rename
+doesn't error, it silently reverts that slot's assignment to its default. Add
+the old id to `RENAMED_SLOT_IDS` (`lib/atlas/slots.ts` and `Atlas/Slots.swift`)
+in the same change, and regenerate the slot matrix. `dust` was `jakku` until
+2026-08-17: a franchise world name sitting in the one vocabulary the analytics
+payload leans on being generic.
+
 **Analytics is off unless explicitly configured**, on purpose — a fresh clone,
 every local build, Xcode previews, and both test suites all send nothing. Web
 reads `NEXT_PUBLIC_TELEMETRYDECK_APP_ID`; iOS reads `TELEMETRYDECK_APP_ID` from

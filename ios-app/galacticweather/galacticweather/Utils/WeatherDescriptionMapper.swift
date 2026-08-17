@@ -49,7 +49,7 @@ enum WeatherDescriptionMapper {
         ("smoke", [711, 762]),
         ("haze", [721]),
         ("fog", [741]),
-        ("jakku", [731, 751, 761]),
+        ("dust", [731, 751, 761]),
     ]
 
     private static let slotByCode: [Int: SlotId] = {
@@ -86,8 +86,8 @@ enum WeatherDescriptionMapper {
     }()
 
     private static let conditionAliases: [String: SlotId] = [
-        "dust": "jakku",
-        "sand": "jakku",
+        "dust": "dust",
+        "sand": "dust",
         "ash": "smoke",
         "squall": "thunderstorm",
         "tornado": "thunderstorm",

@@ -61,7 +61,7 @@ const SLOT_CODES: readonly (readonly [SlotId, readonly number[]])[] = [
 	["smoke", [711, 762]],
 	["haze", [721]],
 	["fog", [741]],
-	["jakku", [731, 751, 761]],
+	["dust", [731, 751, 761]],
 ];
 
 const SLOT_BY_CODE = new Map<number, SlotId>(
@@ -94,8 +94,8 @@ const LADDER_BY_CODE = new Map<number, TempLadder>(
 );
 
 const WEATHER_ALIASES: Record<string, SlotId> = {
-	dust: "jakku",
-	sand: "jakku",
+	dust: "dust",
+	sand: "dust",
 	ash: "smoke",
 	squall: "thunderstorm",
 	tornado: "thunderstorm",

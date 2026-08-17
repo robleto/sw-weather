@@ -38,7 +38,7 @@ export const SLOTS: readonly Slot[] = [
 	{ id: "fog", label: "Fog", group: "Atmosphere", defaultWorld: "mandalore" },
 	{ id: "haze", label: "Haze", group: "Atmosphere", defaultWorld: "corellia" },
 	{ id: "smoke", label: "Smoke & ash", group: "Atmosphere", defaultWorld: "kessel" },
-	{ id: "jakku", label: "Dust & sand", group: "Atmosphere", defaultWorld: "tatooine" },
+	{ id: "dust", label: "Dust & sand", group: "Atmosphere", defaultWorld: "tatooine" },
 
 	// ── Cloud cover ────────────────────────────────────────────────────────
 	{ id: "clouds_warm", label: "Cloudy · warm", group: "Cloud cover", defaultWorld: "at-attin" },
@@ -114,6 +114,30 @@ export const SLOT_RANGE_HINT: Readonly<Record<SlotId, string>> = {
 	clear_cold: "32–44°F",
 	clear_freezing: "below 32°F",
 };
+
+/**
+ * Slot ids that have been renamed, old id → current id.
+ *
+ * Slot ids are not just internal labels: they key stored Atlas assignments and
+ * are recorded on every Passport stamp, so renaming one orphans real data.
+ * Both storage layers drop entries whose slot they don't recognize, which would
+ * turn a rename into a silent reset of that slot's assignment.
+ *
+ * `dust` was `jakku` — a franchise world name where every other slot is generic
+ * weather vocabulary. That mattered once analytics started sending slot ids
+ * precisely *because* they're generic; see `shared/analytics-signals.json`.
+ *
+ * This map can go once no stored data predates the rename. Given nobody has
+ * shipped or installed a build carrying the old id beyond the developer's own
+ * devices, that is a short list — but "short" isn't "empty", and the cost of
+ * keeping it is three lines.
+ */
+export const RENAMED_SLOT_IDS: Readonly<Record<string, SlotId>> = {
+	jakku: "dust",
+};
+
+/** The current id for a possibly-historical one. Unknown ids pass through. */
+export const canonicalSlotId = (id: string): SlotId => RENAMED_SLOT_IDS[id] ?? id;
 
 const SLOT_BY_ID = new Map<SlotId, Slot>(SLOTS.map((s) => [s.id, s]));
 

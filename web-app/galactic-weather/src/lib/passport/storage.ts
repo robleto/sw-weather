@@ -1,4 +1,5 @@
 import { isKnownWorld } from "@/lib/atlas/worlds";
+import { canonicalSlotId } from "@/lib/atlas/slots";
 import type { Passport, Sighting, WorldStamp } from "./types";
 
 const STORAGE_KEY = "galacticweather:passport:v1";
@@ -20,7 +21,10 @@ const sanitizeSighting = (raw: unknown): Sighting | undefined => {
 	if (typeof city !== "string") return undefined;
 	if (typeof slotId !== "string") return undefined;
 	if (typeof tempF !== "number" || !Number.isFinite(tempF)) return undefined;
-	return { date, city, slotId, tempF };
+	// A renamed slot still described this stamp accurately when it was earned,
+	// so carry it forward rather than letting the "earned on Dust & sand" line
+	// quietly disappear from an old page.
+	return { date, city, slotId: canonicalSlotId(slotId), tempF };
 };
 
 /**

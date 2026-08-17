@@ -49,7 +49,15 @@ enum PassportStorage {
             let slotId = raw.slotId,
             let tempF = raw.tempF, tempF.isFinite
         else { return nil }
-        return Sighting(date: date, city: city, slotId: slotId, tempF: Int(tempF.rounded()))
+        // A renamed slot still described this stamp accurately when it was
+        // earned, so carry it forward rather than letting the "earned on
+        // Dust & sand" line quietly disappear from an old page.
+        return Sighting(
+            date: date,
+            city: city,
+            slotId: canonicalSlotId(slotId),
+            tempF: Int(tempF.rounded())
+        )
     }
 
     /// Drop anything we don't recognize.

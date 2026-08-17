@@ -35,7 +35,7 @@ let SLOTS: [Slot] = [
     Slot(id: "fog", label: "Fog", group: .atmosphere, defaultWorld: "mandalore"),
     Slot(id: "haze", label: "Haze", group: .atmosphere, defaultWorld: "corellia"),
     Slot(id: "smoke", label: "Smoke & ash", group: .atmosphere, defaultWorld: "kessel"),
-    Slot(id: "jakku", label: "Dust & sand", group: .atmosphere, defaultWorld: "tatooine"),
+    Slot(id: "dust", label: "Dust & sand", group: .atmosphere, defaultWorld: "tatooine"),
 
     // ── Cloud cover ──────────────────────────────────────────────────────
     Slot(id: "clouds_warm", label: "Cloudy · warm", group: .cloudCover, defaultWorld: "at-attin"),
@@ -103,6 +103,27 @@ let SLOT_RANGE_HINT: [SlotId: String] = [
     "clear_cold": "32–44°F",
     "clear_freezing": "below 32°F",
 ]
+
+/// Slot ids that have been renamed, old id -> current id.
+///
+/// Slot ids are not just internal labels: they key stored Atlas assignments and
+/// are recorded on every Passport stamp, so renaming one orphans real data.
+/// Both storage layers drop entries whose slot they don't recognize, which
+/// would turn a rename into a silent reset of that slot's assignment.
+///
+/// `dust` was `jakku` — a franchise world name where every other slot is
+/// generic weather vocabulary. That mattered once analytics started sending
+/// slot ids precisely *because* they're generic; see
+/// `shared/analytics-signals.json`.
+///
+/// Port of the web app's `RENAMED_SLOT_IDS`; both can go once no stored data
+/// predates the rename.
+let RENAMED_SLOT_IDS: [String: SlotId] = [
+    "jakku": "dust"
+]
+
+/// The current id for a possibly-historical one. Unknown ids pass through.
+func canonicalSlotId(_ id: String) -> SlotId { RENAMED_SLOT_IDS[id] ?? id }
 
 private let slotByID: [SlotId: Slot] = Dictionary(uniqueKeysWithValues: SLOTS.map { ($0.id, $0) })
 
