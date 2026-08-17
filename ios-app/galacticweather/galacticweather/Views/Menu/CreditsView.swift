@@ -10,11 +10,23 @@ import SwiftUI
 /// and the personal site is still reachable from the byline below.
 struct CreditsView: View {
     /// A spread across biomes rather than the first few alphabetically — warm
-    /// desert, ice, volcanic, forest, bright ocean, and sky read as six
+    /// desert, ice, bright ocean, temperate, forest, and sky read as six
     /// different places at thumbnail size. All non-premium, so nothing shown
     /// off here is something a free reader can't actually visit.
-    private static let featuredWorldIDs = [
-        "tatooine", "hoth", "scarif", "mustafar", "endor", "bespin"
+    ///
+    /// Bounded by which posters actually exist: these name real printed
+    /// artwork in `Assets.xcassets/Posters/`, not planet backdrops, so a world
+    /// can only appear here once its poster has been drawn. Mustafar held the
+    /// volcanic slot until the real posters arrived and it had none; Naboo
+    /// takes its place. Alderaan has a poster and is deliberately absent — it
+    /// is premium, and the rule above outranks the spread.
+    /// Internal rather than private so `CreditsPosterTests` can assert that a
+    /// poster asset actually exists for each one. A missing or misspelled asset
+    /// name compiles cleanly and renders an empty rectangle, which is precisely
+    /// the failure a test has to catch here — the Simulator is not available
+    /// for visual checks in this project's environment.
+    static let featuredWorldIDs = [
+        "tatooine", "hoth", "scarif", "naboo", "endor", "bespin"
     ]
 
     private var featuredWorlds: [World] {
@@ -127,45 +139,37 @@ struct CreditsView: View {
     }
 }
 
-/// One world at poster scale: art in a paper mat, title on a plate keyed to the
-/// world's own palette. The mat is the point — planet art is a full-bleed
-/// *background* everywhere else in the app, and matting it is what makes it
-/// read as a printed object instead of another backdrop.
+/// One real travel poster in a paper mat.
+///
+/// This used to *fabricate* a poster: the landscape planet backdrop cropped to
+/// 4:3, with a "VISIT <WORLD>" plate built underneath from the world's palette.
+/// That was a stand-in for artwork that didn't exist yet. The real posters do
+/// now — portrait, with their own title, tagline and typography already part of
+/// the composition — so the plate is gone rather than doubled up.
+///
+/// The mat survives the change and matters more than before: it is what says
+/// "printed object" about an image that would otherwise read as one more piece
+/// of app art.
 private struct PosterThumb: View {
     let world: World
 
-    private let artWidth: CGFloat = 104
+    private let artWidth: CGFloat = 124
+
+    /// The posters are authored 750x1050. Derived rather than written as 1.4 so
+    /// the frame can't quietly disagree with the source and letterbox.
+    private var artHeight: CGFloat { artWidth * 1050 / 750 }
 
     var body: some View {
-        VStack(spacing: 0) {
-            Image(world.id)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: artWidth, height: artWidth * 3 / 4)
-                .clipped()
-
-            VStack(spacing: 1) {
-                Text("VISIT")
-                    .font(.system(size: 6, weight: .medium))
-                    .tracking(1.1)
-                    .foregroundStyle(.white.opacity(0.7))
-
-                Text(world.name.uppercased())
-                    .font(.custom("PoiretOne-Regular", size: 13))
-                    .tracking(1.0)
-                    .foregroundStyle(Color(hex: world.color.headline))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-            }
-            .frame(width: artWidth)
-            .padding(.vertical, 7)
-            .background(Color(hex: world.color.primary))
-        }
-        .padding(3)
-        .background(Color(hex: "#f6f2ea").opacity(0.92))
-        .shadow(color: .black.opacity(0.5), radius: 8, y: 4)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(world.name) travel poster")
+        Image("poster-\(world.id)")
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(width: artWidth, height: artHeight)
+            .clipped()
+            .padding(3)
+            .background(Color(hex: "#f6f2ea").opacity(0.92))
+            .shadow(color: .black.opacity(0.5), radius: 8, y: 4)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(world.name) travel poster")
     }
 }
 
