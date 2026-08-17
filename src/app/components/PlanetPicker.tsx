@@ -59,7 +59,7 @@ const PlanetPicker: React.FC<PlanetPickerProps> = ({
 		<div className={styles.sheet} role="dialog" aria-label={`Choose a world for ${slot.label}`}>
 			<header className={styles.sheetHeader}>
 				<div>
-					<p className={styles.eyebrow}>Weather twin for</p>
+					<p className={styles.eyebrow}>World for</p>
 					<h3 className={styles.slotLabel}>{slot.label}</h3>
 				</div>
 				<button type="button" className={styles.closeButton} onClick={onClose}>
@@ -70,7 +70,7 @@ const PlanetPicker: React.FC<PlanetPickerProps> = ({
 			<p className={styles.hint}>
 				{selectionCount > 1
 					? `${selectionCount} worlds assigned — one is chosen each day.`
-					: "Pick one world, or several to rotate between them daily."}
+					: "Pick one world, or several to randomize between them daily."}
 			</p>
 
 			<div className={styles.controls}>
