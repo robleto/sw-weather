@@ -63,38 +63,52 @@ Pairs cleanly with the existing vocabulary: **Atlas** = the map of worlds,
 
 ---
 
-## The load-bearing fact: 16 wild, 7 charter-only
+## The load-bearing fact: 21 wild, 22 charter-only
 
-Audited against `src/lib/atlas/{worlds,slots}.ts` at web `302fb55`:
+Re-audited against `src/lib/atlas/{worlds,slots}.ts` on 17 August 2026. The
+catalog has roughly doubled since this was first written (it was 23 worlds, 22
+slots, 16 wild and 7 charter-only), but **the invariant the whole design rests
+on survived the growth intact**:
 
-- 23 worlds, 22 slots, **16 distinct slot defaults**.
-- The 7 worlds that are *never* any slot's default are **exactly the 7 premium
-  worlds**: Ahch-To, Alderaan, Coruscant, Ilum, Jakku, Mortis, Nur.
+- 43 worlds, 26 slots, **21 distinct slot defaults**.
+- The 22 worlds that are *never* any slot's default are **exactly the 22
+  premium worlds** — no free world is unreachable, and no premium world is a
+  slot default.
 
-That's not luck — the addendum reassigned three slot defaults away from premium
-worlds (Ilum→Hoth, Mortis→Endor, Alderaan→Naboo) specifically to keep the free
-experience unchanged. The side effect is a clean two-tier hunt that needs no new
-gating logic:
+That's not luck. It held originally because three slot defaults were reassigned
+away from premium worlds (Ilum→Hoth, Mortis→Endor, Alderaan→Naboo) to keep the
+free experience unchanged, and it still holds because new worlds default to
+premium and aren't given slots.
+
+It is also no longer maintained by hand. `WILD_REACHABLE_WORLDS` in
+`progress.ts` is derived from `SLOTS`, and every count below — wild, total,
+per-biome — is computed from the catalogs rather than written down. A free
+world with no slot default would make the Wild book quietly uncompletable, so
+both platforms warn about exactly that in debug builds (`progress.ts` and
+`PassportViewModel.warnAboutStrandedWorlds`). The numbers in this document are
+illustrations; the code is the source of truth.
 
 | | worlds | how you get them | who can |
 |---|---|---|---|
-| **Wild** | 16 | The forecast served it to you at a slot's default | everyone, free |
-| **Chartered** | 7 | You own the world, assigned it in Atlas, then lived through that weather | premium (iOS) |
+| **Wild** | 21 | The forecast served it to you at a slot's default | everyone, free |
+| **Chartered** | 22 | You own the world, assigned it in Atlas, then lived through that weather | premium (iOS) |
 
-**A free user can complete a full Wild book — all 16, no purchase.** That is the
-point. The paywall isn't a wall across the hunt; it's seven more pages at the
-back of a book you already finished.
+**A free user can complete a full Wild book — all 21, no purchase.** That is the
+point. The paywall isn't a wall across the hunt; it's twenty-two more pages at
+the back of a book you already finished.
 
-### Reachability check (all 16 wild worlds are genuinely findable)
+### Reachability check (every wild world is genuinely findable)
 
 Every wild world has at least one slot that real weather hits regularly. The
-hardest is **Mustafar** — `clear_scorching` needs ≥99°F clear, or the rare
-`smoke` condition. **Kijimi** needs the API to say *light* snow specifically.
-Everything else is a normal day somewhere. Hoth is the easiest rare-feeling one:
-it holds three slots (`snow`, `clear_cold`, `clear_freezing`).
+hardest is still **Mustafar**, which holds `clear_scorching` alone — ≥99°F under
+a clear sky. Everything else is a normal day somewhere.
 
-No wild world is unreachable. Worth re-running the audit any time slot defaults
-change — a reassignment can strand a world silently.
+Five worlds hold two slots each, which makes them the gentle ones: Hoth
+(`snow`, `clear_cold`), Kijimi (`snow_light`, `clouds_freezing`), Dagobah
+(`drizzle`, `rain_light`), Kashyyyk (`rain_light_cold`, `clear_chilly`) and
+Tatooine (`jakku`, `clear_hot`). Hoth used to hold three; `clear_freezing` went
+to Ilum in `fdf840a`, which is also how Ilum became wild-reachable rather than
+premium.
 
 ### Biome pages
 
@@ -102,20 +116,25 @@ change — a reassignment can strand a world silently.
 
 | biome | worlds | wild | roster |
 |---|---|---|---|
-| ocean | 5 | 3 | Ahch-To\*, Kamino, Niamos, Nur\*, Scarif |
-| forest | 4 | 4 | Dagobah, Endor, Kashyyyk, Yavin 4 |
-| temperate | 3 | 2 | Alderaan\*, At-Attin, Naboo |
-| ice | 3 | 2 | Hoth, Ilum\*, Kijimi |
-| urban | 2 | 1 | Coruscant\*, Ghorman |
+| desert | 7 | 2 | Crait\*, Geonosis\*, Jakku\*, Jedha\*, Mandalore, Ryloth\*, Tatooine |
+| forest | 7 | 4 | Dagobah, Endor, Kashyyyk, Ossus\*, Sorgan\*, Takodana\*, Yavin 4 |
+| ocean | 7 | 2 | Ahch-To\*, Kamino, Kef Bir\*, Mon Cala\*, Niamos\*, Nur\*, Scarif |
+| urban | 7 | 4 | Corellia, Coruscant\*, Daiyu, Ferrix\*, Ghorman, Janix\*, Kessel |
+| temperate | 6 | 3 | Alderaan\*, At-Attin, Dantooine, Lothal\*, Mina-Rau\*, Naboo |
+| ice | 4 | 3 | Hoth, Ilum, Kijimi, Mathleen Divide\* |
 | storm | 2 | 1 | Exegol, Mortis\* |
-| desert | 2 | 1 | Jakku\*, Tatooine |
+| volcanic | 2 | 1 | Mustafar, Nevarro\* |
 | sky | 1 | 1 | Bespin |
-| volcanic | 1 | 1 | Mustafar |
 
 \* = premium, charter-only.
 
-Forest is the only biome completable wild. That asymmetry is fine and even
-useful — it gives the premium pages an obvious shape ("1 world from complete").
+**Sky is now the only biome completable wild**, and only because Bespin is alone
+in it. Forest used to be — it gained three premium worlds as the catalog grew.
+That shift is worth noticing rather than just recording: the original design
+leaned on a free user being able to *finish* something, and at 43 worlds the
+only biome that offers that is a biome of one. The Wild book as a whole is
+still completable, which is the promise that actually matters, but the
+per-biome version of it has quietly gone.
 
 ---
 
@@ -154,7 +173,7 @@ book.
 
 - Web — `localStorage`.
 - iOS — `NSUbiquitousKeyValueStore` mirrored to `UserDefaults`. iCloud KVS
-  caps at 1 MB; 23 stamps is ~4 KB.
+  caps at 1 MB; a full 43-stamp book is ~8 KB.
 
 ### iOS must not copy AtlasStorage's sync rule
 
@@ -239,7 +258,7 @@ fixed ordering. Each page is a grid of stamps:
   make.
 
 Header shows both counters, because they mean different things:
-`Wild 14/16 · Complete 14/23`.
+`Wild 14/21 · Complete 14/43`.
 
 ## Gating (iOS)
 
@@ -258,7 +277,7 @@ already stops a free user assigning one. **The book gates itself** — the lock
 chips are signage over a door that was already shut.
 
 Web stays entirely ungated per the addendum — and note that on web, where every
-world is assignable, all 23 are chartered-reachable. That's correct: web is the
+world is assignable, all 43 are chartered-reachable. That's correct: web is the
 demo that sells the iOS app.
 
 ## Where it hooks in
@@ -357,7 +376,7 @@ app.
    properties, and a `.task(id:)`. Swiping between saved locations and the
    throw-to-dismiss gesture should be untouched.
 2. **A stamp appears** after ~2s on a landed page, and the menu row reads
-   `Passport (1/16 wild)`.
+   `Passport (1/21 wild)`.
 3. **Swiping fast leaves nothing behind.** Flick through several saved
    locations without pausing — no stamps. Pause on one — one stamp. This is
    the whole reason the dwell exists and the one behavior with no web
@@ -413,7 +432,7 @@ app.
    Replaced with a four-state machine (`huntStateFor` / `blurbFor` in
    `progress.ts` and `PassportProgress.swift`) that names a *strategy* and
    never a world: **hunting** → **closing** (≤3 wild left) → **wildComplete**
-   → **complete**. `wildComplete` also marks finishing 16/16, which otherwise
+   → **complete**. `wildComplete` also marks finishing the wild book, which otherwise
    passed unremarked.
 
    The copy lives in the shared lib rather than the two views, so the books

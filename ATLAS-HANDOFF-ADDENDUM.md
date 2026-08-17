@@ -1,14 +1,11 @@
 # Addendum — monetization model (settled)
 
-Follow-up to `ATLAS-HANDOFF.md`. That doc left the paywall as an open
-question. It's now decided. Paste everything below the divider.
+The reasoning behind the monetization decisions summarized in
+`ATLAS-HANDOFF.md`. The model is decided and built; only the price is open.
+Nobody has ever paid for anything, so there is no migration or grandfathering
+to worry about.
 
----
-
-## Addendum to the Atlas handoff — the paywall model is now settled
-
-This supersedes the "What is NOT done → no paywall" section. Nobody has ever
-paid for anything, so there is no migration or grandfathering to worry about.
+Counts here were corrected against the code on 17 August 2026.
 
 ### Entitlement: StoreKit, iOS only, one-time
 
@@ -37,28 +34,30 @@ someone's devices on day one with zero infrastructure.**
 
 ### Free vs. premium on iOS
 
-**Superseded again — the gating axis changed from slot-count to world-content.**
-The original "one editable slot" model was replaced before shipping: every
-slot is now freely reassignable for everyone, but only from a *base* pool of
-worlds. A subset of worlds (6 to start: Ahch-To, Coruscant, Nur, Ilum, Mortis,
-Alderaan) is premium-only and renders locked/greyed with a lock icon in the
-picker — visible so free users can see what they'd get, but not assignable.
-Reassigning three slot defaults away from the newly-premium worlds (Ilum's
-"Clear · freezing" → Hoth, Mortis's "Fog" → Endor, Alderaan's "Clear · cool" →
-Naboo) kept the free out-of-the-box experience unchanged. The plan is to add
-30-40 more worlds later, defaulting new ones to premium (`World.isPremium`),
-growing the premium pool over time without touching the free base set.
+**The gating axis is world content, not slot count.** An early "one editable
+slot" model was replaced before shipping. Every slot is freely reassignable for
+everyone, but only from a *base* pool of worlds; the rest are premium-only and
+render locked/greyed with a lock icon in the picker — visible so free users can
+see what they'd get, but not assignable.
 
-- Free: reassign any of the 22 conditions, but only using non-premium worlds
-  (17 to start). Single-assign only.
+That began as 6 premium worlds out of 23. The catalog has since grown to **43
+worlds, 22 of them premium**, which is the growth plan working as intended: new
+worlds default to premium (`World.isPremium`), enlarging the premium pool over
+time without touching the free base set. When the first worlds became premium,
+three slot defaults were reassigned away from them (Ilum's "Clear · freezing" →
+Hoth, Mortis's "Fog" → Endor, Alderaan's "Clear · cool" → Naboo) so the free
+out-of-the-box experience stayed unchanged.
+
+- Free: reassign any of the 26 conditions, but only using the 21 non-premium
+  worlds. Single-assign only.
 - Premium: every world (locked ones unlock), multi-assign, saved locations,
   and the perks below.
 
-~~current location only~~ — superseded earlier during implementation: search
-itself stays free for everyone (see the comment in `PremiumGate.swift`).
-Gating location lookup dead-ends anyone who declines the location prompt and
-hides the whole app behind the paywall before they can see what they'd be
-buying. Saved locations, not search, is the actual premium hook.
+**Search itself stays free for everyone** (see the comment in
+`PremiumGate.swift`). An early plan gated it to current location only; that
+dead-ends anyone who declines the location prompt and hides the whole app
+behind the paywall before they can see what they'd be buying. Saved locations,
+not search, is the actual premium hook.
 
 ### Feature list, sorted by what each one demands
 
@@ -68,9 +67,9 @@ home & lock screen widgets · theme packs (one tap assigns a whole chart) ·
 share cards (free watermarks, premium doesn't) · faction UI chrome (accent
 color, typeface, icon set — extends the per-world `color` shape) · the Passport
 (log of worlds actually experienced, with date and city — formerly "Holocron";
-now specced as a full scavenger hunt in `PASSPORT.md`, and **free to collect**
-rather than premium-only: the 7 premium worlds are already unreachable without
-a purchase, so the book gates itself)
+specced in `PASSPORT.md` and since **built on both platforms**, and **free to
+collect** rather than premium-only: the premium worlds are already unreachable
+without a purchase, so the book gates itself)
 
 **Recurring API cost, still no accounts:**
 Extended forecast — 7 days as a strip of seven different worlds. Visually the
