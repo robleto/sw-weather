@@ -5,13 +5,15 @@ import SwiftUI
 /// image is rendered separately by `ContentView` so this view can be pinned
 /// to the top half of the screen independent of the full-bleed photo.
 struct WeatherDetailsView: View {
-    var weatherViewModel: WeatherViewModel
+    /// Passed in rather than read off the view model: each swipeable page
+    /// renders its own location's weather, so there is no single "current"
+    /// value to reach for.
+    var weatherData: WeatherResponse
     var weatherInfo: ResolvedWorld
 
     var body: some View {
-        if let weatherData = weatherViewModel.weatherData {
-            let info = weatherInfo
-            let headline = Color(hex: info.color.headline)
+        let info = weatherInfo
+        let headline = Color(hex: info.color.headline)
 
             VStack(spacing: 10) {
                 Text("Today's Forecast for \(weatherData.name)")
@@ -45,9 +47,6 @@ struct WeatherDetailsView: View {
                     .frame(maxWidth: 480)
             }
             .padding(.horizontal, 24)
-        } else {
-            EmptyView()
-        }
     }
 
     private func temperatureLine(for weatherData: WeatherResponse) -> String {

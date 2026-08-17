@@ -15,33 +15,41 @@ struct ContentView: View {
     @State private var isSettingsOpen = false
     @State private var isAccountOpen = false
     @State private var isCreditsOpen = false
+    @State private var isSavedLocationsOpen = false
+    @State private var isSavedPaywallOpen = false
 
     init() {
         let weatherViewModel = WeatherViewModel()
         _weatherViewModel = State(initialValue: weatherViewModel)
         _searchViewModel = State(initialValue: LocationSearchViewModel(
-            onLocationResolved: { lat, lon, _ in
+            onLocationResolved: { lat, lon, displayName in
                 // The search field is cleared inside `goToLocation` itself
                 // once the load kicks off, rather than being set to the
-                // resolved display name here.
-                Task { await weatherViewModel.goToLocation(lat: lat, lon: lon) }
+                // resolved display name here — the name instead labels the
+                // transient page the search lands on.
+                Task {
+                    await weatherViewModel.goToLocation(
+                        lat: lat,
+                        lon: lon,
+                        displayName: displayName
+                    )
+                }
             }
         ))
     }
 
     var body: some View {
         ZStack {
-            backgroundLayer
-                .ignoresSafeArea()
-
+            // Every page paints its own full-bleed art, so the whole planet
+            // slides with the swipe rather than the text moving over a fixed
+            // background. The idle hero has no page of its own.
             if weatherViewModel.appPhase == .idle {
+                PlanetTheme.background(for: "default")
+                    .ignoresSafeArea()
                 HyperspaceStarsView()
                     .ignoresSafeArea()
-            }
-
-            if let planetImageName = landedPlanetImageName {
-                backdropImage(named: planetImageName)
-                    .ignoresSafeArea()
+            } else {
+                pager
             }
 
             VStack(spacing: 0) {
@@ -50,14 +58,15 @@ struct ContentView: View {
                         .padding(.top, 8)
                 }
 
-                topContent
-                    .padding(.top, weatherViewModel.appPhase == .landed ? 12 : 32)
-
                 Spacer(minLength: 0)
 
                 bottomSearchBar
                     .padding(.horizontal, 20)
                     .padding(.bottom, 16)
+            }
+
+            if weatherViewModel.appPhase == .idle {
+                HyperspaceHeroView(pageError: weatherViewModel.pageError)
             }
         }
         .animation(.easeInOut(duration: 0.5), value: weatherViewModel.appPhase)
@@ -66,6 +75,12 @@ struct ContentView: View {
         }
         .task {
             await PremiumStore.shared.start()
+        }
+        .onAppear {
+            weatherViewModel.syncSavedLocations(savedLocationsViewModel.locations)
+        }
+        .onChange(of: savedLocationsViewModel.locations) { _, locations in
+            weatherViewModel.syncSavedLocations(locations)
         }
         .fullScreenCover(isPresented: $isAtlasOpen) {
             AtlasView(viewModel: atlasViewModel)
@@ -82,20 +97,80 @@ struct ContentView: View {
         .sheet(isPresented: $isCreditsOpen) {
             CreditsView()
         }
-    }
-
-    /// Weather picks the slot; Atlas decides which world that slot
-    /// shows. Computed once here and threaded down, mirroring the web app's
-    /// `page.tsx` composition of `useAtlas` + `resolveWorld`.
-    private var weatherInfo: ResolvedWorld {
-        weatherViewModel.resolvedWorld(overrides: atlasViewModel.overrides)
-    }
-
-    private var landedPlanetImageName: String? {
-        guard weatherViewModel.appPhase == .landed, weatherViewModel.weatherData != nil else {
-            return nil
+        .sheet(isPresented: $isSavedLocationsOpen) {
+            SavedLocationsView(viewModel: savedLocationsViewModel, weatherViewModel: weatherViewModel)
+                .presentationDetents([.fraction(0.7), .large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(Color(hex: "#0a0e16"))
         }
-        return PlanetTheme.imageName(for: weatherInfo.planet)
+        .sheet(isPresented: $isSavedPaywallOpen) {
+            PaywallView(context: .savedLocations)
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+        }
+    }
+
+    /// One page per location, swiped horizontally. The page indicator lives
+    /// next to the search field instead of TabView's own centered dots, so
+    /// it doesn't collide with the docked search bar.
+    private var pager: some View {
+        TabView(selection: pageSelection) {
+            ForEach(weatherViewModel.pages) { page in
+                weatherPage(page)
+                    .tag(page.kind)
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .ignoresSafeArea()
+        .task(id: weatherViewModel.selection) {
+            await weatherViewModel.loadNeighborhood(around: weatherViewModel.selection)
+        }
+    }
+
+    /// Clamps the selection to a page that actually exists. Removing the
+    /// saved location you were looking at (or having no device fix yet) would
+    /// otherwise leave `TabView` pointing at nothing, which renders blank.
+    private var pageSelection: Binding<WeatherPageKind> {
+        Binding(
+            get: {
+                let pages = weatherViewModel.pages
+                if pages.contains(where: { $0.kind == weatherViewModel.selection }) {
+                    return weatherViewModel.selection
+                }
+                return pages.first?.kind ?? .currentLocation
+            },
+            set: { weatherViewModel.selection = $0 }
+        )
+    }
+
+    private func weatherPage(_ page: WeatherPage) -> some View {
+        let state = weatherViewModel.state(for: page.kind)
+        let info = weatherViewModel.resolvedWorld(for: page.kind, overrides: atlasViewModel.overrides)
+
+        return ZStack {
+            PlanetTheme.background(for: state.hasLoaded ? info.planet : "default")
+                .ignoresSafeArea()
+
+            if state.hasLoaded {
+                backdropImage(named: PlanetTheme.imageName(for: info.planet))
+                    .ignoresSafeArea()
+            }
+
+            VStack(spacing: 12) {
+                // Leaves room for the top bar, which floats above the pager.
+                Spacer().frame(height: 56)
+
+                if !state.hasLoaded || state.error != nil {
+                    statusLine(for: state)
+                }
+
+                if let weather = state.weather {
+                    WeatherDetailsView(weatherData: weather, weatherInfo: info)
+                }
+
+                Spacer(minLength: 0)
+            }
+        }
     }
 
     @ViewBuilder
@@ -106,16 +181,6 @@ struct ContentView: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .bottom)
                 .clipped()
-        }
-    }
-
-    @ViewBuilder
-    private var backgroundLayer: some View {
-        switch weatherViewModel.appPhase {
-        case .idle:
-            PlanetTheme.background(for: "default")
-        case .landed:
-            PlanetTheme.background(for: weatherInfo.planet)
         }
     }
 
@@ -178,36 +243,15 @@ struct ContentView: View {
     }
 
     @ViewBuilder
-    private var topContent: some View {
-        switch weatherViewModel.appPhase {
-        case .idle:
-            HyperspaceHeroView(pageError: weatherViewModel.pageError)
-
-        case .landed:
-            VStack(spacing: 12) {
-                // Shown while the first fetch is still loading, or if a later
-                // "use my location" retry fails while old weather is still on
-                // screen (goToLocation's failure path doesn't clear weatherData
-                // unless the failing call is itself the one landing the app).
-                if weatherViewModel.weatherData == nil || weatherViewModel.pageError != nil {
-                    statusLine
-                }
-
-                WeatherDetailsView(weatherViewModel: weatherViewModel, weatherInfo: weatherInfo)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var statusLine: some View {
-        if let pageError = weatherViewModel.pageError {
-            Text(pageError)
+    private func statusLine(for state: WeatherPageState) -> some View {
+        if let error = state.error {
+            Text(error)
                 .font(.system(size: 14))
                 .foregroundStyle(Color(hex: "#ffd4d4"))
                 .padding(.vertical, 8)
                 .padding(.horizontal, 12)
         } else {
-            Text(weatherViewModel.isWeatherLoading ? "Loading weather…" : "Preparing forecast…")
+            Text(state.isLoading ? "Loading weather…" : "Preparing forecast…")
                 .font(.system(size: 14))
                 .foregroundStyle(.white)
                 .padding(.vertical, 8)
@@ -217,6 +261,21 @@ struct ContentView: View {
 
     private var bottomSearchBar: some View {
         HStack(alignment: .top, spacing: 10) {
+            // Only meaningful once there are pages to move between, so it
+            // stays out of the idle hero.
+            if weatherViewModel.appPhase == .landed {
+                PageIndicatorView(
+                    pages: weatherViewModel.pages,
+                    selection: weatherViewModel.selection
+                ) {
+                    if PremiumGate.canUseSavedLocations {
+                        isSavedLocationsOpen = true
+                    } else {
+                        isSavedPaywallOpen = true
+                    }
+                }
+            }
+
             // Search is available to everyone — see the note in `PremiumGate`.
             // Without it, declining the location prompt leaves a free user with
             // no way to reach any weather at all.
