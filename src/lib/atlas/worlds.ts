@@ -1,4 +1,4 @@
-import type { World, WorldId } from "./types";
+import type { Climate, World, WorldId } from "./types";
 
 /**
  * The catalog of worlds available to assign to a weather slot.
@@ -177,6 +177,35 @@ export const WORLDS: readonly World[] = [
 		color: { primary: "#6B7A4A", headline: "#B8C890" },
 	},
 ] as const;
+
+export const CLIMATE_LABELS: Record<Climate, string> = {
+	desert: "Desert",
+	ice: "Ice",
+	ocean: "Ocean",
+	forest: "Forest",
+	volcanic: "Volcanic",
+	urban: "Urban",
+	temperate: "Temperate",
+	storm: "Storm",
+	sky: "Sky",
+};
+
+/**
+ * Fixed display order for biomes, the same way SLOT_GROUP_ORDER fixes the
+ * order of slot groups. Roughly hospitable -> hostile, so the Passport reads
+ * as a journey outward rather than an alphabetical list.
+ */
+export const CLIMATE_ORDER: readonly Climate[] = [
+	"temperate",
+	"forest",
+	"ocean",
+	"desert",
+	"ice",
+	"volcanic",
+	"storm",
+	"sky",
+	"urban",
+];
 
 const WORLD_BY_ID = new Map<WorldId, World>(WORLDS.map((w) => [w.id, w]));
 

@@ -8,9 +8,12 @@ import { getSlotForWeather } from "./utils/weatherDescriptions";
 import LocationSearch from "./components/LocationSearch";
 import WeatherDetails from "./components/WeatherDetails";
 import Atlas from "./components/Atlas";
+import Passport from "./components/Passport";
 import Footer from "./components/Footer";
 import { useAtlas } from "./hooks/useAtlas";
+import { usePassport, useStampOnDwell } from "./hooks/usePassport";
 import { resolveWorld } from "@/lib/atlas/resolve";
+import { convertKelvinToFahrenheit } from "./utils/temperature";
 import { geocodeLocation } from "@/lib/location/geocode";
 import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
 
@@ -25,6 +28,7 @@ interface WeatherData {
   };
   weather: [
     {
+      id: number;
       main: string;
     }
   ];
@@ -39,8 +43,10 @@ const Home = () => {
   const [pageError, setPageError] = useState<string | null>(null);
   const [isWeatherLoading, setIsWeatherLoading] = useState(false);
   const [isAtlasOpen, setIsAtlasOpen] = useState(false);
+  const [isPassportOpen, setIsPassportOpen] = useState(false);
 
   const atlas = useAtlas();
+  const passport = usePassport();
 
   // ── fetch + land ──────────────────────────────────────────────────────────
 
@@ -125,10 +131,11 @@ const Home = () => {
   // Weather picks the slot; Atlas decides which world that slot shows.
   const weatherInfo = weatherData
     ? resolveWorld(
-        getSlotForWeather(
-          weatherData.weather[0].main,
-          weatherData.main.temp
-        ),
+        getSlotForWeather({
+          id: weatherData.weather[0].id,
+          main: weatherData.weather[0].main,
+          tempKelvin: weatherData.main.temp,
+        }),
         atlas.overrides
       )
     : {
@@ -139,6 +146,20 @@ const Home = () => {
         color: { primary: "#000000", headline: "#000000" },
         customized: false,
       };
+
+  // Landing on a world stamps it in the Passport, once it's held still for a
+  // moment. Held back until the passport has hydrated — stamping against the
+  // empty initial state would write over the stored book.
+  useStampOnDwell(
+    passport.record,
+    appPhase === "landed" && weatherData && passport.hydrated
+      ? {
+          resolved: weatherInfo,
+          city: weatherData.name,
+          tempF: convertKelvinToFahrenheit(weatherData.main.temp),
+        }
+      : null
+  );
 
   // idle → hyperspace background; landed → planet theme
   const bgClass =
@@ -165,18 +186,32 @@ const Home = () => {
                 goToLocation(lat, lon);
               }}
             />
-            <button
-              type="button"
-              className={styles.atlasButton}
-              onClick={() => setIsAtlasOpen(true)}
-            >
-              Atlas
-              {atlas.customizedCount > 0 && (
-                <span className={styles.atlasCount}>
-                  {atlas.customizedCount}
-                </span>
-              )}
-            </button>
+            <div className={styles.navActions}>
+              <button
+                type="button"
+                className={styles.navAction}
+                onClick={() => setIsAtlasOpen(true)}
+              >
+                Atlas
+                {atlas.customizedCount > 0 && (
+                  <span className={styles.navCount}>
+                    {atlas.customizedCount}
+                  </span>
+                )}
+              </button>
+              <button
+                type="button"
+                className={styles.navAction}
+                onClick={() => setIsPassportOpen(true)}
+              >
+                Passport
+                {passport.progress.found > 0 && (
+                  <span className={styles.navCount}>
+                    {passport.progress.found}
+                  </span>
+                )}
+              </button>
+            </div>
           </>
         )}
       </nav>
@@ -241,6 +276,14 @@ const Home = () => {
           onResetSlot={atlas.resetSlot}
           onResetAll={atlas.resetAll}
           onClose={() => setIsAtlasOpen(false)}
+        />
+      )}
+
+      {/* ── Passport overlay ──────────────────────────────────────── */}
+      {isPassportOpen && (
+        <Passport
+          progress={passport.progress}
+          onClose={() => setIsPassportOpen(false)}
         />
       )}
     </main>

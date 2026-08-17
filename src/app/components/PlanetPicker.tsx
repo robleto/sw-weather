@@ -3,20 +3,9 @@
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import styles from "../styles/PlanetPicker.module.css";
-import { WORLDS } from "@/lib/atlas/worlds";
+import WorldPoster from "./WorldPoster";
+import { CLIMATE_LABELS, WORLDS, getWorld } from "@/lib/atlas/worlds";
 import type { Climate, Slot, WorldId } from "@/lib/atlas/types";
-
-const CLIMATE_LABELS: Record<Climate, string> = {
-	desert: "Desert",
-	ice: "Ice",
-	ocean: "Ocean",
-	forest: "Forest",
-	volcanic: "Volcanic",
-	urban: "Urban",
-	temperate: "Temperate",
-	storm: "Storm",
-	sky: "Sky",
-};
 
 // Only offer filters for climates that actually have worlds behind them.
 const AVAILABLE_CLIMATES = Array.from(
@@ -42,6 +31,9 @@ const PlanetPicker: React.FC<PlanetPickerProps> = ({
 }) => {
 	const [climate, setClimate] = useState<Climate | "all">("all");
 	const [query, setQuery] = useState("");
+	const [posterWorldId, setPosterWorldId] = useState<WorldId | null>(null);
+
+	const posterWorld = posterWorldId ? getWorld(posterWorldId) : undefined;
 
 	const visibleWorlds = useMemo(() => {
 		const needle = query.trim().toLowerCase();
@@ -56,6 +48,7 @@ const PlanetPicker: React.FC<PlanetPickerProps> = ({
 	const selectionCount = isCustomized ? assigned.length : 0;
 
 	return (
+		<>
 		<div className={styles.sheet} role="dialog" aria-label={`Choose a world for ${slot.label}`}>
 			<header className={styles.sheetHeader}>
 				<div>
@@ -110,7 +103,10 @@ const PlanetPicker: React.FC<PlanetPickerProps> = ({
 					const isDefault = world.id === slot.defaultWorld;
 
 					return (
-						<li key={world.id}>
+						// The expand control has to be a sibling of the card, not a
+						// child: a button inside a button is invalid HTML and the
+						// inner one stops being reachable.
+						<li key={world.id} className={styles.worldCell}>
 							<button
 								type="button"
 								className={`${styles.worldCard} ${selected ? styles.worldCardSelected : ""}`}
@@ -133,6 +129,34 @@ const PlanetPicker: React.FC<PlanetPickerProps> = ({
 								<span className={styles.worldName}>{world.name}</span>
 								{isDefault && <span className={styles.defaultBadge}>Suits this weather</span>}
 							</button>
+
+							{/* An inert layer mirroring the thumb's box, so the chip can
+							    sit at the *thumb's* bottom-right. The cell is taller
+							    than the thumb by a name and a sometimes-present badge,
+							    so anchoring to the cell would drift between cards. */}
+							<span className={styles.expandLayer}>
+								<button
+									type="button"
+									className={styles.expandButton}
+									onClick={() => setPosterWorldId(world.id)}
+									aria-label={`View ${world.name} as a poster`}
+								>
+									{/* The chip is a child so the button can carry a
+									    44px hit area while the mark stays 32px. */}
+									<span className={styles.expandChip}>
+										<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+											<path
+												d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											/>
+										</svg>
+									</span>
+								</button>
+							</span>
 						</li>
 					);
 				})}
@@ -153,6 +177,22 @@ const PlanetPicker: React.FC<PlanetPickerProps> = ({
 				</button>
 			</footer>
 		</div>
+
+		{/* Rendered as a sibling of the sheet: the sheet's backdrop-filter makes
+		    it a containing block, which would trap the poster's position:fixed
+		    inside the sheet's bounds. */}
+		{posterWorld && (
+			<WorldPoster
+				world={posterWorld}
+				assignment={{
+					slot,
+					isAssigned: assigned.includes(posterWorld.id),
+					onToggle: () => onToggleWorld(posterWorld.id),
+				}}
+				onClose={() => setPosterWorldId(null)}
+			/>
+		)}
+		</>
 	);
 };
 
