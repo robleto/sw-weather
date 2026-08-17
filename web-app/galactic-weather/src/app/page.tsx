@@ -11,7 +11,6 @@ import WeatherDetails from "./components/WeatherDetails";
 import Atlas from "./components/Atlas";
 import Passport from "./components/Passport";
 import Footer from "./components/Footer";
-import NavMenu from "./components/NavMenu";
 import { useAtlas } from "./hooks/useAtlas";
 import { usePassport, useStampOnDwell } from "./hooks/usePassport";
 import { resolveWorld } from "@/lib/atlas/resolve";
@@ -275,7 +274,6 @@ const Home = () => {
                   </span>
                 )}
               </button>
-              <NavMenu />
             </div>
           </>
         )}
