@@ -18,6 +18,25 @@ weather-icons.min.css);
   overflow: hidden; /* contain pseudo-element hyperspace streaks */
 }
 
+/* ── Full-bleed planet photo ───────────────────────────────────────────────
+   iOS draws the same photo behind the readout (ContentView.backdropImage,
+   aspectRatio .fill, bottom-aligned). Web used to show only the planet
+   gradient, which meant the generated textTone — measured from the photo —
+   described a background the web app never displayed. The gradient stays on
+   .main underneath as the base color while the image loads. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.backdropImage {
+  object-fit: cover;
+  /* Bottom-aligned to match the iOS crop. */
+  object-position: center bottom;
+}
+
 .navHeader {
   padding: 0.5rem 1rem;
   width: 100%;

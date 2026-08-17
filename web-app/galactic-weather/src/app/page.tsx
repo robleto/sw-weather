@@ -1,5 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
 import styles from "./styles/page.module.css";
 import locationSearchStyles from "./styles/LocationSearch.module.css";
 import planetStyles from "./styles/planetStyles.module.css";
@@ -173,6 +174,20 @@ const Home = () => {
 
   return (
     <main className={`${styles.main} ${bgClass}`} data-phase={appPhase}>
+
+      {/* ── Planet photo, the same backdrop iOS draws ──────────────────────── */}
+      {appPhase === "landed" && weatherInfo.planet !== "default" && (
+        <div className={styles.backdrop} aria-hidden="true">
+          <Image
+            src={`/planets/${weatherInfo.planet}.png`}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className={styles.backdropImage}
+          />
+        </div>
+      )}
 
       {/* ── Fixed nav ─────────────────────────────────────────────────────── */}
       <nav className={styles.navHeader} data-phase={appPhase}>

@@ -104,12 +104,13 @@ the catalog to flat white. `Color(hex:)` on iOS accepts `#RRGGBBAA` so the one
 generated value works on both platforms. Rewrites both catalogs, idempotent.
 Needs Pillow (`pip install Pillow`), and only when art changes.
 
-**Caveat worth knowing: the two platforms do not show the same background.** iOS
-draws the planet photo full-bleed (`ContentView.backdropImage`); the web app
-draws only a CSS gradient from `planetStyles.module.css` and never loads the PNG
-behind the readout. The tone measurement is taken from the photo, so it describes
-iOS exactly and web only loosely. Worth reconciling — either by having web use
-the photo, or by measuring the gradient for web.
+Both platforms draw the same photo behind the readout, which is what makes one
+measurement valid for both: iOS via `ContentView.backdropImage`, web via the
+`.backdrop` layer in `page.module.css`. Web renders it through `next/image` so
+the source PNGs — 4.8 MB on average, 15 MB at worst — are served as
+viewport-sized WebP rather than raw. The planet gradient stays on `.main`
+underneath as the base color while the image loads. If web ever stops drawing
+the photo, the generated `textTone` stops describing what it shows.
 
 **XcodeGen owns the Xcode project.** `ios-app/galacticweather/project.yml` is
 the source of truth; `galacticweather.xcodeproj` is generated. After adding or
