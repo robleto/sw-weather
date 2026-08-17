@@ -28,7 +28,8 @@ let WORLDS: [World] = [
         name: "At-Attin",
         description: "A rumored paradise world — warm and hazy beneath a blanket of soft clouds.",
         climate: .temperate,
-        color: WorldColor(primary: "#7A9E8A", headline: "#C8E0D0")
+        color: WorldColor(primary: "#7A9E8A", headline: "#C8E0D0"),
+        isPremium: true
     ),
     World(
         id: "bespin",
@@ -71,7 +72,8 @@ let WORLDS: [World] = [
         name: "Ghorman",
         description: "A temperate trade world of grey overcast skies and quiet, cultural streets.",
         climate: .urban,
-        color: WorldColor(primary: "#7A8090", headline: "#B8C0C8")
+        color: WorldColor(primary: "#7A8090", headline: "#B8C0C8"),
+        isPremium: true
     ),
     World(
         id: "hoth",
@@ -93,7 +95,8 @@ let WORLDS: [World] = [
         name: "Jakku",
         description: "A desert scrapyard world with endless dunes and dust-choked skies.",
         climate: .desert,
-        color: WorldColor(primary: "#A8895A", headline: "#E8D09A")
+        color: WorldColor(primary: "#A8895A", headline: "#E8D09A"),
+        isPremium: true
     ),
     World(
         id: "kamino",
@@ -172,7 +175,8 @@ let WORLDS: [World] = [
         name: "Yavin 4",
         description: "A jungle moon draped in warm humidity and overcast tropical skies.",
         climate: .forest,
-        color: WorldColor(primary: "#6B7A4A", headline: "#B8C890")
+        color: WorldColor(primary: "#6B7A4A", headline: "#B8C890"),
+        isPremium: true
     ),
 ]
 
