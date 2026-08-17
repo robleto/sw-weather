@@ -51,6 +51,8 @@ func resolveWorld(slotId: SlotId, overrides: AtlasOverrides = [:], now: Date = D
             planetName: "",
             description: "",
             color: WorldColor(primary: "#000000", headline: "#000000"),
+            textTone: .light,
+            textColor: "#FAFAFA",
             customized: false
         )
     }
@@ -64,6 +66,8 @@ func resolveWorld(slotId: SlotId, overrides: AtlasOverrides = [:], now: Date = D
         // Slot-specific copy only applies while the slot is untouched.
         description: (usingDefault ? slot.defaultDescription : nil) ?? world.description,
         color: world.color,
+        textTone: world.textTone,
+        textColor: world.textColor,
         customized: customized
     )
 }

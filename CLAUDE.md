@@ -80,6 +80,25 @@ because it names exactly which weather now resolves differently. The probe
 temperatures are every band boundary and the degree below it, so no cutoff can
 move without shifting at least one cell.
 
+**Text over the planet art is generated, not hand-picked.** In the landed view
+the readout sits directly on the photo — no scrim, no text-shadow — so whether
+light or dark text is readable is a property of the image. Each world carries a
+generated `textTone` and `textColor`; the views use `textColor` and must not
+reach for `color.headline`, which is a decorative accent measured against
+nothing.
+
+Regenerate after changing or adding planet art:
+
+```bash
+python3 scripts/measure-text-tone.py
+```
+
+It measures the region the text actually occupies, keeps a world's existing
+`headline` when that already clears 3:1, and otherwise shifts lightness while
+preserving hue. 3:1 is the bar because the readout is large text; aiming at 4.5
+forced a third of the catalog to flat white. It rewrites both catalogs and is
+idempotent. Needs Pillow (`pip install Pillow`), and only when art changes.
+
 **XcodeGen owns the Xcode project.** `ios-app/galacticweather/project.yml` is
 the source of truth; `galacticweather.xcodeproj` is generated. After adding or
 removing *any* file under `ios-app/`, run `xcodegen generate` — otherwise the

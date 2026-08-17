@@ -14,6 +14,8 @@ export const WORLDS: readonly World[] = [
 		description: "A remote ocean world of jagged island peaks, sea spray, and restless grey water.",
 		climate: "ocean",
 		color: { primary: "#5C7684", headline: "#B4CEDA" },
+		textTone: "light",
+		textColor: "#B4CEDA",
 		isPremium: true,
 	},
 	{
@@ -22,6 +24,8 @@ export const WORLDS: readonly World[] = [
 		description: "A peaceful, beautiful world of rolling hills and crisp, clear air.",
 		climate: "temperate",
 		color: { primary: "#5F749E", headline: "#C4D8E8" },
+		textTone: "light",
+		textColor: "#E8F0F6",
 		isPremium: true,
 	},
 	{
@@ -30,6 +34,8 @@ export const WORLDS: readonly World[] = [
 		description: "A rumored paradise world — warm and hazy beneath a blanket of soft clouds.",
 		climate: "temperate",
 		color: { primary: "#7A9E8A", headline: "#C8E0D0" },
+		textTone: "light",
+		textColor: "#C9E1D1",
 	},
 	{
 		id: "bespin",
@@ -37,6 +43,8 @@ export const WORLDS: readonly World[] = [
 		description: "Cloud City drifts through cold upper atmosphere, wrapped in dense cloud cover.",
 		climate: "sky",
 		color: { primary: "#C15A51", headline: "#F4BE9C" },
+		textTone: "light",
+		textColor: "#F5C7A9",
 	},
 	{
 		id: "corellia",
@@ -44,6 +52,8 @@ export const WORLDS: readonly World[] = [
 		description: "A shipyard world of green industrial haze, its cranes fading into the murk.",
 		climate: "urban",
 		color: { primary: "#3E6B57", headline: "#C3D68F" },
+		textTone: "light",
+		textColor: "#C3D68F",
 	},
 	{
 		id: "coruscant",
@@ -51,6 +61,8 @@ export const WORLDS: readonly World[] = [
 		description: "A city that covers a world entirely — endless towers under a haze of traffic light.",
 		climate: "urban",
 		color: { primary: "#6E7A93", headline: "#C3CEE4" },
+		textTone: "dark",
+		textColor: "#3F598D",
 		isPremium: true,
 	},
 	{
@@ -59,6 +71,8 @@ export const WORLDS: readonly World[] = [
 		description: "Salt flats of blinding white, cut open to the red mineral beneath.",
 		climate: "desert",
 		color: { primary: "#8F1319", headline: "#FDFCED" },
+		textTone: "dark",
+		textColor: "#9A9211",
 		isPremium: true,
 	},
 	{
@@ -67,6 +81,8 @@ export const WORLDS: readonly World[] = [
 		description: "A swampy, mist-laden world with a damp atmosphere that matches steady light rain.",
 		climate: "forest",
 		color: { primary: "#48542D", headline: "#6C7858" },
+		textTone: "light",
+		textColor: "#C0C8B3",
 	},
 	{
 		id: "daiyu",
@@ -74,6 +90,8 @@ export const WORLDS: readonly World[] = [
 		description: "A neon port city under low cloud, its streets slick with cold rain.",
 		climate: "urban",
 		color: { primary: "#14403C", headline: "#63C7BC" },
+		textTone: "light",
+		textColor: "#63C7BC",
 	},
 	{
 		id: "dantooine",
@@ -81,6 +99,8 @@ export const WORLDS: readonly World[] = [
 		description: "Quiet farmland under tall white clouds — green, cool, and open to the horizon.",
 		climate: "temperate",
 		color: { primary: "#2F8272", headline: "#D8E39B" },
+		textTone: "light",
+		textColor: "#F7F9E9",
 	},
 	{
 		id: "endor",
@@ -88,6 +108,8 @@ export const WORLDS: readonly World[] = [
 		description: "A forest moon with cool, humid air and frequent mist through dense woodland.",
 		climate: "forest",
 		color: { primary: "#6B8A60", headline: "#BCD2B5" },
+		textTone: "light",
+		textColor: "#BCD2B5",
 	},
 	{
 		id: "exegol",
@@ -95,6 +117,8 @@ export const WORLDS: readonly World[] = [
 		description: "A storm-wracked world with relentless lightning, heavy rain, and violent weather.",
 		climate: "storm",
 		color: { primary: "#9589A4", headline: "#686788" },
+		textTone: "light",
+		textColor: "#737294",
 	},
 	{
 		id: "ferrix",
@@ -102,6 +126,8 @@ export const WORLDS: readonly World[] = [
 		description: "A close-built foundry town where terracotta roofs hold the last of the sun.",
 		climate: "urban",
 		color: { primary: "#B5622F", headline: "#F6CE93" },
+		textTone: "light",
+		textColor: "#F6CE93",
 		isPremium: true,
 	},
 	{
@@ -110,6 +136,8 @@ export const WORLDS: readonly World[] = [
 		description: "A burnt-orange desert of stone spires, its air always thick with dust.",
 		climate: "desert",
 		color: { primary: "#C84304", headline: "#EC9D3A" },
+		textTone: "light",
+		textColor: "#F8DBB7",
 		isPremium: true,
 	},
 	{
@@ -118,6 +146,8 @@ export const WORLDS: readonly World[] = [
 		description: "A temperate trade world of grey overcast skies and quiet, cultural streets.",
 		climate: "urban",
 		color: { primary: "#7A8090", headline: "#B8C0C8" },
+		textTone: "light",
+		textColor: "#F8F9FA",
 	},
 	{
 		id: "hoth",
@@ -125,6 +155,8 @@ export const WORLDS: readonly World[] = [
 		description: "An icy world covered in snow year-round, swept by freezing wind.",
 		climate: "ice",
 		color: { primary: "#39657F", headline: "#6DB3DC" },
+		textTone: "light",
+		textColor: "#AAD3EB",
 	},
 	{
 		id: "ilum",
@@ -132,6 +164,8 @@ export const WORLDS: readonly World[] = [
 		description: "A frigid, crystal-lined world with clear skies and severe cold.",
 		climate: "ice",
 		color: { primary: "#A4B3C1", headline: "#A9CEEF" },
+		textTone: "light",
+		textColor: "#A9CEEF",
 	},
 	{
 		id: "jakku",
@@ -139,6 +173,8 @@ export const WORLDS: readonly World[] = [
 		description: "A desert scrapyard world with endless dunes and dust-choked skies.",
 		climate: "desert",
 		color: { primary: "#A8895A", headline: "#E8D09A" },
+		textTone: "dark",
+		textColor: "#6E5419",
 		isPremium: true,
 	},
 	{
@@ -147,6 +183,8 @@ export const WORLDS: readonly World[] = [
 		description: "A skyline of glass towers under a deep, star-thick twilight.",
 		climate: "urban",
 		color: { primary: "#172B6B", headline: "#C4A4BC" },
+		textTone: "light",
+		textColor: "#C4A4BC",
 		isPremium: true,
 	},
 	{
@@ -155,6 +193,8 @@ export const WORLDS: readonly World[] = [
 		description: "A desert moon of pilgrim cities, its air thick with golden dust.",
 		climate: "desert",
 		color: { primary: "#69865C", headline: "#FDD16E" },
+		textTone: "dark",
+		textColor: "#7D5702",
 		isPremium: true,
 	},
 	{
@@ -163,6 +203,8 @@ export const WORLDS: readonly World[] = [
 		description: "A water planet that experiences frequent, heavy rainfall.",
 		climate: "ocean",
 		color: { primary: "#868D9F", headline: "#C9CFB9" },
+		textTone: "light",
+		textColor: "#C9CFB9",
 	},
 	{
 		id: "kashyyyk",
@@ -170,6 +212,8 @@ export const WORLDS: readonly World[] = [
 		description: "A forested world that feels brisk and chilly beneath towering canopies.",
 		climate: "forest",
 		color: { primary: "#6C7F74", headline: "#7C9688" },
+		textTone: "light",
+		textColor: "#D3DCD7",
 	},
 	{
 		id: "kef-bir",
@@ -177,6 +221,8 @@ export const WORLDS: readonly World[] = [
 		description: "An ocean moon of grey rolling swells and hard wind off open water.",
 		climate: "ocean",
 		color: { primary: "#2D7787", headline: "#96BBC3" },
+		textTone: "light",
+		textColor: "#C5DADE",
 		isPremium: true,
 	},
 	{
@@ -185,6 +231,8 @@ export const WORLDS: readonly World[] = [
 		description: "A mining world under permanent stacks of black industrial smoke.",
 		climate: "urban",
 		color: { primary: "#342F2E", headline: "#F1B26E" },
+		textTone: "light",
+		textColor: "#F1B26E",
 	},
 	{
 		id: "kijimi",
@@ -192,6 +240,8 @@ export const WORLDS: readonly World[] = [
 		description: "A cold mountain world with ancient cities dusted in light snowfall.",
 		climate: "ice",
 		color: { primary: "#8AA3B5", headline: "#C8DDE8" },
+		textTone: "light",
+		textColor: "#C8DDE8",
 	},
 	{
 		id: "lothal",
@@ -199,6 +249,8 @@ export const WORLDS: readonly World[] = [
 		description: "Wide grass plains beneath an enormous, cloudless sky.",
 		climate: "temperate",
 		color: { primary: "#2C7FA6", headline: "#FBDD97" },
+		textTone: "light",
+		textColor: "#FBDE99",
 		isPremium: true,
 	},
 	{
@@ -207,6 +259,8 @@ export const WORLDS: readonly World[] = [
 		description: "Glassed plains and drowned spires, half-lost in pale grey mist.",
 		climate: "desert",
 		color: { primary: "#517566", headline: "#A2C2A7" },
+		textTone: "dark",
+		textColor: "#36523A",
 	},
 	{
 		id: "mathleen-divide",
@@ -214,6 +268,8 @@ export const WORLDS: readonly World[] = [
 		description: "A high range of snowbound peaks under a thin, pale sun.",
 		climate: "ice",
 		color: { primary: "#548F8D", headline: "#D3DABF" },
+		textTone: "dark",
+		textColor: "#5C683C",
 		isPremium: true,
 	},
 	{
@@ -222,6 +278,8 @@ export const WORLDS: readonly World[] = [
 		description: "A quiet farm world of golden grain under a wide, clear sky.",
 		climate: "temperate",
 		color: { primary: "#3A8176", headline: "#B2C78A" },
+		textTone: "dark",
+		textColor: "#48572A",
 		isPremium: true,
 	},
 	{
@@ -230,6 +288,8 @@ export const WORLDS: readonly World[] = [
 		description: "An ocean world seen from below — coral canyons and slanting light.",
 		climate: "ocean",
 		color: { primary: "#1B708C", headline: "#6AD1D7" },
+		textTone: "light",
+		textColor: "#6AD1D7",
 		isPremium: true,
 	},
 	{
@@ -238,6 +298,8 @@ export const WORLDS: readonly World[] = [
 		description: "A realm between worlds, shrouded in thick fog and an otherworldly stillness.",
 		climate: "storm",
 		color: { primary: "#7A7090", headline: "#B0A8C8" },
+		textTone: "light",
+		textColor: "#B0A8C8",
 		isPremium: true,
 	},
 	{
@@ -246,6 +308,8 @@ export const WORLDS: readonly World[] = [
 		description: "A volcanic world of lava rivers and an ash-filled, smoky sky.",
 		climate: "volcanic",
 		color: { primary: "#AC5861", headline: "#B47A80" },
+		textTone: "light",
+		textColor: "#B47A80",
 	},
 	{
 		id: "naboo",
@@ -253,6 +317,8 @@ export const WORLDS: readonly World[] = [
 		description: "A balanced, temperate climate with clear skies and calm conditions.",
 		climate: "temperate",
 		color: { primary: "#7A609B", headline: "#B5C0EE" },
+		textTone: "light",
+		textColor: "#DAE0F6",
 	},
 	{
 		id: "nevarro",
@@ -260,6 +326,8 @@ export const WORLDS: readonly World[] = [
 		description: "A warm volcanic world where tall clouds pile above a sunlit town.",
 		climate: "volcanic",
 		color: { primary: "#36726A", headline: "#D0A921" },
+		textTone: "light",
+		textColor: "#EAD078",
 		isPremium: true,
 	},
 	{
@@ -268,6 +336,8 @@ export const WORLDS: readonly World[] = [
 		description: "A sunny, tropical beach planet known for its vibrant resorts and relaxing atmosphere.",
 		climate: "ocean",
 		color: { primary: "#7B9684", headline: "#DBDFBF" },
+		textTone: "light",
+		textColor: "#E9EBD8",
 		isPremium: true,
 	},
 	{
@@ -276,6 +346,8 @@ export const WORLDS: readonly World[] = [
 		description: "A dark ocean moon of perpetual rain, lashed by wind above a black sea.",
 		climate: "ocean",
 		color: { primary: "#4A5A6B", headline: "#9DB2C4" },
+		textTone: "light",
+		textColor: "#9DB2C4",
 		isPremium: true,
 	},
 	{
@@ -284,6 +356,8 @@ export const WORLDS: readonly World[] = [
 		description: "Green mountain forest beneath towering white cloud.",
 		climate: "forest",
 		color: { primary: "#137769", headline: "#C9E6B7" },
+		textTone: "dark",
+		textColor: "#375C20",
 		isPremium: true,
 	},
 	{
@@ -292,6 +366,8 @@ export const WORLDS: readonly World[] = [
 		description: "Red canyon spires beneath a violent violet-and-orange dusk.",
 		climate: "desert",
 		color: { primary: "#282586", headline: "#F5A65B" },
+		textTone: "light",
+		textColor: "#F5A65B",
 		isPremium: true,
 	},
 	{
@@ -300,6 +376,8 @@ export const WORLDS: readonly World[] = [
 		description: "A warm tropical world with clear skies and bright coastal weather.",
 		climate: "ocean",
 		color: { primary: "#237691", headline: "#95E1F6" },
+		textTone: "light",
+		textColor: "#C1EEFA",
 	},
 	{
 		id: "sorgan",
@@ -307,6 +385,8 @@ export const WORLDS: readonly World[] = [
 		description: "A humid marsh of paddy ponds and thatched roofs, warm and still.",
 		climate: "forest",
 		color: { primary: "#2C786D", headline: "#CFD575" },
+		textTone: "light",
+		textColor: "#EAEDC3",
 		isPremium: true,
 	},
 	{
@@ -315,6 +395,8 @@ export const WORLDS: readonly World[] = [
 		description: "Forested lake country under bright, drifting cumulus.",
 		climate: "forest",
 		color: { primary: "#3B619F", headline: "#CBDBE8" },
+		textTone: "light",
+		textColor: "#CBDBE8",
 		isPremium: true,
 	},
 	{
@@ -323,6 +405,8 @@ export const WORLDS: readonly World[] = [
 		description: "A desert world of twin suns, known for its scorching heat and clear skies.",
 		climate: "desert",
 		color: { primary: "#944505", headline: "#FDC683" },
+		textTone: "light",
+		textColor: "#FED7A8",
 	},
 	{
 		id: "yavin",
@@ -330,6 +414,8 @@ export const WORLDS: readonly World[] = [
 		description: "A jungle moon draped in warm humidity and overcast tropical skies.",
 		climate: "forest",
 		color: { primary: "#6B7A4A", headline: "#B8C890" },
+		textTone: "light",
+		textColor: "#B8C890",
 	},
 ] as const;
 

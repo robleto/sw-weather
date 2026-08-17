@@ -144,6 +144,8 @@ const Home = () => {
         planetName: "default",
         description: "",
         color: { primary: "#000000", headline: "#000000" },
+        textTone: "light" as const,
+        textColor: "#FAFAFA",
         customized: false,
       };
 

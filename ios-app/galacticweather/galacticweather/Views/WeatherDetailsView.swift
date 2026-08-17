@@ -20,7 +20,9 @@ struct WeatherDetailsView: View {
 
     var body: some View {
         let info = weatherInfo
-        let headline = Color(hex: info.color.headline)
+        // This text sits directly on the planet photo, so it uses the world's
+        // measured textColor rather than color.headline — see TextTone.
+        let headline = Color(hex: info.textColor)
 
             VStack(spacing: 10) {
                 Text("Today's Forecast for \(locationName)")

@@ -65,6 +65,8 @@ export const resolveWorld = (
 			planetName: "",
 			description: "",
 			color: { primary: "#000000", headline: "#000000" },
+			textTone: "light",
+			textColor: "#FAFAFA",
 			customized: false,
 		};
 	}
@@ -81,6 +83,8 @@ export const resolveWorld = (
 				? slot.defaultDescription
 				: world.description,
 		color: world.color,
+		textTone: world.textTone,
+		textColor: world.textColor,
 		customized,
 	};
 };

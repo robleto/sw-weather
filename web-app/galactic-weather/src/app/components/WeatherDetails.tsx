@@ -28,6 +28,8 @@ interface WeatherDetailsProps {
 		planetName: string;
 		description: string;
 		color: PlanetColor;
+		/** Measured against this world's art — see TextTone in atlas/types. */
+		textColor: string;
 	};
 }
 
@@ -39,8 +41,10 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 
 	if (!weatherData) return null;
 
-	const planetColors = weatherInfo.color;
-	const secondaryStyle = { color: planetColors.headline, opacity: 0.78 };
+	// This text sits directly on the planet photo, so it uses the world's
+	// measured textColor rather than `headline` — see TextTone in atlas/types.
+	const textColor = weatherInfo.textColor;
+	const secondaryStyle = { color: textColor, opacity: 0.78 };
 
 	return (
 		<section className={weatherStyles.weatherSection}>
@@ -53,7 +57,7 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 				</p>
 				<p
 					className={weatherStyles.tempForecast}
-					style={{ color: planetColors.headline }}
+					style={{ color: textColor }}
 				>
 					{convertKelvinToFahrenheit(weatherData.main.temp).toFixed(0)}°F and {weatherData.weather[0].main}
 				</p>
@@ -65,7 +69,7 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 				</p>
 				<h2
 					className={weatherStyles.planetName}
-					style={{ color: planetColors.headline }}
+					style={{ color: textColor }}
 				>
 					{weatherInfo.planetName}
 				</h2>

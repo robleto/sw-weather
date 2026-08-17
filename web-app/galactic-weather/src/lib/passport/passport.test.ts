@@ -26,6 +26,8 @@ const resolved = (
 	planetName: planet,
 	description: "",
 	color: { primary: "", headline: "" },
+	textTone: "light",
+	textColor: "#FAFAFA",
 	customized,
 });
 

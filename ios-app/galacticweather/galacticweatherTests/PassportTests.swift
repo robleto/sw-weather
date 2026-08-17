@@ -23,14 +23,16 @@ final class PassportTests: XCTestCase {
     private func wild(_ planet: WorldId, _ slotId: SlotId = "rain") -> ResolvedWorld {
         ResolvedWorld(
             slotId: slotId, planet: planet, planetName: planet, description: "",
-            color: WorldColor(primary: "", headline: ""), customized: false
+            color: WorldColor(primary: "", headline: ""),
+            textTone: .light, textColor: "#FAFAFA", customized: false
         )
     }
 
     private func charted(_ planet: WorldId, _ slotId: SlotId = "rain") -> ResolvedWorld {
         ResolvedWorld(
             slotId: slotId, planet: planet, planetName: planet, description: "",
-            color: WorldColor(primary: "", headline: ""), customized: true
+            color: WorldColor(primary: "", headline: ""),
+            textTone: .light, textColor: "#FAFAFA", customized: true
         )
     }
 
