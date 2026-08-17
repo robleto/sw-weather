@@ -388,10 +388,10 @@ final class PassportTests: XCTestCase {
 
         let ocean = try XCTUnwrap(progress.biomes.first { $0.climate == .ocean })
         XCTAssertEqual(ocean.found, 5)
-        XCTAssertEqual(ocean.wild, 3)
+        XCTAssertEqual(ocean.wild, 2)
         XCTAssertEqual(
             ocean.worlds.filter { !$0.wildReachable }.map(\.world.id).sorted(),
-            ["ahch-to", "nur"]
+            ["ahch-to", "niamos", "nur"]
         )
     }
 }

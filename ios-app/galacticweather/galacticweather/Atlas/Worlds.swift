@@ -42,8 +42,7 @@ let WORLDS: [World] = [
         name: "Corellia",
         description: "A shipyard world of green industrial haze, its cranes fading into the murk.",
         climate: .urban,
-        color: WorldColor(primary: "#3E6B57", headline: "#C3D68F"),
-        isPremium: true
+        color: WorldColor(primary: "#3E6B57", headline: "#C3D68F")
     ),
     World(
         id: "coruscant",
@@ -181,7 +180,8 @@ let WORLDS: [World] = [
         name: "Niamos",
         description: "A sunny, tropical beach planet known for its vibrant resorts and relaxing atmosphere.",
         climate: .ocean,
-        color: WorldColor(primary: "#7B9684", headline: "#DBDFBF")
+        color: WorldColor(primary: "#7B9684", headline: "#DBDFBF"),
+        isPremium: true
     ),
     World(
         id: "nur",

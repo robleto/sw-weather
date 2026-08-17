@@ -44,7 +44,6 @@ export const WORLDS: readonly World[] = [
 		description: "A shipyard world of green industrial haze, its cranes fading into the murk.",
 		climate: "urban",
 		color: { primary: "#3E6B57", headline: "#C3D68F" },
-		isPremium: true,
 	},
 	{
 		id: "coruscant",
@@ -183,6 +182,7 @@ export const WORLDS: readonly World[] = [
 		description: "A sunny, tropical beach planet known for its vibrant resorts and relaxing atmosphere.",
 		climate: "ocean",
 		color: { primary: "#7B9684", headline: "#DBDFBF" },
+		isPremium: true,
 	},
 	{
 		id: "nur",

@@ -33,7 +33,7 @@ let SLOTS: [Slot] = [
     // ── Atmosphere ───────────────────────────────────────────────────────
     Slot(id: "mist", label: "Mist", group: .atmosphere, defaultWorld: "endor"),
     Slot(id: "fog", label: "Fog", group: .atmosphere, defaultWorld: "endor"),
-    Slot(id: "haze", label: "Haze", group: .atmosphere, defaultWorld: "niamos"),
+    Slot(id: "haze", label: "Haze", group: .atmosphere, defaultWorld: "corellia"),
     Slot(id: "smoke", label: "Smoke & ash", group: .atmosphere, defaultWorld: "mustafar"),
     Slot(id: "jakku", label: "Dust & sand", group: .atmosphere, defaultWorld: "tatooine"),
 

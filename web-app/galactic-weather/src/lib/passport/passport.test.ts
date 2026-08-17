@@ -283,9 +283,10 @@ describe("progress", () => {
 		expect(progress.wildFound).toBe(19);
 
 		const ocean = progress.biomes.find((b) => b.climate === "ocean")!;
-		expect([ocean.found, ocean.wild, ocean.total, ocean.wildTotal]).toEqual([5, 3, 5, 3]);
+		expect([ocean.found, ocean.wild, ocean.total, ocean.wildTotal]).toEqual([5, 2, 5, 2]);
 		expect(ocean.worlds.filter((w) => !w.wildReachable).map((w) => w.world.id).sort()).toEqual([
 			"ahch-to",
+			"niamos",
 			"nur",
 		]);
 	});
