@@ -2,22 +2,22 @@
 
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
-import styles from "../styles/WeatherTwins.module.css";
+import styles from "../styles/Atlas.module.css";
 import PlanetPicker from "./PlanetPicker";
-import { SLOTS, SLOT_GROUP_ORDER, SLOT_RANGE_HINT, getSlot } from "@/lib/weathertwins/slots";
-import { resolveWorld } from "@/lib/weathertwins/resolve";
-import { getWorld } from "@/lib/weathertwins/worlds";
-import type { SlotId, WeatherTwinsOverrides, WorldId } from "@/lib/weathertwins/types";
+import { SLOTS, SLOT_GROUP_ORDER, SLOT_RANGE_HINT, getSlot } from "@/lib/atlas/slots";
+import { resolveWorld } from "@/lib/atlas/resolve";
+import { getWorld } from "@/lib/atlas/worlds";
+import type { SlotId, AtlasOverrides, WorldId } from "@/lib/atlas/types";
 
-interface WeatherTwinsProps {
-	overrides: WeatherTwinsOverrides;
+interface AtlasProps {
+	overrides: AtlasOverrides;
 	onToggleWorld: (slotId: SlotId, worldId: WorldId) => void;
 	onResetSlot: (slotId: SlotId) => void;
 	onResetAll: () => void;
 	onClose: () => void;
 }
 
-const WeatherTwins: React.FC<WeatherTwinsProps> = ({
+const Atlas: React.FC<AtlasProps> = ({
 	overrides,
 	onToggleWorld,
 	onResetSlot,
@@ -50,7 +50,7 @@ const WeatherTwins: React.FC<WeatherTwinsProps> = ({
 	const customizedCount = Object.keys(overrides).length;
 
 	return (
-		<div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Weather Twins">
+		<div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Atlas">
 			{backdropWorldId && (
 				<div className={styles.backdrop} key={backdropWorldId}>
 					<Image
@@ -68,7 +68,7 @@ const WeatherTwins: React.FC<WeatherTwinsProps> = ({
 			<div className={styles.content}>
 				<header className={styles.header}>
 					<div>
-						<p className={styles.eyebrow}>Your Weather Twins</p>
+						<p className={styles.eyebrow}>Your Atlas</p>
 						<h2 className={styles.title}>Reassign any condition</h2>
 					</div>
 					<button type="button" className={styles.closeButton} onClick={onClose}>
@@ -165,4 +165,4 @@ const WeatherTwins: React.FC<WeatherTwinsProps> = ({
 	);
 };
 
-export default WeatherTwins;
+export default Atlas;

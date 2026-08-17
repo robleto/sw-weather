@@ -7,10 +7,10 @@ import { fetchWeatherByCoordinates } from "./utils/fetchWeather";
 import { getSlotForWeather } from "./utils/weatherDescriptions";
 import LocationSearch from "./components/LocationSearch";
 import WeatherDetails from "./components/WeatherDetails";
-import WeatherTwins from "./components/WeatherTwins";
+import Atlas from "./components/Atlas";
 import Footer from "./components/Footer";
-import { useWeatherTwins } from "./hooks/useWeatherTwins";
-import { resolveWorld } from "@/lib/weathertwins/resolve";
+import { useAtlas } from "./hooks/useAtlas";
+import { resolveWorld } from "@/lib/atlas/resolve";
 import { geocodeLocation } from "@/lib/location/geocode";
 import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
 
@@ -38,9 +38,9 @@ const Home = () => {
   const [appPhase, setAppPhase] = useState<AppPhase>("idle");
   const [pageError, setPageError] = useState<string | null>(null);
   const [isWeatherLoading, setIsWeatherLoading] = useState(false);
-  const [isWeatherTwinsOpen, setIsWeatherTwinsOpen] = useState(false);
+  const [isAtlasOpen, setIsAtlasOpen] = useState(false);
 
-  const weatherTwins = useWeatherTwins();
+  const atlas = useAtlas();
 
   // ── fetch + land ──────────────────────────────────────────────────────────
 
@@ -122,14 +122,14 @@ const Home = () => {
 
   // ─── derived display values ────────────────────────────────────────────────
 
-  // Weather picks the slot; Weather Twins decides which world that slot shows.
+  // Weather picks the slot; Atlas decides which world that slot shows.
   const weatherInfo = weatherData
     ? resolveWorld(
         getSlotForWeather(
           weatherData.weather[0].main,
           weatherData.main.temp
         ),
-        weatherTwins.overrides
+        atlas.overrides
       )
     : {
         slotId: "",
@@ -167,13 +167,13 @@ const Home = () => {
             />
             <button
               type="button"
-              className={styles.weatherTwinsButton}
-              onClick={() => setIsWeatherTwinsOpen(true)}
+              className={styles.atlasButton}
+              onClick={() => setIsAtlasOpen(true)}
             >
-              Weather Twins
-              {weatherTwins.customizedCount > 0 && (
-                <span className={styles.weatherTwinsCount}>
-                  {weatherTwins.customizedCount}
+              Atlas
+              {atlas.customizedCount > 0 && (
+                <span className={styles.atlasCount}>
+                  {atlas.customizedCount}
                 </span>
               )}
             </button>
@@ -233,14 +233,14 @@ const Home = () => {
         </>
       )}
 
-      {/* ── Weather Twins overlay ─────────────────────────────────────────── */}
-      {isWeatherTwinsOpen && (
-        <WeatherTwins
-          overrides={weatherTwins.overrides}
-          onToggleWorld={weatherTwins.toggleWorld}
-          onResetSlot={weatherTwins.resetSlot}
-          onResetAll={weatherTwins.resetAll}
-          onClose={() => setIsWeatherTwinsOpen(false)}
+      {/* ── Atlas overlay ─────────────────────────────────────────── */}
+      {isAtlasOpen && (
+        <Atlas
+          overrides={atlas.overrides}
+          onToggleWorld={atlas.toggleWorld}
+          onResetSlot={atlas.resetSlot}
+          onResetAll={atlas.resetAll}
+          onClose={() => setIsAtlasOpen(false)}
         />
       )}
     </main>

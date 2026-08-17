@@ -1,18 +1,18 @@
 import { getSlot } from "./slots";
 import { isKnownWorld } from "./worlds";
-import type { WeatherTwinsOverrides } from "./types";
+import type { AtlasOverrides } from "./types";
 
-const STORAGE_KEY = "galacticweather:weathertwins:v1";
+const STORAGE_KEY = "galacticweather:atlas:v1";
 
 /**
  * Drop anything we don't recognize. Stored assignments outlive deploys, so a
  * slot or world removed in a later release must not break the whole set —
  * the unknown entry is discarded and that slot falls back to its default.
  */
-const sanitize = (raw: unknown): WeatherTwinsOverrides => {
+const sanitize = (raw: unknown): AtlasOverrides => {
 	if (!raw || typeof raw !== "object") return {};
 
-	const result: WeatherTwinsOverrides = {};
+	const result: AtlasOverrides = {};
 
 	for (const [slotId, value] of Object.entries(raw as Record<string, unknown>)) {
 		if (!getSlot(slotId)) continue;
@@ -29,7 +29,7 @@ const sanitize = (raw: unknown): WeatherTwinsOverrides => {
 	return result;
 };
 
-export const loadOverrides = (): WeatherTwinsOverrides => {
+export const loadOverrides = (): AtlasOverrides => {
 	if (typeof window === "undefined") return {};
 	try {
 		const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -42,7 +42,7 @@ export const loadOverrides = (): WeatherTwinsOverrides => {
 	}
 };
 
-export const saveOverrides = (overrides: WeatherTwinsOverrides): void => {
+export const saveOverrides = (overrides: AtlasOverrides): void => {
 	if (typeof window === "undefined") return;
 	try {
 		window.localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));

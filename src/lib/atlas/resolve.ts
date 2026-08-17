@@ -1,6 +1,6 @@
 import { FALLBACK_SLOT_ID, getSlot } from "./slots";
 import { getWorld } from "./worlds";
-import type { ResolvedWorld, SlotId, WeatherTwinsOverrides, WorldId } from "./types";
+import type { ResolvedWorld, SlotId, AtlasOverrides, WorldId } from "./types";
 
 /**
  * Stable hash of a string -> non-negative int. Used to pick which world a
@@ -44,7 +44,7 @@ export const pickWorldForSlot = (
  */
 export const resolveWorld = (
 	slotId: SlotId,
-	overrides: WeatherTwinsOverrides = {},
+	overrides: AtlasOverrides = {},
 	now: Date = new Date()
 ): ResolvedWorld => {
 	const slot = getSlot(slotId) ?? getSlot(FALLBACK_SLOT_ID)!;

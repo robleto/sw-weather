@@ -1,17 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { clearOverrides, loadOverrides, saveOverrides } from "@/lib/weathertwins/storage";
-import type { SlotId, WeatherTwinsOverrides, WorldId } from "@/lib/weathertwins/types";
+import { clearOverrides, loadOverrides, saveOverrides } from "@/lib/atlas/storage";
+import type { SlotId, AtlasOverrides, WorldId } from "@/lib/atlas/types";
 
 /**
- * Owns the user's Weather Twins (their slot -> world assignments).
+ * Owns the user's Atlas (their slot -> world assignments).
  *
  * Starts empty and hydrates from storage in an effect rather than during
  * render, so the server and first client render agree.
  */
-export const useWeatherTwins = () => {
-	const [overrides, setOverrides] = useState<WeatherTwinsOverrides>({});
+export const useAtlas = () => {
+	const [overrides, setOverrides] = useState<AtlasOverrides>({});
 	const [hydrated, setHydrated] = useState(false);
 
 	useEffect(() => {
@@ -19,7 +19,7 @@ export const useWeatherTwins = () => {
 		setHydrated(true);
 	}, []);
 
-	const persist = useCallback((next: WeatherTwinsOverrides) => {
+	const persist = useCallback((next: AtlasOverrides) => {
 		setOverrides(next);
 		saveOverrides(next);
 	}, []);
