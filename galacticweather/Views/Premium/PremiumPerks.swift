@@ -12,14 +12,14 @@ struct PremiumPerk: Identifiable {
         PremiumPerk(
             id: "worlds",
             symbol: "globe.americas.fill",
-            title: "Every world",
+            title: "Every world in our Atlas",
             detail: "Unlock all \(AtlasCatalog.premiumWorldCount) locked worlds — and every new one added later."
         ),
         PremiumPerk(
             id: "rotation",
             symbol: "shuffle",
-            title: "Weather Twin rotation",
-            detail: "Assign several worlds to one condition and let them rotate, one per day."
+            title: "Multiple Worlds",
+            detail: "Assign several worlds to one condition and let it randomize, one per day."
         ),
         PremiumPerk(
             id: "saved",

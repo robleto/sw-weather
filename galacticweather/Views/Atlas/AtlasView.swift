@@ -143,7 +143,7 @@ struct AtlasView: View {
             if !PremiumGate.isPremium {
                 PremiumUpsellCard(
                     headline: "Unlock \(AtlasCatalog.premiumWorldCount) more worlds",
-                    subhead: "You're using \(AtlasCatalog.freeWorldCount) of \(WORLDS.count) worlds. Premium opens the rest of the catalog — plus daily rotation and saved locations."
+                    subhead: "You're using \(AtlasCatalog.freeWorldCount) of \(WORLDS.count) worlds. Premium opens the rest of the catalog — plus multiple worlds per condition and saved locations."
                 ) {
                     isPaywallOpen = true
                 }

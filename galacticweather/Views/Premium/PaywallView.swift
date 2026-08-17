@@ -12,7 +12,7 @@ enum PaywallContext {
         case .general: return "Galactic Weather Premium"
         case .lockedWorld: return "Unlock every world"
         case .multiAssign: return "Assign several worlds"
-        case .savedLocations: return "Keep your favorite skies"
+        case .savedLocations: return "Keep your favorite destinations"
         }
     }
 
@@ -23,7 +23,7 @@ enum PaywallContext {
         case .lockedWorld:
             return "Premium adds this world — and every other locked one — to your picker, forever."
         case .multiAssign:
-            return "Give one condition a handful of worlds and let them rotate, one per day."
+            return "Give one condition a handful of worlds and let it randomize, one per day."
         case .savedLocations:
             return "Premium saves up to \(PremiumGate.maxSavedLocations) locations and syncs them across your devices."
         }

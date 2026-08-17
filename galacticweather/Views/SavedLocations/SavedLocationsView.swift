@@ -48,7 +48,7 @@ struct SavedLocationsView: View {
                     .font(.system(size: 12, weight: .medium))
                     .tracking(1.8)
                     .foregroundStyle(.white.opacity(0.6))
-                Text("Your favorite skies")
+                Text("Your favorite destinations")
                     .font(.custom("PoiretOne-Regular", size: 30))
                     .tracking(0.5)
             }

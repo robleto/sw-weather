@@ -88,7 +88,7 @@ struct PlanetPickerView: View {
     private var header: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 3) {
-                Text("WEATHER TWIN FOR")
+                Text("WORLD FOR")
                     .font(.system(size: 11, weight: .medium))
                     .tracking(1.6)
                     .foregroundStyle(.white.opacity(0.55))
@@ -123,7 +123,7 @@ struct PlanetPickerView: View {
         guard canMultiAssign else {
             return "Pick one world for this condition."
         }
-        return "Pick one world, or several to rotate between them daily."
+        return "Pick one world, or several to randomize between them daily."
     }
 
     private var controls: some View {

@@ -42,5 +42,5 @@ enum PremiumGate {
     static let maxSavedLocations = 20
 
     /// Copy shown on locked affordances. Keep it short — these render inside pills.
-    static let multiAssignUpsell = "Rotate several worlds daily"
+    static let multiAssignUpsell = "Randomize several worlds daily"
 }
