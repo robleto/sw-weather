@@ -7,6 +7,14 @@ options:
 configFiles:
   Debug: Config/Secrets.xcconfig
   Release: Config/Secrets.xcconfig
+packages:
+  # Analytics. Pinned to the 2.x line — 3.0 is in beta as of August 2026, and
+  # there is nothing in it this app needs. See Services/Analytics.swift for
+  # what is actually sent; the SDK does nothing at all unless
+  # TELEMETRYDECK_APP_ID is set in Config/Secrets.xcconfig.
+  TelemetryDeck:
+    url: https://github.com/TelemetryDeck/SwiftSDK
+    from: 2.14.2
 targets:
   galacticweather:
     type: application
@@ -14,6 +22,8 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: galacticweather
+    dependencies:
+      - package: TelemetryDeck
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.robleto.galacticweather
@@ -45,6 +55,9 @@ targets:
         UIRequiresFullScreen: true
         NSLocationWhenInUseUsageDescription: "Galactic Weather uses your location to show today's forecast and match it to a world."
         OPENWEATHERMAP_API_KEY: "$(OPENWEATHERMAP_API_KEY)"
+        # Absent from Secrets.xcconfig means analytics stays off entirely —
+        # see Services/Analytics.swift.
+        TELEMETRYDECK_APP_ID: "$(TELEMETRYDECK_APP_ID)"
         UIAppFonts:
           - PoiretOne-Regular.ttf
           - RussoOne-Regular.ttf
@@ -59,6 +72,9 @@ targets:
       # bundled copy is regenerated from the real file on every build and the
       # two platforms cannot be checked against different versions of it.
       - path: ../../shared/weather-slot-matrix.json
+        buildPhase: resources
+      # The analytics contract, shared the same way and for the same reason.
+      - path: ../../shared/analytics-signals.json
         buildPhase: resources
     dependencies:
       - target: galacticweather

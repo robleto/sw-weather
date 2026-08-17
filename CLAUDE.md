@@ -136,6 +136,44 @@ artwork but would not be on photography. Re-run `measure-text-tone.py`
 afterwards — it reads this art, though the measurement has proven stable across
 resolutions.
 
+## Analytics
+
+**`shared/analytics-signals.json` is the second parity fixture**, playing the
+same role for analytics that `weather-slot-matrix.json` plays for the weather
+mapper, and for the same reason: signal names and payload keys are implemented
+twice (`web-app/.../src/lib/analytics/signals.ts` and
+`ios-app/.../Services/AnalyticsSignals.swift`). Drift there is worse than a
+broken test — two vocabularies land in one dashboard and the numbers look
+comparable when they aren't. Both suites assert against it. Unlike the slot
+matrix it is **hand-authored, not generated**: it is a contract being chosen,
+so edit it deliberately and expect both suites to go red until both platforms
+agree.
+
+**Six signals, and adding a seventh is a decision, not a detail.** They exist to
+answer three questions — did someone come back, did they open Atlas, did they
+collect a stamp — plus the paywall denominator on iOS. Anything that doesn't
+answer one of those is noise being paid for in user trust.
+
+**`payloadKeyAllowlist` is a privacy boundary enforced by test on both
+platforms.** Cities, coordinates, search queries and world names are absent by
+design. Slot IDs (`snow`, `clear_scorching`) go instead of world names: they
+answer the same product question in generic weather vocabulary and carry none
+of the catalog's documented IP exposure. Stamp totals are bucketed rather than
+exact, because an exact count fingerprints a person once it gets large.
+
+**Analytics is off unless explicitly configured**, on purpose — a fresh clone,
+every local build, Xcode previews, and both test suites all send nothing. Web
+reads `NEXT_PUBLIC_TELEMETRYDECK_APP_ID`; iOS reads `TELEMETRYDECK_APP_ID` from
+`Config/Secrets.xcconfig` via Info.plist, the same route as the weather key. Web
+additionally honors Do Not Track and Global Privacy Control.
+
+**The policy at `/privacy` is the only copy, and it is a factual claim about
+this code.** `web-app/.../src/app/privacy/page.tsx` is the canonical text and
+the URL App Store Connect gets at submission. If a signal changes, that page
+changes with it, and so do `PrivacyInfo.xcprivacy` and the nutrition-label
+answers in App Store Connect — the third of those is a web form and nothing in
+this repo can enforce it.
+
 **XcodeGen owns the Xcode project.** `ios-app/galacticweather/project.yml` is
 the source of truth; `galacticweather.xcodeproj` is generated. After adding or
 removing *any* file under `ios-app/`, run `xcodegen generate` — otherwise the

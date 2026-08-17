@@ -240,6 +240,21 @@ final class WeatherViewModel {
             loaded.fetchedAt = Date()
             states[kind] = loaded
             appPhase = .landed
+
+            // Fired per successful fetch rather than from a view's appearance,
+            // so paging back to an already-loaded world doesn't count twice.
+            if let condition = weather.weather.first {
+                Analytics.track(
+                    AnalyticsSignal.forecastLanded,
+                    AnalyticsPayload.forecastLanded(
+                        slotId: WeatherDescriptionMapper.getSlotForWeather(
+                            conditionCode: condition.id,
+                            weatherMain: condition.main,
+                            tempKelvin: weather.main.temp
+                        )
+                    )
+                )
+            }
         } catch {
             var failed = state(for: kind)
             failed.isLoading = false

@@ -62,5 +62,14 @@ final class PassportViewModel {
 
         passport = next
         PassportStorage.save(next)
+
+        Analytics.track(
+            AnalyticsSignal.passportStampEarned,
+            AnalyticsPayload.passportStampEarned(
+                slotId: resolved.slotId,
+                kind: stampKind(for: resolved),
+                totalStamps: next.count
+            )
+        )
     }
 }

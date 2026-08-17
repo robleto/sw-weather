@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import styles from "../styles/Footer.module.css";
 
 /**
@@ -44,7 +45,7 @@ const Footer: React.FC = () => (
 			>
 				Greg Robleto
 			</a>
-			.
+			. <Link href="/privacy">Privacy</Link>.
 		</p>
 	</footer>
 );

@@ -52,6 +52,11 @@ final class AtlasViewModel {
         guard let world = getWorld(worldId), PremiumGate.canUseWorld(world) else { return }
         overrides[slotId] = [worldId]
         AtlasStorage.save(overrides)
+
+        Analytics.track(
+            AnalyticsSignal.atlasWorldAssigned,
+            AnalyticsPayload.atlasWorldAssigned(slotId: slotId, action: .assign)
+        )
     }
 
     /// Add or remove a single world from a slot, for multi-assign.
@@ -73,6 +78,16 @@ final class AtlasViewModel {
             overrides[slotId] = assigned
         }
         AtlasStorage.save(overrides)
+
+        // Read from `existing`, before the mutation above, so the signal says
+        // which direction the toggle went.
+        Analytics.track(
+            AnalyticsSignal.atlasWorldAssigned,
+            AnalyticsPayload.atlasWorldAssigned(
+                slotId: slotId,
+                action: existing.contains(worldId) ? .unassign : .assign
+            )
+        )
     }
 
     func resetSlot(_ slotId: SlotId) {

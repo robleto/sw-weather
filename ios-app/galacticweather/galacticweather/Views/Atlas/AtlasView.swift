@@ -42,6 +42,9 @@ struct AtlasView: View {
             .presentationDragIndicator(.visible)
             .presentationBackground(Color(hex: "#0a0e16").opacity(0.97))
         }
+        // On the view rather than at the presentation site, so it counts an
+        // Atlas that was actually shown no matter which screen opened it.
+        .onAppear { Analytics.track(AnalyticsSignal.atlasOpened) }
     }
 
     @ViewBuilder

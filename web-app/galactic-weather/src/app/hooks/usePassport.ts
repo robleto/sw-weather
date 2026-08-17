@@ -2,10 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { loadPassport, savePassport } from "@/lib/passport/storage";
-import { recordSighting, type SightingContext } from "@/lib/passport/record";
+import { recordSighting, stampKind, type SightingContext } from "@/lib/passport/record";
 import { buildProgress } from "@/lib/passport/progress";
 import type { Passport } from "@/lib/passport/types";
 import type { ResolvedWorld } from "@/lib/atlas/types";
+import { track } from "@/lib/analytics/analytics";
+import { SIGNALS, passportStampEarnedPayload } from "@/lib/analytics/signals";
 
 /**
  * How long a world must stay on screen before it's stamped.
@@ -27,8 +29,22 @@ export const usePassport = () => {
 	const [passport, setPassport] = useState<Passport>({});
 	const [hydrated, setHydrated] = useState(false);
 
+	/**
+	 * Mirrors `passport`, updated synchronously.
+	 *
+	 * `record` needs to know whether a stamp was actually awarded so it can
+	 * emit a signal for it, and deciding that inside a `setState` updater
+	 * would put a side effect somewhere React is free to run twice — it does
+	 * exactly that in StrictMode, which would double-count every stamp.
+	 * Reading the current book from a ref keeps the decision out of the
+	 * updater and the write purely a state assignment.
+	 */
+	const passportRef = useRef<Passport>({});
+
 	useEffect(() => {
-		setPassport(loadPassport());
+		const loaded = loadPassport();
+		passportRef.current = loaded;
+		setPassport(loaded);
 		setHydrated(true);
 	}, []);
 
@@ -38,12 +54,22 @@ export const usePassport = () => {
 	 * re-renders nor writes.
 	 */
 	const record = useCallback((resolved: ResolvedWorld, context: SightingContext) => {
-		setPassport((current) => {
-			const next = recordSighting(current, resolved, context);
-			if (next === current) return current;
-			savePassport(next);
-			return next;
-		});
+		const current = passportRef.current;
+		const next = recordSighting(current, resolved, context);
+		if (next === current) return;
+
+		passportRef.current = next;
+		savePassport(next);
+		setPassport(next);
+
+		track(
+			SIGNALS.passportStampEarned,
+			passportStampEarnedPayload(
+				resolved.slotId,
+				stampKind(resolved),
+				Object.keys(next).length
+			)
+		);
 	}, []);
 
 	const progress = useMemo(() => buildProgress(passport), [passport]);

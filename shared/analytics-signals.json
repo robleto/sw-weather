@@ -1,0 +1,84 @@
+{
+  "$comment": [
+    "The analytics contract, shared by both platforms — the same role",
+    "weather-slot-matrix.json plays for the weather mapper. Signal names and",
+    "payload keys are implemented twice (TypeScript and Swift), so without a",
+    "fixture the two dashboards would silently diverge into two vocabularies",
+    "and the numbers would stop being comparable. Both suites assert their own",
+    "constants against this file.",
+    "",
+    "Unlike the slot matrix this one is hand-authored, not generated: it is a",
+    "contract being chosen, not a computation being captured. Edit it",
+    "deliberately, and expect both suites to go red until both platforms agree.",
+    "",
+    "payloadKeyAllowlist is the privacy boundary, and it is enforced by test on",
+    "both platforms. City names, search queries, coordinates and world names are",
+    "all absent by design. Slot IDs answer the same product question using",
+    "generic weather vocabulary, and carry none of the catalog's IP exposure."
+  ],
+  "payloadKeyAllowlist": ["slotId", "kind", "action", "totalStamps", "context"],
+  "signals": [
+    {
+      "name": "App.launched",
+      "platforms": ["web", "ios"],
+      "payload": [],
+      "answers": "Did someone come back. Combined with the durable client ID, this alone yields retention."
+    },
+    {
+      "name": "Forecast.landed",
+      "platforms": ["web", "ios"],
+      "payload": ["slotId"],
+      "answers": "Did the core path work at all, and which weather people actually get."
+    },
+    {
+      "name": "Atlas.opened",
+      "platforms": ["web", "ios"],
+      "payload": [],
+      "answers": "Curiosity about Atlas."
+    },
+    {
+      "name": "Atlas.worldAssigned",
+      "platforms": ["web", "ios"],
+      "payload": ["slotId", "action"],
+      "answers": "Intent. The gap between opened and assigned is the interesting number."
+    },
+    {
+      "name": "Passport.stampEarned",
+      "platforms": ["web", "ios"],
+      "payload": ["slotId", "kind", "totalStamps"],
+      "answers": "Did the collection loop actually engage anyone."
+    },
+    {
+      "name": "Premium.paywallShown",
+      "platforms": ["ios"],
+      "payload": ["context"],
+      "answers": "The denominator for purchases. App Store Connect reports sales but cannot report who saw the offer and declined. `context` is which gate sent them there — a locked world, a second world on one slot, or saved locations — so a low conversion rate can be attributed to a gate rather than to the price."
+    }
+  ],
+  "stampCountBuckets": [
+    { "upTo": 1, "label": "1" },
+    { "upTo": 5, "label": "2-5" },
+    { "upTo": 15, "label": "6-15" },
+    { "upTo": null, "label": "16+" }
+  ],
+  "$stampCountProbeComment": [
+    "Every bucket boundary and the value on each side of it, so no cutoff can",
+    "move without shifting at least one probe. 0 and negatives are defensive:",
+    "a count should never be below 1, and both platforms clamp rather than",
+    "emitting an unlabelled bucket."
+  ],
+  "stampCountProbes": [
+    { "count": -1, "bucket": "1" },
+    { "count": 0, "bucket": "1" },
+    { "count": 1, "bucket": "1" },
+    { "count": 2, "bucket": "2-5" },
+    { "count": 4, "bucket": "2-5" },
+    { "count": 5, "bucket": "2-5" },
+    { "count": 6, "bucket": "6-15" },
+    { "count": 14, "bucket": "6-15" },
+    { "count": 15, "bucket": "6-15" },
+    { "count": 16, "bucket": "16+" },
+    { "count": 43, "bucket": "16+" },
+    { "count": 1000, "bucket": "16+" }
+  ]
+}

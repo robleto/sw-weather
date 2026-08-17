@@ -34,6 +34,7 @@ Open [http://localhost:3000](http://localhost:3000).
   - `GET /api/weather`
   - `GET /api/geocode`
 - `NEXT_PUBLIC_SITE_URL` (production): set to `https://galacticweather.app` in the deployment environment; used for metadata/Open Graph URLs and falls back to `http://localhost:3000` otherwise.
+- `NEXT_PUBLIC_TELEMETRYDECK_APP_ID` (optional): the TelemetryDeck app ID. **Leave it unset locally.** Analytics is entirely inert without it — no SDK is loaded and no identifier is created — so development and any fresh clone send nothing. Set it only in the production deployment environment. See the Analytics section of the root `CLAUDE.md` for what is sent, and `/privacy` for the user-facing version of the same list.
 
 Important migration note:
 

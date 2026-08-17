@@ -24,6 +24,8 @@
 	<string>Galactic Weather uses your location to show today's forecast and match it to a world.</string>
 	<key>OPENWEATHERMAP_API_KEY</key>
 	<string>$(OPENWEATHERMAP_API_KEY)</string>
+	<key>TELEMETRYDECK_APP_ID</key>
+	<string>$(TELEMETRYDECK_APP_ID)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>PoiretOne-Regular.ttf</string>

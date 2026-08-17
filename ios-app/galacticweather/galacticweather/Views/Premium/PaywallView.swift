@@ -16,6 +16,18 @@ enum PaywallContext {
         }
     }
 
+    /// Stable name for analytics. Spelled out rather than derived from the
+    /// case name so renaming a case can't silently rewrite history in the
+    /// dashboard.
+    var analyticsName: String {
+        switch self {
+        case .general: return "general"
+        case .lockedWorld: return "lockedWorld"
+        case .multiAssign: return "multiAssign"
+        case .savedLocations: return "savedLocations"
+        }
+    }
+
     var subhead: String {
         switch self {
         case .general:
@@ -76,6 +88,15 @@ struct PaywallView: View {
         }
         .task {
             await PremiumStore.shared.start()
+        }
+        // The denominator for purchases. App Store Connect reports what sold;
+        // only this reports how many people saw the offer and didn't buy, and
+        // which gate had sent them there.
+        .onAppear {
+            Analytics.track(
+                AnalyticsSignal.premiumPaywallShown,
+                AnalyticsPayload.premiumPaywallShown(context: context)
+            )
         }
         .onChange(of: PremiumStore.shared.isPremium) { _, isPremium in
             if isPremium {

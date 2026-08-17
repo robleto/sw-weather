@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  The app's own privacy manifest. TelemetryDeck ships its own separately; App
+  Store Connect aggregates both.
+
+  This must stay consistent with two other things: the policy published at
+  https://galacticweather.app/privacy, and the nutrition-label answers entered
+  by hand in App Store Connect at submission. Only the first two live in this
+  repository — the third is a form, and nothing here can enforce it.
+
+  What is deliberately NOT declared, because the app does not do it:
+    - NSPrivacyTracking is false, and NSPrivacyTrackingDomains is empty. There
+      is no advertising, no IDFA, no ATT prompt, and nothing correlating this
+      app's users with data from other apps or websites.
+    - Precise location is used to fetch a forecast and immediately discarded;
+      it is never transmitted to us, stored, or tied to an identifier, so it is
+      not a collected data type. NSLocationWhenInUseUsageDescription in
+      Info.plist is what asks for it.
+-->
+<plist version="1.0">
+<dict>
+	<key>NSPrivacyTracking</key>
+	<false/>
+
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array>
+		<!--
+		  The six analytics signals in shared/analytics-signals.json: screens
+		  reached and actions taken. Not linked to identity — there is no
+		  identity in this app to link to.
+		-->
+		<dict>
+			<key>NSPrivacyCollectedDataType</key>
+			<string>NSPrivacyCollectedDataTypeProductInteraction</string>
+			<key>NSPrivacyCollectedDataTypeLinked</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypeTracking</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypePurposes</key>
+			<array>
+				<string>NSPrivacyCollectedDataTypePurposeAnalytics</string>
+			</array>
+		</dict>
+
+		<!--
+		  Declared conservatively. TelemetryDeck derives a per-install
+		  identifier from identifierForVendor and hashes it before sending, so
+		  the raw identifier never leaves the device — but what is sent still
+		  distinguishes one install from another, which is exactly what makes
+		  "did this person come back" answerable. Calling that a Device ID is
+		  the honest reading.
+		-->
+		<dict>
+			<key>NSPrivacyCollectedDataType</key>
+			<string>NSPrivacyCollectedDataTypeDeviceID</string>
+			<key>NSPrivacyCollectedDataTypeLinked</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypeTracking</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypePurposes</key>
+			<array>
+				<string>NSPrivacyCollectedDataTypePurposeAnalytics</string>
+			</array>
+		</dict>
+	</array>
+
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<!--
+		  UserDefaults, used by AtlasStorage, PassportStorage and
+		  SavedLocationsStorage as the local mirror of the iCloud key-value
+		  store. CA92.1 is the "access info from same app only" reason, which
+		  is what this is: nothing here is shared with an app group or another
+		  developer's app.
+		-->
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>CA92.1</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

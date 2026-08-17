@@ -17,6 +17,12 @@ import { resolveWorld } from "@/lib/atlas/resolve";
 import { convertKelvinToFahrenheit } from "./utils/temperature";
 import { geocodeLocation } from "@/lib/location/geocode";
 import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
+import { startAnalytics, track } from "@/lib/analytics/analytics";
+import {
+  SIGNALS,
+  atlasWorldAssignedPayload,
+  forecastLandedPayload,
+} from "@/lib/analytics/signals";
 import { planetImageSrc } from "@/lib/atlas/worlds";
 
 // ─── types ────────────────────────────────────────────────────────────────────
@@ -50,6 +56,21 @@ const Home = () => {
   const atlas = useAtlas();
   const passport = usePassport();
 
+  // Assigning is the Atlas signal that matters — opening it is curiosity,
+  // picking a world is intent. The current assignment is read before toggling
+  // so the signal can say which direction it went.
+  const handleToggleWorld = useCallback(
+    (slotId: string, worldId: string) => {
+      const wasAssigned = (atlas.overrides[slotId] ?? []).includes(worldId);
+      atlas.toggleWorld(slotId, worldId);
+      track(
+        SIGNALS.atlasWorldAssigned,
+        atlasWorldAssignedPayload(slotId, wasAssigned ? "unassign" : "assign")
+      );
+    },
+    [atlas.overrides, atlas.toggleWorld]
+  );
+
   // ── fetch + land ──────────────────────────────────────────────────────────
 
   const goToLocation = useCallback(
@@ -62,6 +83,18 @@ const Home = () => {
       try {
         const data = await fetchWeatherByCoordinates(lat, lon);
         setWeatherData(data);
+        // Fired here rather than from a render effect so it marks one
+        // successful fetch, not every re-render that happens to be landed.
+        track(
+          SIGNALS.forecastLanded,
+          forecastLandedPayload(
+            getSlotForWeather({
+              id: data.weather[0].id,
+              main: data.weather[0].main,
+              tempKelvin: data.main.temp,
+            })
+          )
+        );
       } catch (error) {
         console.error("Error fetching weather:", error);
         setPageError("We couldn't load weather right now. Please try again.");
@@ -94,6 +127,15 @@ const Home = () => {
     },
     [goToLocation]
   );
+
+  // ── mount: analytics ──────────────────────────────────────────────────────
+
+  // Does nothing at all unless NEXT_PUBLIC_TELEMETRYDECK_APP_ID is set, so
+  // local development and anyone who clones this send nothing.
+  useEffect(() => {
+    void startAnalytics();
+    track(SIGNALS.appLaunched);
+  }, []);
 
   // ── mount: geolocation or URL param ───────────────────────────────────────
 
@@ -208,7 +250,10 @@ const Home = () => {
               <button
                 type="button"
                 className={styles.navAction}
-                onClick={() => setIsAtlasOpen(true)}
+                onClick={() => {
+                  setIsAtlasOpen(true);
+                  track(SIGNALS.atlasOpened);
+                }}
               >
                 Atlas
                 {atlas.customizedCount > 0 && (
@@ -290,7 +335,7 @@ const Home = () => {
       {isAtlasOpen && (
         <Atlas
           overrides={atlas.overrides}
-          onToggleWorld={atlas.toggleWorld}
+          onToggleWorld={handleToggleWorld}
           onResetSlot={atlas.resetSlot}
           onResetAll={atlas.resetAll}
           onClose={() => setIsAtlasOpen(false)}
