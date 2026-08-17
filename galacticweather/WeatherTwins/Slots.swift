@@ -26,12 +26,12 @@ let SLOTS: [Slot] = [
     Slot(id: "fog", label: "Fog", group: .atmosphere, defaultWorld: "endor"),
     Slot(id: "haze", label: "Haze", group: .atmosphere, defaultWorld: "niamos"),
     Slot(id: "smoke", label: "Smoke & ash", group: .atmosphere, defaultWorld: "mustafar"),
-    Slot(id: "jakku", label: "Dust & sand", group: .atmosphere, defaultWorld: "jakku"),
+    Slot(id: "jakku", label: "Dust & sand", group: .atmosphere, defaultWorld: "tatooine"),
 
     // ── Cloud cover ──────────────────────────────────────────────────────
-    Slot(id: "clouds_warm", label: "Cloudy · warm", group: .cloudCover, defaultWorld: "at-attin"),
-    Slot(id: "clouds_temperate", label: "Cloudy · mild", group: .cloudCover, defaultWorld: "yavin"),
-    Slot(id: "clouds_cool", label: "Cloudy · cool", group: .cloudCover, defaultWorld: "ghorman"),
+    Slot(id: "clouds_warm", label: "Cloudy · warm", group: .cloudCover, defaultWorld: "bespin"),
+    Slot(id: "clouds_temperate", label: "Cloudy · mild", group: .cloudCover, defaultWorld: "bespin"),
+    Slot(id: "clouds_cool", label: "Cloudy · cool", group: .cloudCover, defaultWorld: "bespin"),
     Slot(id: "clouds_cold", label: "Cloudy · cold", group: .cloudCover, defaultWorld: "bespin"),
 
     // ── Clear skies ──────────────────────────────────────────────────────
