@@ -1,0 +1,28 @@
+{
+  "identifier" : "3E7A1F92",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "5C1B7D40",
+      "localizations" : [
+        {
+          "description" : "Unlock every world, assign several to one condition to rotate daily, and keep favorite locations synced across your devices.",
+          "displayName" : "Galactic Weather Premium",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.robleto.galacticweather.premium",
+      "referenceName" : "Galactic Weather Premium",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+  },
+  "subscriptionGroups" : [],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
