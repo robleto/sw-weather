@@ -16,7 +16,28 @@ final class PremiumStore {
     static let shared = PremiumStore()
     static let productID = "com.robleto.galacticweather.premium"
 
-    private(set) var isPremium: Bool = false
+    /// The real entitlement, derived from StoreKit. Read `isPremium` instead
+    /// — in debug builds it can be overridden.
+    private(set) var entitlementIsActive: Bool = false
+
+    #if DEBUG
+    /// Debug-only entitlement override, driven by the toggle on the Account
+    /// screen. `nil` means "defer to StoreKit".
+    ///
+    /// This exists because the honest paths for flipping *back* to free are
+    /// tedious mid-design-iteration: Xcode's Debug > StoreKit > Manage
+    /// Transactions, or deleting the app. Compiled out of release builds
+    /// entirely, so it can't ship as a way to bypass paying.
+    var debugPremiumOverride: Bool?
+    #endif
+
+    var isPremium: Bool {
+        #if DEBUG
+        if let debugPremiumOverride { return debugPremiumOverride }
+        #endif
+        return entitlementIsActive
+    }
+
     private(set) var product: Product?
     private(set) var isPurchasing: Bool = false
     private(set) var isRestoring: Bool = false
@@ -73,7 +94,7 @@ final class PremiumStore {
                 owned = true
             }
         }
-        isPremium = owned
+        entitlementIsActive = owned
     }
 
     func purchase() async {
@@ -117,7 +138,7 @@ final class PremiumStore {
 
         await refreshEntitlement()
 
-        if !isPremium {
+        if !entitlementIsActive {
             lastErrorMessage = "No previous purchase found on this Apple ID."
         }
     }

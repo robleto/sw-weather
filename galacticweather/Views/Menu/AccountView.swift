@@ -25,6 +25,10 @@ struct AccountView: View {
                 Text("Galactic Weather has no login. Your purchase lives with your Apple ID, and your Atlas and saved locations sync through iCloud.")
                     .font(.system(size: 12))
                     .foregroundStyle(.white.opacity(0.4))
+
+                #if DEBUG
+                debugSection
+                #endif
             }
         }
         .sheet(isPresented: $isPaywallOpen) {
@@ -115,6 +119,55 @@ struct AccountView: View {
         }
     }
 }
+
+#if DEBUG
+extension AccountView {
+    /// Debug-only entitlement switch, so free vs. premium UI can be compared
+    /// without buying (even fake money) or hunting through Xcode's
+    /// Debug > StoreKit > Manage Transactions to get back to free.
+    /// Compiled out of release builds along with the override it drives.
+    private var debugSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Divider().overlay(Color.white.opacity(0.15))
+
+            Text("DEBUG")
+                .font(.system(size: 11, weight: .medium))
+                .tracking(1.4)
+                .foregroundStyle(.orange.opacity(0.8))
+
+            Picker("Entitlement", selection: debugOverrideBinding) {
+                Text("StoreKit").tag(nil as Bool?)
+                Text("Force free").tag(false as Bool?)
+                Text("Force premium").tag(true as Bool?)
+            }
+            .pickerStyle(.segmented)
+
+            Text(debugExplanation)
+                .font(.system(size: 11))
+                .foregroundStyle(.white.opacity(0.45))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var debugOverrideBinding: Binding<Bool?> {
+        Binding(
+            get: { PremiumStore.shared.debugPremiumOverride },
+            set: { PremiumStore.shared.debugPremiumOverride = $0 }
+        )
+    }
+
+    private var debugExplanation: String {
+        switch PremiumStore.shared.debugPremiumOverride {
+        case nil:
+            return "Using the real StoreKit entitlement (currently \(PremiumStore.shared.entitlementIsActive ? "owned" : "not owned")). Purchases run against Products.storekit, so no real money changes hands."
+        case true?:
+            return "Overriding to premium. Nothing was purchased."
+        case false?:
+            return "Overriding to free, even if the purchase is owned."
+        }
+    }
+}
+#endif
 
 #Preview {
     AccountView()
