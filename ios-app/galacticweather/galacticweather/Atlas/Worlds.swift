@@ -24,7 +24,7 @@ let WORLDS: [World] = [
         climate: .temperate,
         color: WorldColor(primary: "#5F749E", headline: "#C4D8E8"),
         textTone: .light,
-        textColor: "#E8F0F6",
+        textColor: "#C4D8E8",
         isPremium: true
     ),
     World(
@@ -34,7 +34,7 @@ let WORLDS: [World] = [
         climate: .temperate,
         color: WorldColor(primary: "#7A9E8A", headline: "#C8E0D0"),
         textTone: .light,
-        textColor: "#C9E1D1"
+        textColor: "#C8E0D0"
     ),
     World(
         id: "bespin",
@@ -43,7 +43,7 @@ let WORLDS: [World] = [
         climate: .sky,
         color: WorldColor(primary: "#C15A51", headline: "#F4BE9C"),
         textTone: .light,
-        textColor: "#F5C7A9"
+        textColor: "#F5C1A1"
     ),
     World(
         id: "corellia",
@@ -81,7 +81,7 @@ let WORLDS: [World] = [
         climate: .forest,
         color: WorldColor(primary: "#48542D", headline: "#6C7858"),
         textTone: .light,
-        textColor: "#C2C7B9"
+        textColor: "#C4C9BC"
     ),
     World(
         id: "daiyu",
@@ -117,7 +117,7 @@ let WORLDS: [World] = [
         climate: .storm,
         color: WorldColor(primary: "#9589A4", headline: "#686788"),
         textTone: .light,
-        textColor: "#727190"
+        textColor: "#706F8E"
     ),
     World(
         id: "ferrix",
@@ -146,7 +146,7 @@ let WORLDS: [World] = [
         climate: .urban,
         color: WorldColor(primary: "#7A8090", headline: "#B8C0C8"),
         textTone: .light,
-        textColor: "#F8F9FA"
+        textColor: "#F3F4F6"
     ),
     World(
         id: "hoth",
@@ -155,7 +155,7 @@ let WORLDS: [World] = [
         climate: .ice,
         color: WorldColor(primary: "#39657F", headline: "#6DB3DC"),
         textTone: .light,
-        textColor: "#AAD3EB"
+        textColor: "#72B6DD"
     ),
     World(
         id: "ilum",
@@ -212,7 +212,7 @@ let WORLDS: [World] = [
         climate: .forest,
         color: WorldColor(primary: "#6C7F74", headline: "#7C9688"),
         textTone: .light,
-        textColor: "#D3DCD7"
+        textColor: "#D6DED9"
     ),
     World(
         id: "kef-bir",
@@ -317,7 +317,7 @@ let WORLDS: [World] = [
         climate: .temperate,
         color: WorldColor(primary: "#7A609B", headline: "#B5C0EE"),
         textTone: .light,
-        textColor: "#DAE0F6"
+        textColor: "#D0D7F4"
     ),
     World(
         id: "nevarro",
@@ -336,7 +336,7 @@ let WORLDS: [World] = [
         climate: .ocean,
         color: WorldColor(primary: "#7B9684", headline: "#DBDFBF"),
         textTone: .light,
-        textColor: "#E9EBD8",
+        textColor: "#E7EAD4",
         isPremium: true
     ),
     World(
@@ -405,7 +405,7 @@ let WORLDS: [World] = [
         climate: .desert,
         color: WorldColor(primary: "#944505", headline: "#FDC683"),
         textTone: .light,
-        textColor: "#FED7A8"
+        textColor: "#FDCA8B"
     ),
     World(
         id: "yavin",

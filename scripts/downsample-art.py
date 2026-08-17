@@ -36,7 +36,8 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
-    files = sorted(WEB.glob("*.png"))
+    files = sorted(f for f in WEB.iterdir()
+                   if f.suffix.lower() in (".png", ".jpg", ".jpeg"))
     if not files:
         sys.exit(f"no art found in {WEB}")
 
@@ -57,7 +58,12 @@ def main():
             resized.append((f.name, (w, h), target, None))
             continue
         out = im.convert("RGB").resize(target, Image.LANCZOS)
-        out.save(f, "PNG", optimize=True)
+        if f.suffix.lower() == ".png":
+            out.save(f, "PNG", optimize=True)
+        else:
+            # 85 is ample for flat painterly art and an order of magnitude
+            # smaller than PNG for the same pixels.
+            out.save(f, "JPEG", quality=85, optimize=True, progressive=True)
         # iOS keeps its own copy inside the imageset
         twin = IOS / f"{f.stem}.imageset" / f.name
         if twin.exists():

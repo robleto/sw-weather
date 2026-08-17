@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import styles from "../styles/WorldPoster.module.css";
-import { CLIMATE_LABELS } from "@/lib/atlas/worlds";
+import { CLIMATE_LABELS, planetImageSrc } from "@/lib/atlas/worlds";
 import type { Slot, World } from "@/lib/atlas/types";
 
 /**
@@ -128,7 +128,7 @@ const WorldPoster: React.FC<WorldPosterProps> = ({
 				<figure className={styles.poster}>
 					<div className={styles.art}>
 						<Image
-							src={`/planets/${world.id}.png`}
+							src={planetImageSrc(world.id)}
 							alt={`${world.name} — ${world.description}`}
 							fill
 							sizes="(max-width: 640px) 92vw, 560px"

@@ -3,7 +3,8 @@ import type { Climate, World, WorldId } from "./types";
 /**
  * The catalog of worlds available to assign to a weather slot.
  *
- * `id` must match the filename in /public/planets/<id>.png. Descriptions here
+ * `id` must match the filename in /public/planets/ — see planetImageSrc for the
+ * format. Descriptions here
  * are the world's canonical copy — used whenever a world is assigned to a slot
  * that has no slot-specific description of its own (see slots.ts).
  */
@@ -25,7 +26,7 @@ export const WORLDS: readonly World[] = [
 		climate: "temperate",
 		color: { primary: "#5F749E", headline: "#C4D8E8" },
 		textTone: "light",
-		textColor: "#E8F0F6",
+		textColor: "#C4D8E8",
 		isPremium: true,
 	},
 	{
@@ -35,7 +36,7 @@ export const WORLDS: readonly World[] = [
 		climate: "temperate",
 		color: { primary: "#7A9E8A", headline: "#C8E0D0" },
 		textTone: "light",
-		textColor: "#C9E1D1",
+		textColor: "#C8E0D0",
 	},
 	{
 		id: "bespin",
@@ -44,7 +45,7 @@ export const WORLDS: readonly World[] = [
 		climate: "sky",
 		color: { primary: "#C15A51", headline: "#F4BE9C" },
 		textTone: "light",
-		textColor: "#F5C7A9",
+		textColor: "#F5C1A1",
 	},
 	{
 		id: "corellia",
@@ -82,7 +83,7 @@ export const WORLDS: readonly World[] = [
 		climate: "forest",
 		color: { primary: "#48542D", headline: "#6C7858" },
 		textTone: "light",
-		textColor: "#C2C7B9",
+		textColor: "#C4C9BC",
 	},
 	{
 		id: "daiyu",
@@ -118,7 +119,7 @@ export const WORLDS: readonly World[] = [
 		climate: "storm",
 		color: { primary: "#9589A4", headline: "#686788" },
 		textTone: "light",
-		textColor: "#727190",
+		textColor: "#706F8E",
 	},
 	{
 		id: "ferrix",
@@ -147,7 +148,7 @@ export const WORLDS: readonly World[] = [
 		climate: "urban",
 		color: { primary: "#7A8090", headline: "#B8C0C8" },
 		textTone: "light",
-		textColor: "#F8F9FA",
+		textColor: "#F3F4F6",
 	},
 	{
 		id: "hoth",
@@ -156,7 +157,7 @@ export const WORLDS: readonly World[] = [
 		climate: "ice",
 		color: { primary: "#39657F", headline: "#6DB3DC" },
 		textTone: "light",
-		textColor: "#AAD3EB",
+		textColor: "#72B6DD",
 	},
 	{
 		id: "ilum",
@@ -213,7 +214,7 @@ export const WORLDS: readonly World[] = [
 		climate: "forest",
 		color: { primary: "#6C7F74", headline: "#7C9688" },
 		textTone: "light",
-		textColor: "#D3DCD7",
+		textColor: "#D6DED9",
 	},
 	{
 		id: "kef-bir",
@@ -318,7 +319,7 @@ export const WORLDS: readonly World[] = [
 		climate: "temperate",
 		color: { primary: "#7A609B", headline: "#B5C0EE" },
 		textTone: "light",
-		textColor: "#DAE0F6",
+		textColor: "#D0D7F4",
 	},
 	{
 		id: "nevarro",
@@ -337,7 +338,7 @@ export const WORLDS: readonly World[] = [
 		climate: "ocean",
 		color: { primary: "#7B9684", headline: "#DBDFBF" },
 		textTone: "light",
-		textColor: "#E9EBD8",
+		textColor: "#E7EAD4",
 		isPremium: true,
 	},
 	{
@@ -406,7 +407,7 @@ export const WORLDS: readonly World[] = [
 		climate: "desert",
 		color: { primary: "#944505", headline: "#FDC683" },
 		textTone: "light",
-		textColor: "#FED7A8",
+		textColor: "#FDCA8B",
 	},
 	{
 		id: "yavin",
@@ -447,6 +448,15 @@ export const CLIMATE_ORDER: readonly Climate[] = [
 	"sky",
 	"urban",
 ];
+
+/**
+ * The backdrop art for a world.
+ *
+ * Centralized because the extension was hardcoded in eight components, which is
+ * what made moving the art from PNG to JPEG an eight-file change. iOS reads the
+ * same images from Assets.xcassets/Planets instead.
+ */
+export const planetImageSrc = (id: WorldId): string => `/planets/${id}.jpg`;
 
 const WORLD_BY_ID = new Map<WorldId, World>(WORLDS.map((w) => [w.id, w]));
 

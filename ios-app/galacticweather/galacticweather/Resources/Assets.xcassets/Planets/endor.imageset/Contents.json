@@ -1,13 +1,13 @@
 {
-  "images" : [
+  "images": [
     {
-      "filename" : "endor.png",
-      "idiom" : "universal",
-      "scale" : "1x"
+      "filename": "endor.jpg",
+      "idiom": "universal",
+      "scale": "1x"
     }
   ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
+  "info": {
+    "author": "xcode",
+    "version": 1
   }
 }

@@ -6,7 +6,7 @@ import styles from "../styles/Atlas.module.css";
 import PlanetPicker from "./PlanetPicker";
 import { SLOTS, SLOT_GROUP_ORDER, SLOT_RANGE_HINT, getSlot } from "@/lib/atlas/slots";
 import { resolveWorld } from "@/lib/atlas/resolve";
-import { getWorld } from "@/lib/atlas/worlds";
+import { getWorld, planetImageSrc } from "@/lib/atlas/worlds";
 import type { SlotId, AtlasOverrides, WorldId } from "@/lib/atlas/types";
 
 interface AtlasProps {
@@ -54,7 +54,7 @@ const Atlas: React.FC<AtlasProps> = ({
 			{backdropWorldId && (
 				<div className={styles.backdrop} key={backdropWorldId}>
 					<Image
-						src={`/planets/${backdropWorldId}.png`}
+						src={planetImageSrc(backdropWorldId)}
 						alt=""
 						fill
 						sizes="100vw"
@@ -114,7 +114,7 @@ const Atlas: React.FC<AtlasProps> = ({
 											>
 												<span className={styles.slotThumb}>
 													<Image
-														src={`/planets/${resolved.planet}.png`}
+														src={planetImageSrc(resolved.planet)}
 														alt=""
 														fill
 														sizes="56px"

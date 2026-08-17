@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import styles from "../styles/PlanetPicker.module.css";
 import WorldPoster from "./WorldPoster";
-import { CLIMATE_LABELS, WORLDS, getWorld } from "@/lib/atlas/worlds";
+import { CLIMATE_LABELS, WORLDS, getWorld, planetImageSrc } from "@/lib/atlas/worlds";
 import type { Climate, Slot, WorldId } from "@/lib/atlas/types";
 
 // Only offer filters for climates that actually have worlds behind them.
@@ -119,7 +119,7 @@ const PlanetPicker: React.FC<PlanetPickerProps> = ({
 							>
 								<span className={styles.thumb}>
 									<Image
-										src={`/planets/${world.id}.png`}
+										src={planetImageSrc(world.id)}
 										alt=""
 										fill
 										sizes="140px"

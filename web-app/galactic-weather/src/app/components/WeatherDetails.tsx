@@ -3,6 +3,7 @@ import Image from "next/image";
 import weatherStyles from "../styles/WeatherDetails.module.css";
 import parallaxStyles from "../styles/Parallax.module.css";
 import { convertKelvinToFahrenheit } from "../utils/temperature";
+import { planetImageSrc } from "@/lib/atlas/worlds";
 
 interface WeatherData {
 	name: string;
@@ -83,7 +84,7 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 			{!imgError && (
 				<div className={parallaxStyles.imageContainer}>
 					<Image
-						src={`/planets/${weatherInfo.planet}.png`}
+						src={planetImageSrc(weatherInfo.planet)}
 						alt={weatherInfo.planetName}
 						fill
 						sizes="100vw"

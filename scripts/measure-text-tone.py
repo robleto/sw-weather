@@ -53,7 +53,7 @@ def contrast(a, b):
     return (hi + 0.05) / (lo + 0.05)
 
 def region_luminance(world):
-    im = Image.open(ART / f"{world}.png").convert("RGB").resize((200, 157))
+    im = Image.open(ART / f"{world}.jpg").convert("RGB").resize((200, 157))
     W, H = im.size
     px = list(im.crop((int(.20*W), int(.10*H), int(.80*W), int(.45*H))).getdata())
     return sum(relum(p) for p in px) / len(px)

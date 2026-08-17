@@ -17,6 +17,7 @@ import { resolveWorld } from "@/lib/atlas/resolve";
 import { convertKelvinToFahrenheit } from "./utils/temperature";
 import { geocodeLocation } from "@/lib/location/geocode";
 import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
+import { planetImageSrc } from "@/lib/atlas/worlds";
 
 // ─── types ────────────────────────────────────────────────────────────────────
 
@@ -179,7 +180,7 @@ const Home = () => {
       {appPhase === "landed" && weatherInfo.planet !== "default" && (
         <div className={styles.backdrop} aria-hidden="true">
           <Image
-            src={`/planets/${weatherInfo.planet}.png`}
+            src={planetImageSrc(weatherInfo.planet)}
             alt=""
             fill
             priority

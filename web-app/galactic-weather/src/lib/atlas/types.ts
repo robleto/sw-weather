@@ -1,4 +1,4 @@
-/** A world's asset id — must match /public/planets/<id>.png. */
+/** A world's asset id — must match the art in /public/planets/. */
 export type WorldId = string;
 
 /** Coarse climate grouping, used as the filter axis in the planet picker. */

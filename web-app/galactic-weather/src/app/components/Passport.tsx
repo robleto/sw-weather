@@ -8,6 +8,7 @@ import { getSlot } from "@/lib/atlas/slots";
 import type { PassportProgress, WorldProgress } from "@/lib/passport/progress";
 import type { Sighting } from "@/lib/passport/types";
 import type { WorldId } from "@/lib/atlas/types";
+import { planetImageSrc } from "@/lib/atlas/worlds";
 
 interface PassportProps {
 	/** Derived once in `usePassport`, so the book never recomputes it on open. */
@@ -69,7 +70,7 @@ const Passport: React.FC<PassportProps> = ({ progress, onClose }) => {
 			{previewWorldId && (
 				<div className={styles.backdrop} key={previewWorldId}>
 					<Image
-						src={`/planets/${previewWorldId}.png`}
+						src={planetImageSrc(previewWorldId)}
 						alt=""
 						fill
 						sizes="100vw"
@@ -143,7 +144,7 @@ const Passport: React.FC<PassportProps> = ({ progress, onClose }) => {
 											>
 												<span className={styles.stampThumb}>
 													<Image
-														src={`/planets/${entry.world.id}.png`}
+														src={planetImageSrc(entry.world.id)}
 														alt=""
 														fill
 														sizes="72px"

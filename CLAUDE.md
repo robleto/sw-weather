@@ -111,9 +111,18 @@ are served as viewport-sized WebP rather than raw. The planet gradient stays on 
 underneath as the base color while the image loads. If web ever stops drawing
 the photo, the generated `textTone` stops describing what it shows.
 
-**Planet art is 2048px wide, downsampled from the ~4000px originals.** That cut
-the set from 208 MB to 76 MB — shipped app size on iOS, page weight on web. To
-redo it after adding art:
+**Planet art is JPEG at 2048px wide.** Downsampled from ~4000px originals and
+converted from PNG, which took the set from 208 MB to 8.9 MB — shipped app size
+on iOS, page weight on web. PNG was the wrong format for painterly artwork; the
+same pixels cost 76 MB as PNG and 8.9 MB as JPEG at quality 85. The superseded
+PNGs are in the gitignored `archive/superseded-planet-png/`.
+
+The web extension lives in exactly one place, `planetImageSrc` in
+`lib/atlas/worlds.ts` — it was hardcoded in eight components, which is what made
+the format change an eight-file edit. iOS reads the same images from
+`Assets.xcassets/Planets`, where each imageset's `Contents.json` names the `.jpg`.
+
+To redo it after adding art:
 
 ```bash
 python3 scripts/downsample-art.py        # or --width N / --height N
