@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Galactic Weather — app icon concepts</title>
+<style>
+  :root {
+    --bg: #0b0d12;
+    --panel: #14171f;
+    --line: #262b36;
+    --text: #e8ecf4;
+    --dim: #98a1b3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 32px 72px;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: var(--dim); margin: 0 0 36px; font-size: 14px; }
+  .row {
+    display: grid;
+    grid-template-columns: 232px 1fr;
+    gap: 28px;
+    align-items: start;
+    padding: 26px 0;
+    border-top: 1px solid var(--line);
+  }
+  .hero {
+    width: 232px; height: 232px;
+    border-radius: 51px; /* ~22% — approximates the iOS squircle mask */
+    overflow: hidden;
+    display: block;
+  }
+  .hero img { width: 100%; height: 100%; display: block; }
+  .meta h2 { font-size: 17px; margin: 2px 0 6px; }
+  .meta h2 span { color: var(--dim); font-weight: 400; font-size: 14px; }
+  .meta p { margin: 0 0 16px; color: var(--dim); max-width: 62ch; }
+  .sizes { display: flex; gap: 12px; flex-wrap: wrap; }
+  .chip {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 10px;
+    border: 1px solid var(--line);
+  }
+  .chip.light { background: #f2f4f8; }
+  .chip.dark  { background: #16181d; }
+  .chip.photo {
+    background: linear-gradient(140deg, #2c4a6e, #6b4a7a 55%, #b06a4a);
+  }
+  .chip .label { font-size: 11px; color: var(--dim); }
+  .chip.light .label { color: #5b6472; }
+  .chip.photo .label { color: rgba(255,255,255,0.8); }
+  .ico { border-radius: 22.4%; overflow: hidden; display: block; flex: none; }
+  .ico img { width: 100%; height: 100%; display: block; }
+  .s180 { width: 180px; height: 180px; }
+  .s60 { width: 60px; height: 60px; }
+  .s40 { width: 40px; height: 40px; }
+  .s29 { width: 29px; height: 29px; }
+  .note {
+    margin-top: 44px; padding: 18px 20px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    color: var(--dim); font-size: 13.5px;
+  }
+  .note strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<h1>Galactic Weather — app icon concepts</h1>
+<p class="sub">
+  Each concept shown at display size, then at 60&nbsp;pt (home screen),
+  40&nbsp;pt (Settings) and 29&nbsp;pt (notifications), over light, dark and
+  wallpaper-like backgrounds. Corners are rounded for preview only — the
+  shipped asset is a full-bleed square.
+</p>
+
+<div class="row">
+  <span class="hero"><img src="concept-a-binary-dawn.svg" alt="Concept A"></span>
+  <div class="meta">
+    <h2>A — Binary Dawn <span>· limb + two suns</span></h2>
+    <p>
+      Deep-space field over the app's own <code>#05070A</code>, a planet's
+      curved limb across the lower third with a cool rim glow, and two suns
+      that are unmistakably a pair. Keeps the warm palette you liked but sets
+      it against black, so it reads off-world instantly and doesn't compete
+      with every other orange gradient on the home screen.
+    </p>
+    <div class="sizes">
+      <div class="chip light"><span class="ico s60"><img src="concept-a-binary-dawn.svg" alt=""></span><span class="ico s40"><img src="concept-a-binary-dawn.svg" alt=""></span><span class="ico s29"><img src="concept-a-binary-dawn.svg" alt=""></span><span class="label">light</span></div>
+      <div class="chip dark"><span class="ico s60"><img src="concept-a-binary-dawn.svg" alt=""></span><span class="ico s40"><img src="concept-a-binary-dawn.svg" alt=""></span><span class="ico s29"><img src="concept-a-binary-dawn.svg" alt=""></span><span class="label">dark</span></div>
+      <div class="chip photo"><span class="ico s60"><img src="concept-a-binary-dawn.svg" alt=""></span><span class="ico s40"><img src="concept-a-binary-dawn.svg" alt=""></span><span class="label">wallpaper</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <span class="hero"><img src="concept-b-two-suns.svg" alt="Concept B"></span>
+  <div class="meta">
+    <h2>B — Two Suns <span>· your icon, repaired</span></h2>
+    <p>
+      The closest thing to what you have: same warm sky, but the second sun is
+      promoted to a true twin, the suns go white-hot for real contrast against
+      the orange, the dunes are gone, and the cloud has a fully rounded base
+      instead of the hard horizontal cut. Still the most generic of the four —
+      this is the "keep the direction, fix the craft" option.
+    </p>
+    <div class="sizes">
+      <div class="chip light"><span class="ico s60"><img src="concept-b-two-suns.svg" alt=""></span><span class="ico s40"><img src="concept-b-two-suns.svg" alt=""></span><span class="ico s29"><img src="concept-b-two-suns.svg" alt=""></span><span class="label">light</span></div>
+      <div class="chip dark"><span class="ico s60"><img src="concept-b-two-suns.svg" alt=""></span><span class="ico s40"><img src="concept-b-two-suns.svg" alt=""></span><span class="ico s29"><img src="concept-b-two-suns.svg" alt=""></span><span class="label">dark</span></div>
+      <div class="chip photo"><span class="ico s60"><img src="concept-b-two-suns.svg" alt=""></span><span class="ico s40"><img src="concept-b-two-suns.svg" alt=""></span><span class="label">wallpaper</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <span class="hero"><img src="concept-c-ringed-world.svg" alt="Concept C"></span>
+  <div class="meta">
+    <h2>C — Ringed World <span>· strongest silhouette</span></h2>
+    <p>
+      A ringed planet with a lit limb and a distant sun. The ring gives it the
+      most distinctive outline of the four, which is what actually buys you
+      recognition at 29&nbsp;pt in a notification stack. Says "another world"
+      with total clarity — but says nothing about weather on its own.
+    </p>
+    <div class="sizes">
+      <div class="chip light"><span class="ico s60"><img src="concept-c-ringed-world.svg" alt=""></span><span class="ico s40"><img src="concept-c-ringed-world.svg" alt=""></span><span class="ico s29"><img src="concept-c-ringed-world.svg" alt=""></span><span class="label">light</span></div>
+      <div class="chip dark"><span class="ico s60"><img src="concept-c-ringed-world.svg" alt=""></span><span class="ico s40"><img src="concept-c-ringed-world.svg" alt=""></span><span class="ico s29"><img src="concept-c-ringed-world.svg" alt=""></span><span class="label">dark</span></div>
+      <div class="chip photo"><span class="ico s60"><img src="concept-c-ringed-world.svg" alt=""></span><span class="ico s40"><img src="concept-c-ringed-world.svg" alt=""></span><span class="label">wallpaper</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <span class="hero"><img src="concept-d-storm-eye.svg" alt="Concept D"></span>
+  <div class="meta">
+    <h2>D — Storm Eye <span>· best concept fit</span></h2>
+    <p>
+      A banded world filling the frame with a visible storm system and a rim
+      light on the lit limb. This is the only one of the four that depicts
+      <em>weather</em> and <em>another planet</em> in a single form, which is
+      exactly the app's pitch. One big shape plus one focal feature is also the
+      composition that downscales best.
+    </p>
+    <div class="sizes">
+      <div class="chip light"><span class="ico s60"><img src="concept-d-storm-eye.svg" alt=""></span><span class="ico s40"><img src="concept-d-storm-eye.svg" alt=""></span><span class="ico s29"><img src="concept-d-storm-eye.svg" alt=""></span><span class="label">light</span></div>
+      <div class="chip dark"><span class="ico s60"><img src="concept-d-storm-eye.svg" alt=""></span><span class="ico s40"><img src="concept-d-storm-eye.svg" alt=""></span><span class="ico s29"><img src="concept-d-storm-eye.svg" alt=""></span><span class="label">dark</span></div>
+      <div class="chip photo"><span class="ico s60"><img src="concept-d-storm-eye.svg" alt=""></span><span class="ico s40"><img src="concept-d-storm-eye.svg" alt=""></span><span class="label">wallpaper</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  <strong>None of these are shippable assets yet.</strong> They're vector
+  concepts for picking a direction — flat gradients, no painterly texture, and
+  nothing matching the hand-illustrated quality of the planet art in the app.
+  Once you pick one, it wants a real illustrator pass (or an image model) to
+  get the texture, and then a flattened 1024×1024 PNG: no alpha, no rounded
+  corners, no baked shadow.
+</div>
+
+</body>
+</html>

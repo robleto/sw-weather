@@ -38,6 +38,14 @@ let WORLDS: [World] = [
         color: WorldColor(primary: "#C15A51", headline: "#F4BE9C")
     ),
     World(
+        id: "corellia",
+        name: "Corellia",
+        description: "A shipyard world of green industrial haze, its cranes fading into the murk.",
+        climate: .urban,
+        color: WorldColor(primary: "#3E6B57", headline: "#C3D68F"),
+        isPremium: true
+    ),
+    World(
         id: "coruscant",
         name: "Coruscant",
         description: "A city that covers a world entirely — endless towers under a haze of traffic light.",
@@ -53,6 +61,20 @@ let WORLDS: [World] = [
         color: WorldColor(primary: "#48542D", headline: "#6C7858")
     ),
     World(
+        id: "daiyu",
+        name: "Daiyu",
+        description: "A neon port city under low cloud, its streets slick with cold rain.",
+        climate: .urban,
+        color: WorldColor(primary: "#14403C", headline: "#63C7BC")
+    ),
+    World(
+        id: "dantooine",
+        name: "Dantooine",
+        description: "Quiet farmland under tall white clouds — green, cool, and open to the horizon.",
+        climate: .temperate,
+        color: WorldColor(primary: "#2F8272", headline: "#D8E39B")
+    ),
+    World(
         id: "endor",
         name: "Endor",
         description: "A forest moon with cool, humid air and frequent mist through dense woodland.",
@@ -65,6 +87,14 @@ let WORLDS: [World] = [
         description: "A storm-wracked world with relentless lightning, heavy rain, and violent weather.",
         climate: .storm,
         color: WorldColor(primary: "#9589A4", headline: "#686788")
+    ),
+    World(
+        id: "ferrix",
+        name: "Ferrix",
+        description: "A close-built foundry town where terracotta roofs hold the last of the sun.",
+        climate: .urban,
+        color: WorldColor(primary: "#B5622F", headline: "#F6CE93"),
+        isPremium: true
     ),
     World(
         id: "ghorman",
@@ -116,6 +146,14 @@ let WORLDS: [World] = [
         description: "A cold mountain world with ancient cities dusted in light snowfall.",
         climate: .ice,
         color: WorldColor(primary: "#8AA3B5", headline: "#C8DDE8")
+    ),
+    World(
+        id: "lothal",
+        name: "Lothal",
+        description: "Wide grass plains beneath an enormous, cloudless sky.",
+        climate: .temperate,
+        color: WorldColor(primary: "#2C7FA6", headline: "#FBDD97"),
+        isPremium: true
     ),
     World(
         id: "mortis",

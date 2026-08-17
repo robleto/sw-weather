@@ -196,3 +196,33 @@
   position: relative;
   overflow: hidden;
 }
+
+.corellia {
+  /* Synthesized from the world's primary -> headline, the same
+     fallback iOS PlanetTheme applies to worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #3E6B57 0%, #C3D68F 100%);
+}
+
+.daiyu {
+  /* Synthesized from the world's primary -> headline, the same
+     fallback iOS PlanetTheme applies to worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #14403C 0%, #63C7BC 100%);
+}
+
+.dantooine {
+  /* Synthesized from the world's primary -> headline, the same
+     fallback iOS PlanetTheme applies to worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #2F8272 0%, #D8E39B 100%);
+}
+
+.ferrix {
+  /* Synthesized from the world's primary -> headline, the same
+     fallback iOS PlanetTheme applies to worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #B5622F 0%, #F6CE93 100%);
+}
+
+.lothal {
+  /* Synthesized from the world's primary -> headline, the same
+     fallback iOS PlanetTheme applies to worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #2C7FA6 0%, #FBDD97 100%);
+}

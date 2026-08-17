@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Galactic Weather — Concept A: Binary Dawn</title>
+  <defs>
+    <linearGradient id="A_sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#04060B"/>
+      <stop offset="0.36" stop-color="#0C1233"/>
+      <stop offset="0.64" stop-color="#3A1A4C"/>
+      <stop offset="0.86" stop-color="#8A2E3C"/>
+      <stop offset="1" stop-color="#C85A2E"/>
+    </linearGradient>
+    <radialGradient id="A_glowA" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFD98A" stop-opacity="0.72"/>
+      <stop offset="0.4" stop-color="#FF9E45" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#FF8A2A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="A_sunA" cx="0.4" cy="0.34" r="0.75">
+      <stop offset="0" stop-color="#FFFCF0"/>
+      <stop offset="0.58" stop-color="#FFE79C"/>
+      <stop offset="1" stop-color="#FFBC4A"/>
+    </radialGradient>
+    <radialGradient id="A_sunB" cx="0.4" cy="0.34" r="0.75">
+      <stop offset="0" stop-color="#FFF6DC"/>
+      <stop offset="0.58" stop-color="#FFCD72"/>
+      <stop offset="1" stop-color="#F2953A"/>
+    </radialGradient>
+    <linearGradient id="A_planet" x1="0.12" y1="0" x2="0.72" y2="1">
+      <stop offset="0" stop-color="#F2AE58"/>
+      <stop offset="0.34" stop-color="#D9682F"/>
+      <stop offset="0.72" stop-color="#8A2C24"/>
+      <stop offset="1" stop-color="#3E1119"/>
+    </linearGradient>
+    <linearGradient id="A_rim" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9FD8FF" stop-opacity="0.05"/>
+      <stop offset="0.3" stop-color="#E4F4FF" stop-opacity="0.9"/>
+      <stop offset="0.62" stop-color="#BFE6FF" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#9FD8FF" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+
+  <!-- full-bleed square field: no rounding, no transparency, no shadow -->
+  <rect width="1024" height="1024" fill="#04060B"/>
+  <rect width="1024" height="1024" fill="url(#A_sky)"/>
+
+  <!-- sparse starfield: 1024-only texture, disappears gracefully when scaled down -->
+  <g fill="#EAF2FF">
+    <circle cx="128" cy="96" r="5" opacity="0.85"/>
+    <circle cx="266" cy="182" r="3.5" opacity="0.6"/>
+    <circle cx="86" cy="300" r="4" opacity="0.5"/>
+    <circle cx="418" cy="88" r="4.5" opacity="0.75"/>
+    <circle cx="590" cy="150" r="3" opacity="0.5"/>
+    <circle cx="742" cy="78" r="5" opacity="0.8"/>
+    <circle cx="880" cy="176" r="3.5" opacity="0.6"/>
+    <circle cx="948" cy="300" r="4.5" opacity="0.7"/>
+    <circle cx="820" cy="404" r="3" opacity="0.45"/>
+    <circle cx="180" cy="446" r="3.5" opacity="0.5"/>
+    <circle cx="512" cy="240" r="3" opacity="0.4"/>
+    <circle cx="654" cy="452" r="3" opacity="0.35"/>
+    <circle cx="330" cy="330" r="3" opacity="0.35"/>
+    <circle cx="960" cy="112" r="3" opacity="0.5"/>
+  </g>
+
+  <!-- binary suns: the wordless "not Earth" signal, made unmistakable -->
+  <circle cx="358" cy="392" r="330" fill="url(#A_glowA)"/>
+  <circle cx="686" cy="318" r="230" fill="url(#A_glowA)" opacity="0.7"/>
+  <circle cx="358" cy="392" r="128" fill="url(#A_sunA)"/>
+  <circle cx="686" cy="318" r="90" fill="url(#A_sunB)"/>
+
+  <!-- planet limb across the lower third; circle is wider than the canvas so
+       only the top arc is ever visible -->
+  <circle cx="512" cy="1392" r="628" fill="url(#A_planet)"/>
+  <circle cx="512" cy="1392" r="628" fill="none" stroke="url(#A_rim)" stroke-width="11"/>
+</svg>

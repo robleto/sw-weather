@@ -12,15 +12,7 @@ let SLOTS: [Slot] = [
     Slot(id: "thunderstorm", label: "Thunderstorm", group: .precipitation, defaultWorld: "exegol"),
     Slot(id: "drizzle", label: "Drizzle", group: .precipitation, defaultWorld: "dagobah"),
     Slot(id: "rain", label: "Heavy rain", group: .precipitation, defaultWorld: "kamino"),
-    Slot(
-        id: "rain_cold",
-        label: "Heavy rain · cold",
-        group: .precipitation,
-        defaultWorld: "ghorman",
-        // Ghorman's canonical copy leads with "temperate", which undersells a
-        // downpour at 38°F. The grey overcast streets are the right image.
-        defaultDescription: "Cold rain sweeping the grey streets of a quiet trade world."
-    ),
+    Slot(id: "rain_cold", label: "Heavy rain · cold", group: .precipitation, defaultWorld: "daiyu"),
     Slot(id: "rain_light", label: "Light rain", group: .precipitation, defaultWorld: "dagobah"),
     Slot(
         id: "rain_light_cold",
@@ -77,7 +69,7 @@ let SLOTS: [Slot] = [
     ),
     Slot(id: "clear_warm", label: "Clear · warm", group: .clearSkies, defaultWorld: "scarif"),
     Slot(id: "clear_temperate", label: "Clear · mild", group: .clearSkies, defaultWorld: "naboo"),
-    Slot(id: "clear_cool", label: "Clear · cool", group: .clearSkies, defaultWorld: "naboo"),
+    Slot(id: "clear_cool", label: "Clear · cool", group: .clearSkies, defaultWorld: "dantooine"),
     Slot(id: "clear_chilly", label: "Clear · chilly", group: .clearSkies, defaultWorld: "kashyyyk"),
     Slot(
         id: "clear_cold",

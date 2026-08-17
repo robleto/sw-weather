@@ -39,6 +39,14 @@ export const WORLDS: readonly World[] = [
 		color: { primary: "#C15A51", headline: "#F4BE9C" },
 	},
 	{
+		id: "corellia",
+		name: "Corellia",
+		description: "A shipyard world of green industrial haze, its cranes fading into the murk.",
+		climate: "urban",
+		color: { primary: "#3E6B57", headline: "#C3D68F" },
+		isPremium: true,
+	},
+	{
 		id: "coruscant",
 		name: "Coruscant",
 		description: "A city that covers a world entirely — endless towers under a haze of traffic light.",
@@ -54,6 +62,20 @@ export const WORLDS: readonly World[] = [
 		color: { primary: "#48542D", headline: "#6C7858" },
 	},
 	{
+		id: "daiyu",
+		name: "Daiyu",
+		description: "A neon port city under low cloud, its streets slick with cold rain.",
+		climate: "urban",
+		color: { primary: "#14403C", headline: "#63C7BC" },
+	},
+	{
+		id: "dantooine",
+		name: "Dantooine",
+		description: "Quiet farmland under tall white clouds — green, cool, and open to the horizon.",
+		climate: "temperate",
+		color: { primary: "#2F8272", headline: "#D8E39B" },
+	},
+	{
 		id: "endor",
 		name: "Endor",
 		description: "A forest moon with cool, humid air and frequent mist through dense woodland.",
@@ -66,6 +88,14 @@ export const WORLDS: readonly World[] = [
 		description: "A storm-wracked world with relentless lightning, heavy rain, and violent weather.",
 		climate: "storm",
 		color: { primary: "#9589A4", headline: "#686788" },
+	},
+	{
+		id: "ferrix",
+		name: "Ferrix",
+		description: "A close-built foundry town where terracotta roofs hold the last of the sun.",
+		climate: "urban",
+		color: { primary: "#B5622F", headline: "#F6CE93" },
+		isPremium: true,
 	},
 	{
 		id: "ghorman",
@@ -117,6 +147,14 @@ export const WORLDS: readonly World[] = [
 		description: "A cold mountain world with ancient cities dusted in light snowfall.",
 		climate: "ice",
 		color: { primary: "#8AA3B5", headline: "#C8DDE8" },
+	},
+	{
+		id: "lothal",
+		name: "Lothal",
+		description: "Wide grass plains beneath an enormous, cloudless sky.",
+		climate: "temperate",
+		color: { primary: "#2C7FA6", headline: "#FBDD97" },
+		isPremium: true,
 	},
 	{
 		id: "mortis",

@@ -13,16 +13,7 @@ export const SLOTS: readonly Slot[] = [
 	{ id: "thunderstorm", label: "Thunderstorm", group: "Precipitation", defaultWorld: "exegol" },
 	{ id: "drizzle", label: "Drizzle", group: "Precipitation", defaultWorld: "dagobah" },
 	{ id: "rain", label: "Heavy rain", group: "Precipitation", defaultWorld: "kamino" },
-	{
-		id: "rain_cold",
-		label: "Heavy rain · cold",
-		group: "Precipitation",
-		defaultWorld: "ghorman",
-		// Ghorman's canonical copy leads with "temperate", which undersells a
-		// downpour at 38°F. The grey overcast streets are the right image.
-		defaultDescription:
-			"Cold rain sweeping the grey streets of a quiet trade world.",
-	},
+	{ id: "rain_cold", label: "Heavy rain · cold", group: "Precipitation", defaultWorld: "daiyu" },
 	{ id: "rain_light", label: "Light rain", group: "Precipitation", defaultWorld: "dagobah" },
 	{
 		id: "rain_light_cold",
@@ -83,7 +74,7 @@ export const SLOTS: readonly Slot[] = [
 	},
 	{ id: "clear_warm", label: "Clear · warm", group: "Clear skies", defaultWorld: "scarif" },
 	{ id: "clear_temperate", label: "Clear · mild", group: "Clear skies", defaultWorld: "naboo" },
-	{ id: "clear_cool", label: "Clear · cool", group: "Clear skies", defaultWorld: "naboo" },
+	{ id: "clear_cool", label: "Clear · cool", group: "Clear skies", defaultWorld: "dantooine" },
 	{ id: "clear_chilly", label: "Clear · chilly", group: "Clear skies", defaultWorld: "kashyyyk" },
 	{
 		id: "clear_cold",
