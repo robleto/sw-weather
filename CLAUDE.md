@@ -106,11 +106,26 @@ Needs Pillow (`pip install Pillow`), and only when art changes.
 
 Both platforms draw the same photo behind the readout, which is what makes one
 measurement valid for both: iOS via `ContentView.backdropImage`, web via the
-`.backdrop` layer in `page.module.css`. Web renders it through `next/image` so
-the source PNGs — 4.8 MB on average, 15 MB at worst — are served as
-viewport-sized WebP rather than raw. The planet gradient stays on `.main`
+`.backdrop` layer in `page.module.css`. Web renders it through `next/image` so the PNGs
+are served as viewport-sized WebP rather than raw. The planet gradient stays on `.main`
 underneath as the base color while the image loads. If web ever stops drawing
 the photo, the generated `textTone` stops describing what it shows.
+
+**Planet art is 2048px wide, downsampled from the ~4000px originals.** That cut
+the set from 208 MB to 76 MB — shipped app size on iOS, page weight on web. To
+redo it after adding art:
+
+```bash
+python3 scripts/downsample-art.py        # or --width N / --height N
+```
+
+It resizes in place and syncs the iOS imageset copies; the originals stay in git
+history. Note the art is landscape but cover-fits portrait phones, so height is
+the binding dimension there: 2048 wide gives ~1540px of height, which a
+2868px-tall phone upscales ~1.8x. That is invisible on this flat, painterly
+artwork but would not be on photography. Re-run `measure-text-tone.py`
+afterwards — it reads this art, though the measurement has proven stable across
+resolutions.
 
 **XcodeGen owns the Xcode project.** `ios-app/galacticweather/project.yml` is
 the source of truth; `galacticweather.xcodeproj` is generated. After adding or
