@@ -194,22 +194,22 @@ describe("storage sanitize", () => {
 
 describe("huntStateFor", () => {
 	it("stays in hunting for most of the book", () => {
-		expect(huntStateFor(0, 18, 0, 28)).toBe("hunting");
-		expect(huntStateFor(14, 18, 14, 28)).toBe("hunting");
+		expect(huntStateFor(0, 19, 0, 28)).toBe("hunting");
+		expect(huntStateFor(15, 19, 15, 28)).toBe("hunting");
 	});
 
 	it("switches to closing with three or fewer wild worlds left", () => {
-		expect(huntStateFor(15, 18, 15, 28)).toBe("closing");
-		expect(huntStateFor(17, 18, 17, 28)).toBe("closing");
+		expect(huntStateFor(16, 19, 16, 28)).toBe("closing");
+		expect(huntStateFor(18, 19, 18, 28)).toBe("closing");
 	});
 
 	it("marks the Wild book done before the catalog is", () => {
-		expect(huntStateFor(18, 18, 18, 28)).toBe("wildComplete");
-		expect(huntStateFor(18, 18, 27, 28)).toBe("wildComplete");
+		expect(huntStateFor(19, 19, 19, 28)).toBe("wildComplete");
+		expect(huntStateFor(19, 19, 27, 28)).toBe("wildComplete");
 	});
 
 	it("only says complete when every world is found", () => {
-		expect(huntStateFor(18, 18, 28, 28)).toBe("complete");
+		expect(huntStateFor(19, 19, 28, 28)).toBe("complete");
 	});
 
 	it("names no world in any state, so no line can go stale", () => {
@@ -226,7 +226,7 @@ describe("huntStateFor", () => {
 	it("agrees with the counters buildProgress derived", () => {
 		const progress = buildProgress({});
 		expect(progress.state).toBe("hunting");
-		expect(progress.blurb).toBe(blurbFor("hunting", 18));
+		expect(progress.blurb).toBe(blurbFor("hunting", 19));
 	});
 });
 
@@ -235,7 +235,7 @@ describe("huntStateFor", () => {
 describe("progress", () => {
 	it("derives the wild-reachable set from slot defaults", () => {
 		expect(WILD_REACHABLE_WORLDS).toEqual(new Set(SLOTS.map((slot) => slot.defaultWorld)));
-		expect(WILD_REACHABLE_WORLDS.size).toBe(18);
+		expect(WILD_REACHABLE_WORLDS.size).toBe(19);
 	});
 
 	it("keeps the charter-only worlds and the premium worlds as the same set", () => {
@@ -252,9 +252,9 @@ describe("progress", () => {
 		const progress = buildProgress({});
 
 		expect([progress.wildFound, progress.found]).toEqual([0, 0]);
-		expect([progress.wildTotal, progress.total]).toEqual([18, WORLDS.length]);
+		expect([progress.wildTotal, progress.total]).toEqual([19, WORLDS.length]);
 		expect(progress.biomes.reduce((n, b) => n + b.total, 0)).toBe(WORLDS.length);
-		expect(progress.biomes.reduce((n, b) => n + b.wildTotal, 0)).toBe(18);
+		expect(progress.biomes.reduce((n, b) => n + b.wildTotal, 0)).toBe(19);
 		expect(progress.biomes.every((b) => b.total > 0)).toBe(true);
 	});
 
@@ -265,8 +265,8 @@ describe("progress", () => {
 		}
 
 		const progress = buildProgress(book);
-		expect([progress.wildFound, progress.wildTotal]).toEqual([18, 18]);
-		expect([progress.found, progress.total]).toEqual([18, 28]);
+		expect([progress.wildFound, progress.wildTotal]).toEqual([19, 19]);
+		expect([progress.found, progress.total]).toEqual([19, 28]);
 	});
 
 	it("fills the remaining pages by chartering, without moving the wild score", () => {
@@ -280,7 +280,7 @@ describe("progress", () => {
 
 		const progress = buildProgress(book);
 		expect([progress.found, progress.total]).toEqual([28, 28]);
-		expect(progress.wildFound).toBe(18);
+		expect(progress.wildFound).toBe(19);
 
 		const ocean = progress.biomes.find((b) => b.climate === "ocean")!;
 		expect([ocean.found, ocean.wild, ocean.total, ocean.wildTotal]).toEqual([5, 3, 5, 3]);

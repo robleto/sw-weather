@@ -78,7 +78,7 @@ let SLOTS: [Slot] = [
         defaultWorld: "hoth",
         defaultDescription: "An icy world at its calmest — crisp, cold air beneath clear, pale skies."
     ),
-    Slot(id: "clear_freezing", label: "Clear · freezing", group: .clearSkies, defaultWorld: "hoth"),
+    Slot(id: "clear_freezing", label: "Clear · freezing", group: .clearSkies, defaultWorld: "ilum"),
 ]
 
 let SLOT_GROUP_ORDER: [SlotGroup] = [.clearSkies, .cloudCover, .precipitation, .atmosphere]

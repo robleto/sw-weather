@@ -115,8 +115,7 @@ let WORLDS: [World] = [
         name: "Ilum",
         description: "A frigid, crystal-lined world with clear skies and severe cold.",
         climate: .ice,
-        color: WorldColor(primary: "#A4B3C1", headline: "#A9CEEF"),
-        isPremium: true
+        color: WorldColor(primary: "#A4B3C1", headline: "#A9CEEF")
     ),
     World(
         id: "jakku",

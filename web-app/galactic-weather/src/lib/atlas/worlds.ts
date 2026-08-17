@@ -117,7 +117,6 @@ export const WORLDS: readonly World[] = [
 		description: "A frigid, crystal-lined world with clear skies and severe cold.",
 		climate: "ice",
 		color: { primary: "#A4B3C1", headline: "#A9CEEF" },
-		isPremium: true,
 	},
 	{
 		id: "jakku",

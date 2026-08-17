@@ -84,7 +84,7 @@ export const SLOTS: readonly Slot[] = [
 		defaultDescription:
 			"An icy world at its calmest — crisp, cold air beneath clear, pale skies.",
 	},
-	{ id: "clear_freezing", label: "Clear · freezing", group: "Clear skies", defaultWorld: "hoth" },
+	{ id: "clear_freezing", label: "Clear · freezing", group: "Clear skies", defaultWorld: "ilum" },
 ] as const;
 
 export const SLOT_GROUP_ORDER: readonly SlotGroup[] = [
