@@ -79,7 +79,11 @@ struct CreditsView: View {
             }
             .padding(.horizontal, -20)
 
-            Text("Every world in the app is an original painting, made the way railways and airlines once sold real destinations — a travel poster for somewhere that doesn't exist.")
+            // "digital design", not "painting" — the same words the web footer
+            // uses. This is a provenance claim about how the art was made, and
+            // the two platforms saying it differently invites the question of
+            // which one is true.
+            Text("Every world in the app is an original digital design, made the way railways and airlines once sold real destinations — a travel poster for somewhere that doesn't exist.")
                 .font(.system(size: 14))
                 .lineSpacing(2)
                 .foregroundStyle(Color(hex: "#f2f5fa").opacity(0.75))
