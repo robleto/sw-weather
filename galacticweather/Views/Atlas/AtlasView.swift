@@ -105,15 +105,7 @@ struct AtlasView: View {
                     .tracking(0.5)
             }
             Spacer()
-            Button("Close") { dismiss() }
-                .font(.system(size: 13, weight: .semibold))
-                .tracking(1)
-                .textCase(.uppercase)
-                .foregroundStyle(Color(hex: "#f2f5fa"))
-                .padding(.horizontal, 16)
-                .padding(.vertical, 9)
-                .background(Capsule().fill(.white.opacity(0.1)))
-                .overlay(Capsule().strokeBorder(.white.opacity(0.2)))
+            CloseButton { dismiss() }
         }
     }
 

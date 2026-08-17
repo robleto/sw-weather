@@ -25,7 +25,10 @@ enum PaywallContext {
         case .multiAssign:
             return "Give one condition a handful of worlds and let it randomize, one per day."
         case .savedLocations:
-            return "Premium saves up to \(PremiumGate.maxSavedLocations) locations and syncs them across your devices."
+            // `premiumSavedLocationLimit`, not `maxSavedLocations` — the
+            // latter reports the *reader's* current cap, which on a paywall
+            // is by definition the free one.
+            return "Premium saves up to \(PremiumGate.premiumSavedLocationLimit) locations and syncs them across your devices."
         }
     }
 }

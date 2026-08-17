@@ -1,56 +1,129 @@
 import SwiftUI
+import UIKit
 
-/// Utility settings. Currently hosts Saved Locations; this is the shelf that
-/// future preferences (units, default location, app icon) land on.
+/// Utility settings — the shelf that future preferences (units, default
+/// location, app icon) land on.
+///
+/// Briefly folded into Atlas on the grounds that it only had one row left.
+/// Put back: Atlas is a creative surface you go to on purpose, settings is
+/// housekeeping you go to when something needs changing, and burying the
+/// second at the foot of the first made both worse. Thin is fine.
+///
+/// Saved locations used to be reached from here. They're their own screen
+/// now, and it's reachable from the same menu, so this reports the slot
+/// count rather than linking sideways to it.
 struct SettingsView: View {
     @Bindable var savedLocationsViewModel: SavedLocationsViewModel
-    var weatherViewModel: WeatherViewModel
+    @Bindable private var settings = AppSettings.shared
 
-    @State private var isSavedLocationsOpen = false
+    @Environment(\.openURL) private var openURL
+
+    /// Computed, not stored: a private stored property would make the
+    /// synthesized memberwise initializer private too, and call sites need it.
+    /// Observation still tracks the read, so the row updates when the
+    /// permission changes.
+    @MainActor
+    private var locationAuthorization: LocationAuthorization { .shared }
 
     var body: some View {
         MenuScreen(eyebrow: "SETTINGS", title: "Preferences") {
             VStack(alignment: .leading, spacing: 10) {
-                Button {
-                    isSavedLocationsOpen = true
-                } label: {
-                    MenuRow(
-                        symbol: "bookmark.fill",
-                        title: "Saved locations",
-                        subtitle: savedLocationsSubtitle
-                    ) {
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(.white.opacity(0.35))
+                MenuRow(
+                    symbol: "thermometer.medium",
+                    title: "Temperature",
+                    subtitle: temperatureSubtitle
+                ) {
+                    Picker("Temperature unit", selection: $settings.temperatureUnit) {
+                        ForEach(TemperatureUnit.allCases) { unit in
+                            Text(unit.shortLabel).tag(unit)
+                        }
                     }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .frame(width: 108)
                 }
-                .buttonStyle(.plain)
 
-                Text("More preferences are on the way — units, a default location, and alternate app icons.")
+                locationRow
+
+                MenuRow(
+                    symbol: "bookmark.fill",
+                    title: "Saved locations",
+                    subtitle: savedLocationsSubtitle
+                ) {
+                    EmptyView()
+                }
+
+                Text("More preferences are on the way — a default location and alternate app icons.")
                     .font(.system(size: 12))
                     .foregroundStyle(.white.opacity(0.4))
                     .padding(.top, 4)
             }
         }
-        .sheet(isPresented: $isSavedLocationsOpen) {
-            SavedLocationsView(
-                viewModel: savedLocationsViewModel,
-                weatherViewModel: weatherViewModel
-            )
-            .presentationDetents([.fraction(0.7), .large])
-            .presentationDragIndicator(.visible)
-            .presentationBackground(Color(hex: "#0a0e16"))
+    }
+
+    /// Reports the permission and, where it's actually changeable, hands off
+    /// to iOS Settings.
+    ///
+    /// The app can't grant this itself, and once someone has denied it iOS
+    /// won't prompt again — so an in-app "use my location" button would fail
+    /// silently forever. This row is the honest version of that button: it
+    /// says what the state is and takes you to the one place it can change.
+    @ViewBuilder
+    private var locationRow: some View {
+        let row = MenuRow(
+            symbol: locationSymbol,
+            title: "Location",
+            subtitle: locationAuthorization.summary
+        ) {
+            if locationAuthorization.isChangeableInSettings {
+                HStack(spacing: 4) {
+                    Text("iOS Settings")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(Color(hex: "#8fc7ff"))
+                    Image(systemName: "arrow.up.forward.app")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(Color(hex: "#8fc7ff"))
+                }
+            }
+        }
+
+        if locationAuthorization.isChangeableInSettings {
+            Button {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    openURL(url)
+                }
+            } label: {
+                row
+            }
+            .buttonStyle(.plain)
+        } else {
+            row
         }
     }
 
-    private var savedLocationsSubtitle: String {
-        guard PremiumGate.canUseSavedLocations else {
-            return "Premium — bookmark your favorite spots"
+    private var locationSymbol: String {
+        switch locationAuthorization.status {
+        case .authorizedWhenInUse, .authorizedAlways: return "location.fill"
+        case .denied, .restricted: return "location.slash.fill"
+        default: return "location"
         }
+    }
+
+    /// Says where the starting value came from, so someone who never set this
+    /// isn't left wondering whether the app guessed or they once chose.
+    private var temperatureSubtitle: String {
+        settings.temperatureUnit == TemperatureUnit.deviceDefault
+            ? "Matching your region"
+            : "\(TemperatureUnit.deviceDefault.shortLabel) in your region"
+    }
+
+    private var savedLocationsSubtitle: String {
+        let slots = PremiumGate.maxSavedLocations
+        let noun = slots == 1 ? "slot" : "slots"
         let count = savedLocationsViewModel.locations.count
         if count == 0 {
-            return "None saved yet"
+            return "None saved yet — \(slots) \(noun) available"
         }
-        return "\(count) of \(PremiumGate.maxSavedLocations) saved"
+        return "\(count) saved, \(slots) \(noun) unlocked"
     }
 }

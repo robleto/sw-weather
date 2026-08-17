@@ -13,6 +13,10 @@ struct WeatherDetailsView: View {
     /// Shown instead of `weatherData.name`, so a renamed saved location keeps
     /// its user-chosen label here too.
     var locationName: String
+    /// Optional short status shown directly under the location line. The
+    /// preview screen uses it for "Not saved" — without it that screen is
+    /// pixel-identical to a real page apart from its two buttons.
+    var badge: String?
 
     var body: some View {
         let info = weatherInfo
@@ -25,8 +29,20 @@ struct WeatherDetailsView: View {
                     .textCase(.uppercase)
                     .foregroundStyle(headline.opacity(0.78))
 
+                if let badge {
+                    Text(badge)
+                        .font(.system(size: 11, weight: .semibold))
+                        .tracking(1.4)
+                        .textCase(.uppercase)
+                        .foregroundStyle(headline)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Capsule().fill(headline.opacity(0.14)))
+                        .overlay(Capsule().strokeBorder(headline.opacity(0.35)))
+                }
+
                 Text(temperatureLine(for: weatherData))
-                    .font(.custom("RussoOne-Regular", size: 36))
+                    .font(.custom("PoiretOne-Regular", size: 42))
                     .foregroundStyle(headline)
 
                 Text("\(locationName) feels like being on")
@@ -36,7 +52,10 @@ struct WeatherDetailsView: View {
                     .foregroundStyle(headline.opacity(0.78))
 
                 Text(info.planetName)
-                    .font(.custom("RussoOne-Regular", size: 48))
+                    // The one that gains most from the swap: PoiretOne is an
+                    // Art Deco face, and uppercase with this much tracking is
+                    // exactly what it's drawn for.
+                    .font(.custom("PoiretOne-Regular", size: 56))
                     .tracking(3)
                     .textCase(.uppercase)
                     .multilineTextAlignment(.center)
@@ -52,9 +71,13 @@ struct WeatherDetailsView: View {
             .padding(.horizontal, 24)
     }
 
+    /// The one place that spells the unit out rather than showing a bare
+    /// degree sign — it's the app's headline reading, and "76°F and Clouds"
+    /// reads as a sentence in a way "76° and Clouds" doesn't.
     private func temperatureLine(for weatherData: WeatherResponse) -> String {
-        let fahrenheit = Int(kelvinToFahrenheit(weatherData.main.temp).rounded())
+        let unit = AppSettings.shared.temperatureUnit
+        let degrees = unit.degrees(fromKelvin: weatherData.main.temp)
         let condition = weatherData.weather.first?.main ?? ""
-        return "\(fahrenheit)\u{00B0}F and \(condition)"
+        return "\(degrees)\u{00B0}\(unit.symbol) and \(condition)"
     }
 }

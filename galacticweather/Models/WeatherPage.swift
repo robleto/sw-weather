@@ -3,19 +3,19 @@ import Foundation
 /// One horizontally-swipeable page on the weather screen.
 ///
 /// The order mirrors the native Weather app: the device's location first,
-/// then the user's saved locations in their saved order. A location reached
-/// by searching (and not saved) is a single transient page pinned to the end
-/// — it's replaced by the next search rather than accumulating.
+/// then the user's saved locations in their saved order.
+///
+/// Searching no longer produces a page. A search result opens as a preview
+/// (`WeatherViewModel.preview`) that you either add or discard, so the only
+/// things in the deck are places you actually keep.
 enum WeatherPageKind: Hashable, Identifiable {
     case currentLocation
     case saved(SavedLocation.ID)
-    case searchResult
 
     var id: String {
         switch self {
         case .currentLocation: return "page:current"
         case .saved(let savedID): return "page:saved:\(savedID)"
-        case .searchResult: return "page:search"
         }
     }
 
@@ -24,7 +24,6 @@ enum WeatherPageKind: Hashable, Identifiable {
     var indicatorSymbol: String? {
         switch self {
         case .currentLocation: return "location.fill"
-        case .searchResult: return "magnifyingglass"
         case .saved: return nil
         }
     }
@@ -52,6 +51,15 @@ struct WeatherPageState {
     var weather: WeatherResponse?
     var isLoading = false
     var error: String?
+    /// When `weather` was fetched. Drives the saved-locations list's freshness
+    /// window so reopening the list doesn't re-bill every card.
+    var fetchedAt: Date?
 
     var hasLoaded: Bool { weather != nil }
+
+    /// Whether this state is recent enough to reuse instead of refetching.
+    func isFresh(within ttl: TimeInterval, now: Date = Date()) -> Bool {
+        guard hasLoaded, let fetchedAt else { return false }
+        return now.timeIntervalSince(fetchedAt) < ttl
+    }
 }

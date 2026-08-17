@@ -22,8 +22,17 @@ final class WeatherViewModel {
     private(set) var currentCoordinate: WeatherPage.Coordinate?
     /// The user's saved locations, mirrored from `SavedLocationsViewModel`.
     private(set) var savedLocations: [SavedLocation] = []
-    /// A searched-but-unsaved location. Transient: replaced by the next search.
-    private(set) var searchResult: (coordinate: WeatherPage.Coordinate, name: String)?
+
+    /// A location the user tapped in the search dropdown but hasn't decided
+    /// about yet. Held apart from `pages` on purpose: a preview shouldn't add
+    /// a dot to the pager or a card to the list until it's been added.
+    private(set) var preview: PreviewLocation?
+    private(set) var previewState = WeatherPageState()
+
+    struct PreviewLocation: Equatable {
+        let coordinate: WeatherPage.Coordinate
+        let displayName: String
+    }
 
     private(set) var states: [WeatherPageKind: WeatherPageState] = [:]
     var selection: WeatherPageKind = .currentLocation
@@ -31,6 +40,20 @@ final class WeatherViewModel {
     var locationQuery: String = ""
     private(set) var appPhase: AppPhase = .idle
     private(set) var isResolvingLocation = false
+
+    /// Bumped every time the user deliberately navigates to a location.
+    ///
+    /// The list screen closes on this rather than on `selection`, because
+    /// "navigated somewhere" and "selection changed" aren't the same event —
+    /// searching for the place you're already looking at, for instance,
+    /// leaves the selection untouched but should still close the list.
+    private(set) var navigationTick = 0
+
+    /// How long a fetched page stays reusable before the saved-locations list
+    /// will refetch it. Long enough that opening the list, tapping into a
+    /// place, and flicking back doesn't re-bill anything; short enough that
+    /// the temperatures on the cards aren't stale.
+    static let freshnessWindow: TimeInterval = 15 * 60
 
     private let weatherService: WeatherService
     private let locationManager: LocationManager
@@ -72,16 +95,6 @@ final class WeatherViewModel {
             )
         }
 
-        if let searchResult {
-            result.append(
-                WeatherPage(
-                    kind: .searchResult,
-                    coordinate: searchResult.coordinate,
-                    displayName: searchResult.name
-                )
-            )
-        }
-
         return result
     }
 
@@ -107,16 +120,25 @@ final class WeatherViewModel {
     /// customizations. Weather picks the slot (`getSlotForWeather`); Atlas
     /// decides which world that slot shows (`resolveWorld`).
     func resolvedWorld(for kind: WeatherPageKind, overrides: AtlasOverrides) -> ResolvedWorld {
+        resolvedWorld(for: state(for: kind).weather, overrides: overrides)
+    }
+
+    /// Same resolution for the preview, which deliberately isn't a page.
+    func resolvedPreviewWorld(overrides: AtlasOverrides) -> ResolvedWorld {
+        resolvedWorld(for: previewState.weather, overrides: overrides)
+    }
+
+    private func resolvedWorld(for weather: WeatherResponse?, overrides: AtlasOverrides) -> ResolvedWorld {
         guard
-            let weather = state(for: kind).weather,
+            let weather,
             let condition = weather.weather.first
         else {
             return .idle
         }
         let slotId = WeatherDescriptionMapper.getSlotForWeather(
+            conditionCode: condition.id,
             weatherMain: condition.main,
-            tempKelvin: weather.main.temp,
-            description: condition.description
+            tempKelvin: weather.main.temp
         )
         return resolveWorld(slotId: slotId, overrides: overrides)
     }
@@ -134,21 +156,13 @@ final class WeatherViewModel {
             }
         }
 
-        // Saving the location you searched for would otherwise leave two
-        // pages for it — the transient search page and the new saved one.
-        // Retire the transient page and hand its already-fetched weather to
-        // the saved page so bookmarking doesn't trigger a refetch.
-        if let searchResult {
-            let searchID = SavedLocation.id(lat: searchResult.coordinate.lat, lon: searchResult.coordinate.lon)
-            if liveIDs.contains(searchID) {
-                if let carried = states[.searchResult], states[.saved(searchID)] == nil {
-                    states[.saved(searchID)] = carried
-                }
-                states.removeValue(forKey: .searchResult)
-                self.searchResult = nil
-                if selection == .searchResult {
-                    selection = .saved(searchID)
-                }
+        // Adding the previewed location hands its already-fetched weather to
+        // the new saved page, so tapping "+" never triggers a refetch of the
+        // forecast the user is looking at while they tap it.
+        if let preview {
+            let previewID = SavedLocation.id(lat: preview.coordinate.lat, lon: preview.coordinate.lon)
+            if liveIDs.contains(previewID), states[.saved(previewID)] == nil, previewState.hasLoaded {
+                states[.saved(previewID)] = previewState
             }
         }
 
@@ -192,6 +206,25 @@ final class WeatherViewModel {
         }
     }
 
+    /// Loads every page that isn't already fresh, for the saved-locations
+    /// list — its cards each show a live temperature, so unlike the pager it
+    /// genuinely needs all of them at once.
+    ///
+    /// This is the one place that deliberately fans out beyond the
+    /// selected-page window, so it's bounded twice over: by
+    /// `PremiumGate.maxSavedLocations`, and by `freshnessWindow` (reopening
+    /// the list inside that window costs nothing). Locked saved locations
+    /// aren't pages, so they're never fetched either.
+    @MainActor
+    func refreshPagesForList() async {
+        for page in pages {
+            guard let coordinate = page.coordinate else { continue }
+            let existing = state(for: page.kind)
+            guard !existing.isLoading, !existing.isFresh(within: Self.freshnessWindow) else { continue }
+            await load(page.kind, coordinate: coordinate)
+        }
+    }
+
     @MainActor
     private func load(_ kind: WeatherPageKind, coordinate: WeatherPage.Coordinate) async {
         var next = state(for: kind)
@@ -204,6 +237,7 @@ final class WeatherViewModel {
             var loaded = state(for: kind)
             loaded.weather = weather
             loaded.isLoading = false
+            loaded.fetchedAt = Date()
             states[kind] = loaded
             appPhase = .landed
         } catch {
@@ -218,32 +252,85 @@ final class WeatherViewModel {
         }
     }
 
-    /// Lands on an arbitrary coordinate, e.g. from search or from tapping a
-    /// row in the saved list. If it matches a page we already have, that page
-    /// is selected instead of creating a duplicate transient one.
+    /// Jumps to a page that already exists, e.g. from tapping a card in the
+    /// list. Distinct from `previewLocation` because there's nothing to
+    /// resolve, dedupe, or decide about — the page is right there.
     @MainActor
-    func goToLocation(lat: Double, lon: Double, displayName: String? = nil) async {
-        locationQuery = ""
+    func select(page: WeatherPage) async {
         appPhase = .landed
+        selection = page.kind
+        navigationTick += 1
+        await loadIfNeeded(page.kind)
+    }
+
+    // MARK: - Preview
+
+    /// Opens a coordinate as a save-or-discard preview, from a tap in the
+    /// search dropdown.
+    ///
+    /// A place you already have isn't previewed — there's nothing to add, so
+    /// it just navigates there and reports that with `false`, letting the
+    /// caller skip presenting a preview it would immediately have to explain.
+    @discardableResult
+    @MainActor
+    func previewLocation(lat: Double, lon: Double, displayName: String? = nil) async -> Bool {
+        locationQuery = ""
 
         let savedID = SavedLocation.id(lat: lat, lon: lon)
         if savedLocations.contains(where: { $0.id == savedID }) {
+            appPhase = .landed
+            navigationTick += 1
             selection = .saved(savedID)
             await loadIfNeeded(.saved(savedID))
-            return
+            return false
         }
 
         if let currentCoordinate, SavedLocation.id(lat: currentCoordinate.lat, lon: currentCoordinate.lon) == savedID {
+            appPhase = .landed
+            navigationTick += 1
             selection = .currentLocation
             await loadIfNeeded(.currentLocation)
-            return
+            return false
         }
 
-        // Replace any previous transient page and reload it from scratch.
-        searchResult = (WeatherPage.Coordinate(lat: lat, lon: lon), displayName ?? "Searched location")
-        states[.searchResult] = WeatherPageState()
-        selection = .searchResult
-        await load(.searchResult, coordinate: WeatherPage.Coordinate(lat: lat, lon: lon))
+        let coordinate = WeatherPage.Coordinate(lat: lat, lon: lon)
+        preview = PreviewLocation(coordinate: coordinate, displayName: displayName ?? "Searched location")
+        previewState = WeatherPageState(isLoading: true)
+
+        do {
+            let weather = try await weatherService.fetchWeather(lat: lat, lon: lon)
+            // A second tap while the first was in flight wins; don't let a
+            // stale response overwrite the newer preview.
+            guard preview?.coordinate == coordinate else { return true }
+            previewState = WeatherPageState(weather: weather, isLoading: false, fetchedAt: Date())
+        } catch {
+            guard preview?.coordinate == coordinate else { return true }
+            previewState = WeatherPageState(
+                isLoading: false,
+                error: "We couldn't load weather right now. Please try again."
+            )
+        }
+        return true
+    }
+
+    /// Discards the preview without keeping the location — the "X".
+    @MainActor
+    func cancelPreview() {
+        preview = nil
+        previewState = WeatherPageState()
+    }
+
+    /// The previewed location as something `SavedLocationsViewModel` can
+    /// store. Prefers the name the weather API reported over the geocoder's,
+    /// matching what the preview is showing on screen as you tap "+".
+    @MainActor
+    var previewSaveCandidate: (lat: Double, lon: Double, displayName: String)? {
+        guard let preview else { return nil }
+        return (
+            preview.coordinate.lat,
+            preview.coordinate.lon,
+            previewState.weather?.name ?? preview.displayName
+        )
     }
 
     // MARK: - Device location
@@ -267,6 +354,7 @@ final class WeatherViewModel {
     @MainActor
     func useCurrentLocation() async {
         selection = .currentLocation
+        navigationTick += 1
         await requestCurrentLocation(surfaceErrors: true)
     }
 

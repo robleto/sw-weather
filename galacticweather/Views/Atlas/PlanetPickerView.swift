@@ -21,6 +21,7 @@ struct PlanetPickerView: View {
     @State private var sort: WorldSort = .alphabetical
     @State private var isMultiAssignPaywallOpen = false
     @State private var isLockedWorldPaywallOpen = false
+    @State private var posterWorld: World?
 
     private static let availableClimates: [Climate] = orderedUnique(WORLDS.map(\.climate))
 
@@ -82,6 +83,31 @@ struct PlanetPickerView: View {
         }
         .sheet(isPresented: $isLockedWorldPaywallOpen) {
             PaywallView(context: .lockedWorld)
+        }
+        .sheet(item: $posterWorld) { world in
+            WorldPosterView(
+                world: world,
+                assignment: PosterAssignment(
+                    slot: slot,
+                    isAssigned: assigned.contains(world.id),
+                    onToggle: { togglePosterAssignment(world) }
+                )
+            )
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
+        }
+    }
+
+    /// Mirrors the card's own tap routing so assigning from the poster and
+    /// assigning from the grid can't drift apart. Locked worlds never reach
+    /// here — the poster shows an unlock button instead of an assign one.
+    private func togglePosterAssignment(_ world: World) {
+        if canMultiAssign {
+            onToggleWorld(world.id)
+        } else if assigned.contains(world.id) {
+            onResetSlot()
+        } else {
+            onAssignSingleWorld(world.id)
         }
     }
 
@@ -265,6 +291,36 @@ struct PlanetPickerView: View {
     }
 
     private func worldCard(_ world: World) -> some View {
+        // The expand control is a sibling of the card, not a child: a Button
+        // inside another Button's label doesn't reliably receive its own taps.
+        ZStack(alignment: .topTrailing) {
+            worldCardButton(world)
+            expandButton(world)
+        }
+    }
+
+    /// Opens the poster. Deliberately always visible rather than revealed by a
+    /// gesture — it's the only route to the poster, and there's no hover on a
+    /// phone to reveal it with.
+    private func expandButton(_ world: World) -> some View {
+        Button {
+            posterWorld = world
+        } label: {
+            Image(systemName: "arrow.up.left.and.arrow.down.right")
+                .font(.system(size: 11, weight: .bold))
+                .foregroundStyle(.white.opacity(0.92))
+                .frame(width: 30, height: 30)
+                .background(Circle().fill(Color(hex: "#0a0e16").opacity(0.55)))
+                // A 44pt target that reaches inward from the corner, so the
+                // chip stays small without shrinking the tap area.
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("View \(world.name) as a poster")
+    }
+
+    private func worldCardButton(_ world: World) -> some View {
         let selected = assigned.contains(world.id)
         let isDefault = world.id == slot.defaultWorld
         let isLocked = !PremiumGate.canUseWorld(world)

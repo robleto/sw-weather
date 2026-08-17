@@ -25,7 +25,7 @@ struct PremiumPerk: Identifiable {
             id: "saved",
             symbol: "bookmark.fill",
             title: "Saved locations",
-            detail: "Bookmark up to \(PremiumGate.maxSavedLocations) spots, synced across your devices."
+            detail: "Bookmark up to \(PremiumGate.premiumSavedLocationLimit) spots, synced across your devices."
         )
     ]
 }

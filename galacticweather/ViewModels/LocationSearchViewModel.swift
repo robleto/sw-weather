@@ -92,10 +92,20 @@ final class LocationSearchViewModel {
             isLoading = false
 
         case .coordinates(let lat, let lon, _):
-            candidates = []
-            activeIndex = -1
+            // Offered as a one-row dropdown rather than resolved on the spot.
+            // Nothing here resolves without an explicit tap — see the note on
+            // `resolveGeocode`.
+            candidates = [
+                LocationCandidate(
+                    name: "\(Self.jsNumberString(lat)), \(Self.jsNumberString(lon))",
+                    regionOrState: "",
+                    country: "",
+                    lat: lat,
+                    lon: lon
+                )
+            ]
+            activeIndex = 0
             isLoading = false
-            onLocationResolved(lat, lon, "\(Self.jsNumberString(lat)), \(Self.jsNumberString(lon))")
 
         case .geocode(let queryText, let normalizedQuery):
             await resolveGeocode(query: queryText, normalizedQuery: normalizedQuery)
@@ -132,11 +142,12 @@ final class LocationSearchViewModel {
                 candidates = []
                 activeIndex = -1
                 message = Self.noResultsMessage
-            } else if results.count == 1 {
-                candidates = []
-                activeIndex = -1
-                onLocationResolved(results[0].lat, results[0].lon, results[0].displayName)
             } else {
+                // A lone result is still offered as a dropdown row rather than
+                // resolved for you. Typing is not choosing: auto-resolving on
+                // the way past "Lond" to "London" pulled up whole locations
+                // mid-keystroke, and now that landing on a location opens a
+                // save-or-discard preview, doing it unasked is worse still.
                 candidates = results
                 activeIndex = 0
             }

@@ -1,8 +1,8 @@
 import Foundation
 
 /// A location the user has bookmarked for quick return, distinct from
-/// `LocationCandidate` (an ephemeral geocode search result). Premium-only —
-/// see `PremiumGate.canUseSavedLocations`.
+/// `LocationCandidate` (an ephemeral geocode search result). How many a user
+/// may keep active is tier-dependent — see `PremiumGate.maxSavedLocations`.
 struct SavedLocation: Codable, Identifiable, Hashable {
     let id: String
     /// The name the geocoder/weather API gave this place. Kept even after a

@@ -1,60 +1,42 @@
 import SwiftUI
 
-/// The dots-and-icons control docked left of the search field.
+/// The dots centered in the pager's bottom bar.
 ///
 /// Each page gets a mark: an arrow for the device location, a magnifier for
-/// a transient search result, plain dots for saved locations. Tapping opens
-/// the full saved list. For free users the whole thing collapses to a single
-/// locked affordance that opens the paywall — saved locations are premium,
-/// but the control stays visible so the feature sells itself.
+/// a transient search result, plain dots for saved locations. Purely an
+/// indicator — getting *to* the saved list is the job of the button beside
+/// it, matching the native Weather app, where the dots only ever tell you
+/// where you are in the deck.
 struct PageIndicatorView: View {
     let pages: [WeatherPage]
     let selection: WeatherPageKind
-    var onTap: () -> Void
-
-    private var accent: Color { Color(hex: "#8fc7ff") }
 
     var body: some View {
-        Button(action: onTap) {
-            content
-                .frame(height: 48)
-                .padding(.horizontal, 12)
-                .background(Capsule().fill(.ultraThinMaterial))
-                .overlay(Capsule().strokeBorder(.white.opacity(0.22)))
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(accessibilityLabel)
+        content
+            .frame(height: 48)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(accessibilityLabel)
     }
 
     @ViewBuilder
     private var content: some View {
-        if PremiumGate.canUseSavedLocations {
-            // Past a handful of saved locations a full dot row stops being
-            // readable and starts being clutter, so fall back to a count.
-            if pages.count > 6 {
-                HStack(spacing: 6) {
-                    Image(systemName: "bookmark.fill")
-                        .font(.system(size: 12, weight: .semibold))
-                    Text("\(selectedIndex + 1)/\(pages.count)")
-                        .font(.system(size: 12, weight: .medium))
-                        .monospacedDigit()
-                }
-                .foregroundStyle(Color(hex: "#e8f4ff"))
-            } else {
-                HStack(spacing: 7) {
-                    ForEach(pages) { page in
-                        mark(for: page)
-                    }
-                }
-            }
-        } else {
+        // Past a handful of saved locations a full dot row stops being
+        // readable and starts being clutter, so fall back to a count.
+        if pages.count > 6 {
             HStack(spacing: 6) {
                 Image(systemName: "bookmark.fill")
-                    .font(.system(size: 13, weight: .semibold))
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.system(size: 12, weight: .semibold))
+                Text("\(selectedIndex + 1)/\(pages.count)")
+                    .font(.system(size: 12, weight: .medium))
+                    .monospacedDigit()
             }
-            .foregroundStyle(accent)
+            .foregroundStyle(Color(hex: "#e8f4ff"))
+        } else {
+            HStack(spacing: 7) {
+                ForEach(pages) { page in
+                    mark(for: page)
+                }
+            }
         }
     }
 
@@ -78,9 +60,6 @@ struct PageIndicatorView: View {
     }
 
     private var accessibilityLabel: String {
-        guard PremiumGate.canUseSavedLocations else {
-            return "Saved locations, premium feature"
-        }
-        return "Saved locations, \(selectedIndex + 1) of \(pages.count). Opens the saved list."
+        "Location \(selectedIndex + 1) of \(pages.count)"
     }
 }

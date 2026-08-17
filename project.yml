@@ -48,6 +48,27 @@ targets:
         UIAppFonts:
           - PoiretOne-Regular.ttf
           - RussoOne-Regular.ttf
+  galacticweatherTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: galacticweatherTests
+      # The cross-platform parity fixture, shared with the web app's vitest
+      # suite. Referenced in place rather than copied into the iOS tree, so the
+      # bundled copy is regenerated from the real file on every build and the
+      # two platforms cannot be checked against different versions of it.
+      - path: ../../shared/weather-slot-matrix.json
+        buildPhase: resources
+    dependencies:
+      - target: galacticweather
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.robleto.galacticweatherTests
+        DEVELOPMENT_TEAM: WNJ76895SD
+        CODE_SIGN_STYLE: Automatic
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
 fileGroups:
   - Config/galacticweather.entitlements
   - StoreKitConfig/Products.storekit
@@ -56,11 +77,14 @@ schemes:
     build:
       targets:
         galacticweather: all
+        galacticweatherTests: [test]
     run:
       config: Debug
       storeKitConfiguration: StoreKitConfig/Products.storekit
     test:
       config: Debug
+      targets:
+        - galacticweatherTests
     profile:
       config: Release
     analyze:

@@ -26,12 +26,27 @@ final class SavedLocationsViewModel {
 
     @MainActor var canSaveMore: Bool { locations.count < PremiumGate.maxSavedLocations }
 
+    /// The saved locations this user may actually use right now — the first
+    /// `PremiumGate.maxSavedLocations` of them. These are the ones that become
+    /// pages in the pager.
+    @MainActor
+    var unlockedLocations: [SavedLocation] {
+        Array(locations.prefix(PremiumGate.maxSavedLocations))
+    }
+
+    /// Everything past the cap: still stored, still listed, but dormant until
+    /// they subscribe. See `PremiumGate.isSavedLocationUnlocked(index:)`.
+    @MainActor
+    var lockedLocations: [SavedLocation] {
+        Array(locations.dropFirst(PremiumGate.maxSavedLocations))
+    }
+
     func isSaved(lat: Double, lon: Double) -> Bool {
         let id = SavedLocation.id(lat: lat, lon: lon)
         return locations.contains { $0.id == id }
     }
 
-    /// Adding is gated on premium + the list cap; removing an existing entry
+    /// Adding is gated on the tier's list cap; removing an existing entry
     /// never is, so a lapsed/refunded purchase still lets someone clean up
     /// their list rather than getting stuck with it.
     @MainActor
@@ -42,7 +57,7 @@ final class SavedLocationsViewModel {
             SavedLocationsStorage.save(locations)
             return
         }
-        guard PremiumGate.canUseSavedLocations, canSaveMore else { return }
+        guard canSaveMore else { return }
         locations.append(SavedLocation(displayName: displayName, lat: lat, lon: lon))
         SavedLocationsStorage.save(locations)
     }
@@ -50,6 +65,29 @@ final class SavedLocationsViewModel {
     func remove(_ location: SavedLocation) {
         locations.removeAll { $0.id == location.id }
         SavedLocationsStorage.save(locations)
+    }
+
+    /// Reorders the saved list. Saved order *is* pager order — `pages` derives
+    /// from it — so dragging a card here also changes where that location sits
+    /// in the swipe deck, which is the point.
+    ///
+    /// Offsets index into the unlocked prefix, which is the only part the list
+    /// shows. Dormant over-cap entries stay pinned behind it rather than being
+    /// shuffled around by a drag the user can't see the far end of.
+    @MainActor
+    func move(fromOffsets source: IndexSet, toOffset destination: Int) {
+        var unlocked = Array(locations.prefix(visibleCount))
+        let dormant = Array(locations.dropFirst(visibleCount))
+        unlocked.move(fromOffsets: source, toOffset: destination)
+        locations = unlocked + dormant
+        SavedLocationsStorage.save(locations)
+    }
+
+    /// Split point between what the list renders and what's dormant. Read
+    /// once per mutation so a tier change mid-drag can't desync the halves.
+    @MainActor
+    private var visibleCount: Int {
+        min(locations.count, PremiumGate.maxSavedLocations)
     }
 
     /// Sets a user-chosen label. Passing nil, or anything blank, clears the

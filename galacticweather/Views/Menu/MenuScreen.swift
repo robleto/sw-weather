@@ -7,6 +7,9 @@ import SwiftUI
 struct MenuScreen<Content: View>: View {
     let eyebrow: String
     let title: String
+    /// Overridable so a longer title can step down a size rather than wrap
+    /// into a header two or three times as tall as its siblings'.
+    var titleSize: CGFloat = 30
     @ViewBuilder var content: () -> Content
 
     @Environment(\.dismiss) private var dismiss
@@ -37,20 +40,34 @@ struct MenuScreen<Content: View>: View {
                     .tracking(1.8)
                     .foregroundStyle(.white.opacity(0.6))
                 Text(title)
-                    .font(.custom("PoiretOne-Regular", size: 30))
+                    .font(.custom("PoiretOne-Regular", size: titleSize))
                     .tracking(0.5)
             }
             Spacer()
-            Button("Close") { dismiss() }
-                .font(.system(size: 13, weight: .semibold))
-                .tracking(1)
-                .textCase(.uppercase)
-                .foregroundStyle(Color(hex: "#f2f5fa"))
-                .padding(.horizontal, 16)
-                .padding(.vertical, 9)
-                .background(Capsule().fill(.white.opacity(0.1)))
-                .overlay(Capsule().strokeBorder(.white.opacity(0.2)))
+            CloseButton { dismiss() }
         }
+    }
+}
+
+/// The app's one dismiss affordance: an X in the trailing corner.
+///
+/// Replaced a set of "CLOSE" capsules. The word was doing no work a glyph
+/// couldn't — it's the most conventional control on iOS — and it cost a
+/// chunk of the header to say so.
+struct CloseButton: View {
+    var action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "xmark")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(Color(hex: "#f2f5fa"))
+                .frame(width: 36, height: 36)
+                .background(Circle().fill(.ultraThinMaterial))
+                .overlay(Circle().strokeBorder(.white.opacity(0.22)))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Close")
     }
 }
 

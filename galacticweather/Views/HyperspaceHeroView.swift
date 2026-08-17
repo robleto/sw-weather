@@ -16,7 +16,10 @@ struct HyperspaceHeroView: View {
                 .foregroundStyle(Color(hex: "#a0c8ff").opacity(0.65))
 
             Text("Where in the galaxy are you?")
-                .font(.custom("RussoOne-Regular", size: 40))
+                // PoiretOne, sized up from RussoOne's 40 — it's a hairline
+                // face where Russo was a heavy squarish one, so it reads
+                // several points smaller at the same size.
+                .font(.custom("PoiretOne-Regular", size: 46))
                 .tracking(1.5)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(Color(hex: "#e8f4ff"))
