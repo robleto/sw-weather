@@ -1,0 +1,11 @@
+# The web app is no longer at the repository root — this became a monorepo in
+# c529552, and Netlify's default build looks for package.json at the root.
+# `base` points it at the app; the build command runs relative to that.
+#
+# Deliberately minimal: Netlify auto-detects Next.js and installs
+# @netlify/plugin-nextjs itself, which is how this site built before the
+# restructure. The publish directory comes from that plugin, so setting it here
+# would only fight with it.
+[build]
+  base = "web-app/galactic-weather"
+  command = "npm run build"

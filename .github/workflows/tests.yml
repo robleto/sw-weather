@@ -1,0 +1,69 @@
+name: tests
+
+# The weather → Atlas slot mapping is implemented twice, once in TypeScript and
+# once in Swift, and shared/weather-slot-matrix.json is what keeps them in
+# agreement. That guarantee is only worth anything if it runs on every change.
+#
+# This job invokes ./scripts/test-all.sh rather than reimplementing it in YAML.
+# Duplicating the steps here would create a second definition of "run the tests"
+# that can drift from the one developers use locally — the same class of problem
+# the parity fixture exists to prevent. One runner, one definition.
+#
+# That means a macOS runner for everything, including the web suite. macOS
+# minutes are free on public repositories, and the web suite takes under a
+# second, so splitting it onto ubuntu would buy very little.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web-app/galactic-weather/package-lock.json
+
+      - name: Install web dependencies
+        working-directory: web-app/galactic-weather
+        run: npm ci
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # Config/Secrets.xcconfig is gitignored. The tests make no network calls,
+      # but the build needs the file present for the key to resolve.
+      - name: Stub iOS secrets
+        working-directory: ios-app/galacticweather
+        run: cp Config/Secrets.xcconfig.example Config/Secrets.xcconfig
+
+      # Runs tsc + vitest, then xcodegen generate + xcodebuild test, resolving
+      # the simulator at runtime. Exits non-zero if either suite fails.
+      - name: Run both suites
+        run: ./scripts/test-all.sh
+
+      # The fixture is generated from the web implementation. If regenerating it
+      # produces a diff, the committed copy is stale — meaning the iOS suite is
+      # being checked against behavior the web app no longer has, and both can
+      # pass while disagreeing with each other.
+      - name: Parity fixture is up to date
+        working-directory: web-app/galactic-weather
+        run: |
+          npm run matrix
+          if ! git diff --quiet -- ../../shared/weather-slot-matrix.json; then
+            echo "::error::shared/weather-slot-matrix.json is stale. Run 'npm run matrix' and commit the result."
+            git diff -- ../../shared/weather-slot-matrix.json
+            exit 1
+          fi
+          echo "fixture matches the implementation"
