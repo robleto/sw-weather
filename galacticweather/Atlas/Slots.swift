@@ -6,7 +6,7 @@ import Foundation
 /// `defaultDescription` is set only where the original slot copy read better
 /// than the world's canonical description; a user-assigned world always
 /// brings its own description with it. Port of the web app's
-/// `src/lib/weathertwins/slots.ts`.
+/// `src/lib/atlas/slots.ts`.
 let SLOTS: [Slot] = [
     // ── Precipitation ────────────────────────────────────────────────────
     Slot(id: "thunderstorm", label: "Thunderstorm", group: .precipitation, defaultWorld: "exegol"),

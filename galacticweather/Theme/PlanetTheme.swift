@@ -60,7 +60,7 @@ enum PlanetTheme {
     // MARK: - Data-driven fallback lookup
 
     /// `WorldColor` keyed by world id (e.g. "naboo"), built once from
-    /// Weather Twins' `WORLDS` catalog.
+    /// Atlas' `WORLDS` catalog.
     private static let colorByPlanetKey: [String: WorldColor] = {
         var result: [String: WorldColor] = [:]
         for world in WORLDS {

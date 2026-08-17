@@ -1,11 +1,11 @@
 import SwiftUI
 
-/// Full-screen Weather Twins overlay: every weather slot the app can land
+/// Full-screen Atlas overlay: every weather slot the app can land
 /// in, grouped for browsing, each showing which world it currently resolves
 /// to. Tapping a slot opens `PlanetPickerView` to reassign it. Port of the
-/// web app's `src/app/components/WeatherTwins.tsx`.
-struct WeatherTwinsView: View {
-    @Bindable var viewModel: WeatherTwinsViewModel
+/// web app's `src/app/components/Atlas.tsx`.
+struct AtlasView: View {
+    @Bindable var viewModel: AtlasViewModel
     @Environment(\.dismiss) private var dismiss
 
     @State private var activeSlot: Slot?
@@ -96,7 +96,7 @@ struct WeatherTwinsView: View {
     private var header: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("YOUR WEATHER TWINS")
+                Text("YOUR ATLAS")
                     .font(.system(size: 12, weight: .medium))
                     .tracking(1.8)
                     .foregroundStyle(.white.opacity(0.6))

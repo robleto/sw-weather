@@ -3,7 +3,7 @@ import Foundation
 /// Stable FNV-1a hash of a string -> non-negative value. Used to pick which
 /// world a multi-assigned slot shows, so the choice is steady within a day
 /// but differs between days and between slots. Port of the web app's
-/// `src/lib/weathertwins/resolve.ts` (`hash`).
+/// `src/lib/atlas/resolve.ts` (`hash`).
 private func fnv1aHash(_ value: String) -> UInt32 {
     var hash: UInt32 = 2_166_136_261
     for byte in value.utf8 {
@@ -33,7 +33,7 @@ func pickWorldForSlot(_ slotId: SlotId, assigned: [WorldId], now: Date = Date())
 /// Resolve a weather slot to the world that should be displayed, honoring any
 /// user customization. Falls back to the slot default, then to the temperate
 /// clear-sky slot, so this never fails to resolve a slot the app can land in.
-func resolveWorld(slotId: SlotId, overrides: WeatherTwinsOverrides = [:], now: Date = Date()) -> ResolvedWorld {
+func resolveWorld(slotId: SlotId, overrides: AtlasOverrides = [:], now: Date = Date()) -> ResolvedWorld {
     guard let slot = getSlot(slotId) ?? getSlot(FALLBACK_SLOT_ID) else {
         return .idle
     }

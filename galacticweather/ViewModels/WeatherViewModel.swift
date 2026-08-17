@@ -42,11 +42,11 @@ final class WeatherViewModel {
     }
 
     /// Resolves the world the current weather should show, honoring the
-    /// user's Weather Twins customizations, or `ResolvedWorld.idle` before
+    /// user's Atlas customizations, or `ResolvedWorld.idle` before
     /// any weather has loaded. Weather picks the slot (`getSlotForWeather`);
-    /// Weather Twins decides which world that slot shows (`resolveWorld`) —
+    /// Atlas decides which world that slot shows (`resolveWorld`) —
     /// mirrors the composition in the web app's `page.tsx`.
-    func resolvedWorld(overrides: WeatherTwinsOverrides) -> ResolvedWorld {
+    func resolvedWorld(overrides: AtlasOverrides) -> ResolvedWorld {
         guard let weatherData, let condition = weatherData.weather.first else {
             return .idle
         }

@@ -9,9 +9,9 @@ import SwiftUI
 struct ContentView: View {
     @State private var weatherViewModel: WeatherViewModel
     @State private var searchViewModel: LocationSearchViewModel
-    @State private var weatherTwinsViewModel = WeatherTwinsViewModel()
+    @State private var atlasViewModel = AtlasViewModel()
     @State private var savedLocationsViewModel = SavedLocationsViewModel()
-    @State private var isWeatherTwinsOpen = false
+    @State private var isAtlasOpen = false
     @State private var isSavedLocationsOpen = false
 
     init() {
@@ -65,8 +65,8 @@ struct ContentView: View {
         .task {
             await PremiumStore.shared.start()
         }
-        .fullScreenCover(isPresented: $isWeatherTwinsOpen) {
-            WeatherTwinsView(viewModel: weatherTwinsViewModel)
+        .fullScreenCover(isPresented: $isAtlasOpen) {
+            AtlasView(viewModel: atlasViewModel)
         }
         .sheet(isPresented: $isSavedLocationsOpen) {
             SavedLocationsView(viewModel: savedLocationsViewModel, weatherViewModel: weatherViewModel)
@@ -76,11 +76,11 @@ struct ContentView: View {
         }
     }
 
-    /// Weather picks the slot; Weather Twins decides which world that slot
+    /// Weather picks the slot; Atlas decides which world that slot
     /// shows. Computed once here and threaded down, mirroring the web app's
-    /// `page.tsx` composition of `useWeatherTwins` + `resolveWorld`.
+    /// `page.tsx` composition of `useAtlas` + `resolveWorld`.
     private var weatherInfo: ResolvedWorld {
-        weatherViewModel.resolvedWorld(overrides: weatherTwinsViewModel.overrides)
+        weatherViewModel.resolvedWorld(overrides: atlasViewModel.overrides)
     }
 
     private var landedPlanetImageName: String? {
@@ -112,12 +112,12 @@ struct ContentView: View {
     }
 
     /// Nav bar shown once weather is showing: "Saved" leading, "Weather
-    /// Twins" trailing (port of the web app's nav-bar `weatherTwinsButton`).
+    /// Twins" trailing (port of the web app's nav-bar `atlasButton`).
     private var topBar: some View {
         HStack(spacing: 10) {
             savedLocationsButton
             Spacer()
-            weatherTwinsButton
+            atlasButton
         }
         .padding(.horizontal, 20)
     }
@@ -142,18 +142,18 @@ struct ContentView: View {
         }
     }
 
-    private var weatherTwinsButton: some View {
+    private var atlasButton: some View {
         Button {
-            isWeatherTwinsOpen = true
+            isAtlasOpen = true
         } label: {
             HStack(spacing: 6) {
-                Text("Weather Twins")
+                Text("Atlas")
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(1.2)
                     .textCase(.uppercase)
 
-                if weatherTwinsViewModel.customizedCount > 0 {
-                    Text("\(weatherTwinsViewModel.customizedCount)")
+                if atlasViewModel.customizedCount > 0 {
+                    Text("\(atlasViewModel.customizedCount)")
                         .font(.system(size: 10, weight: .bold))
                         .frame(minWidth: 18, minHeight: 18)
                         .background(Circle().fill(Color(hex: "#8fc7ff")))

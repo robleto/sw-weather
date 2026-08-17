@@ -1,22 +1,22 @@
 import Foundation
 import Observation
 
-/// Owns the user's Weather Twins (their slot -> world assignments) and its
-/// persistence. Port of the web app's `src/app/hooks/useWeatherTwins.ts`. The
+/// Owns the user's Atlas (their slot -> world assignments) and its
+/// persistence. Port of the web app's `src/app/hooks/useAtlas.ts`. The
 /// first read is still synchronous (no hydration-race like the web app's
 /// `localStorage` effect), but the assignments can now change underneath the
 /// app when another device edits them via iCloud — the remote-change
 /// observer below handles that.
 @Observable
-final class WeatherTwinsViewModel {
-    private(set) var overrides: WeatherTwinsOverrides
+final class AtlasViewModel {
+    private(set) var overrides: AtlasOverrides
 
     @ObservationIgnored private var remoteChangeObserver: NSObjectProtocol?
 
     init() {
-        overrides = WeatherTwinsStorage.load()
-        WeatherTwinsStorage.startSync()
-        remoteChangeObserver = WeatherTwinsStorage.observeRemoteChanges { [weak self] merged in
+        overrides = AtlasStorage.load()
+        AtlasStorage.startSync()
+        remoteChangeObserver = AtlasStorage.observeRemoteChanges { [weak self] merged in
             self?.overrides = merged
         }
     }
@@ -43,7 +43,7 @@ final class WeatherTwinsViewModel {
         } else {
             overrides[slotId] = unique
         }
-        WeatherTwinsStorage.save(overrides)
+        AtlasStorage.save(overrides)
     }
 
     /// The single-assign path: replaces the slot's entire assignment with one
@@ -51,7 +51,7 @@ final class WeatherTwinsViewModel {
     @MainActor func assignSingleWorld(slotId: SlotId, worldId: WorldId) {
         guard let world = getWorld(worldId), PremiumGate.canUseWorld(world) else { return }
         overrides[slotId] = [worldId]
-        WeatherTwinsStorage.save(overrides)
+        AtlasStorage.save(overrides)
     }
 
     /// Add or remove a single world from a slot, for multi-assign.
@@ -72,16 +72,16 @@ final class WeatherTwinsViewModel {
         } else {
             overrides[slotId] = assigned
         }
-        WeatherTwinsStorage.save(overrides)
+        AtlasStorage.save(overrides)
     }
 
     func resetSlot(_ slotId: SlotId) {
         overrides.removeValue(forKey: slotId)
-        WeatherTwinsStorage.save(overrides)
+        AtlasStorage.save(overrides)
     }
 
     func resetAll() {
         overrides = [:]
-        WeatherTwinsStorage.clear()
+        AtlasStorage.clear()
     }
 }

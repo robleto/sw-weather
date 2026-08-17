@@ -8,8 +8,8 @@ typealias SlotId = String
 
 /// User customizations, keyed by slot. A slot may hold several worlds; when it
 /// does, one is chosen per resolution so the surprise of the free experience
-/// survives customization. Port of the web app's `WeatherTwinsOverrides`.
-typealias WeatherTwinsOverrides = [SlotId: [WorldId]]
+/// survives customization. Port of the web app's `AtlasOverrides`.
+typealias AtlasOverrides = [SlotId: [WorldId]]
 
 /// Coarse climate grouping, used as the filter axis in the planet picker.
 enum Climate: String, CaseIterable {
@@ -63,7 +63,7 @@ struct World: Identifiable {
     }
 }
 
-/// Slots are grouped purely for display in Weather Twins.
+/// Slots are grouped purely for display in Atlas.
 enum SlotGroup: String, CaseIterable {
     case precipitation = "Precipitation"
     case cloudCover = "Cloud cover"
@@ -73,7 +73,7 @@ enum SlotGroup: String, CaseIterable {
 
 struct Slot: Identifiable, Hashable {
     let id: SlotId
-    /// Human label shown in Weather Twins, e.g. "Heavy snow".
+    /// Human label shown in Atlas, e.g. "Heavy snow".
     let label: String
     let group: SlotGroup
     /// The world used when the user has not customized this slot.

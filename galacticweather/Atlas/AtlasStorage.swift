@@ -1,20 +1,20 @@
 import Foundation
 
-/// Persists the user's Weather Twins via iCloud's key-value store
+/// Persists the user's Atlas via iCloud's key-value store
 /// (`NSUbiquitousKeyValueStore`), mirrored to `UserDefaults` as a local,
 /// offline/no-iCloud-account fallback. This syncs the assignments across the
 /// user's devices with zero backend and no accounts; the web app's
 /// equivalent uses `localStorage` and stays entirely local to one browser.
-/// Port of the web app's `src/lib/weathertwins/storage.ts`.
-enum WeatherTwinsStorage {
-    private static let storageKey = "galacticweather:weathertwins:v1"
+/// Port of the web app's `src/lib/atlas/storage.ts`.
+enum AtlasStorage {
+    private static let storageKey = "galacticweather:atlas:v1"
 
     /// Drop anything we don't recognize. Stored assignments outlive app
     /// updates, so a slot or world removed in a later release must not break
     /// the whole set — the unknown entry is discarded and that slot falls
     /// back to its default.
-    private static func sanitize(_ raw: [String: [String]]) -> WeatherTwinsOverrides {
-        var result: WeatherTwinsOverrides = [:]
+    private static func sanitize(_ raw: [String: [String]]) -> AtlasOverrides {
+        var result: AtlasOverrides = [:]
         for (slotId, worldIds) in raw {
             guard getSlot(slotId) != nil else { continue }
             let known = worldIds.filter { isKnownWorld($0) }
@@ -25,13 +25,13 @@ enum WeatherTwinsStorage {
         return result
     }
 
-    private static func decode(_ data: Data?) -> WeatherTwinsOverrides? {
+    private static func decode(_ data: Data?) -> AtlasOverrides? {
         guard let data else { return nil }
         guard let raw = try? JSONDecoder().decode([String: [String]].self, from: data) else { return nil }
         return sanitize(raw)
     }
 
-    static func load() -> WeatherTwinsOverrides {
+    static func load() -> AtlasOverrides {
         if let iCloud = decode(NSUbiquitousKeyValueStore.default.data(forKey: storageKey)) {
             return iCloud
         }
@@ -44,7 +44,7 @@ enum WeatherTwinsStorage {
         return [:]
     }
 
-    static func save(_ overrides: WeatherTwinsOverrides) {
+    static func save(_ overrides: AtlasOverrides) {
         guard let data = try? JSONEncoder().encode(overrides) else { return }
         NSUbiquitousKeyValueStore.default.set(data, forKey: storageKey)
         UserDefaults.standard.set(data, forKey: storageKey)
@@ -66,7 +66,7 @@ enum WeatherTwinsStorage {
     /// hands back the freshly-loaded assignments on the main queue. The
     /// returned token must be passed to
     /// `NotificationCenter.default.removeObserver(_:)`.
-    static func observeRemoteChanges(_ handler: @escaping (WeatherTwinsOverrides) -> Void) -> NSObjectProtocol {
+    static func observeRemoteChanges(_ handler: @escaping (AtlasOverrides) -> Void) -> NSObjectProtocol {
         NotificationCenter.default.addObserver(
             forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
             object: NSUbiquitousKeyValueStore.default,
