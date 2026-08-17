@@ -18,18 +18,48 @@ struct PlanetPickerView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var climate: Climate?
     @State private var query = ""
+    @State private var sort: WorldSort = .alphabetical
     @State private var isMultiAssignPaywallOpen = false
     @State private var isLockedWorldPaywallOpen = false
 
     private static let availableClimates: [Climate] = orderedUnique(WORLDS.map(\.climate))
 
+    /// How the world grid is ordered.
+    enum WorldSort: String, CaseIterable, Identifiable {
+        /// Catalog order, which is already A–Z by id.
+        case alphabetical
+        /// Everything the user can actually assign right now, first.
+        case unlockedFirst
+
+        var id: String { rawValue }
+
+        var label: String {
+            switch self {
+            case .alphabetical: return "A–Z"
+            case .unlockedFirst: return "Unlocked first"
+            }
+        }
+    }
+
     private var visibleWorlds: [World] {
         let needle = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        return WORLDS.filter { world in
+        let filtered = WORLDS.filter { world in
             if let climate, world.climate != climate { return false }
             if !needle.isEmpty, !world.name.lowercased().contains(needle) { return false }
             return true
         }
+
+        switch sort {
+        case .alphabetical:
+            return filtered
+        case .unlockedFirst:
+            // Stable partition, so each group stays A–Z internally.
+            return filtered.filter { !$0.isPremium } + filtered.filter(\.isPremium)
+        }
+    }
+
+    private var lockedVisibleCount: Int {
+        visibleWorlds.filter { !PremiumGate.canUseWorld($0) }.count
     }
 
     private var isCustomized: Bool { !assigned.isEmpty }
@@ -107,20 +137,95 @@ struct PlanetPickerView: View {
                 }
             }
 
-            TextField("", text: $query, prompt: Text("Search worlds…").foregroundStyle(.white.opacity(0.4)))
-                .textFieldStyle(.plain)
-                .autocorrectionDisabled()
-                .foregroundStyle(Color(hex: "#f2f5fa"))
-                .padding(.horizontal, 12)
-                .frame(height: 40)
-                .background(.white.opacity(0.07))
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .strokeBorder(.white.opacity(0.14))
-                }
+            HStack(spacing: 10) {
+                TextField("", text: $query, prompt: Text("Search worlds…").foregroundStyle(.white.opacity(0.4)))
+                    .textFieldStyle(.plain)
+                    .autocorrectionDisabled()
+                    .foregroundStyle(Color(hex: "#f2f5fa"))
+                    .padding(.horizontal, 12)
+                    .frame(height: 40)
+                    .background(.white.opacity(0.07))
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .strokeBorder(.white.opacity(0.14))
+                    }
+
+                sortMenu
+            }
+
+            if !PremiumGate.isPremium, lockedVisibleCount > 0 {
+                lockedBanner
+            }
         }
         .padding(.bottom, 14)
+    }
+
+    private var sortMenu: some View {
+        Menu {
+            Picker("Sort", selection: $sort) {
+                ForEach(WorldSort.allCases) { option in
+                    Text(option.label).tag(option)
+                }
+            }
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "arrow.up.arrow.down")
+                    .font(.system(size: 12, weight: .semibold))
+                Text(sort.label)
+                    .font(.system(size: 12))
+                    .lineLimit(1)
+            }
+            .foregroundStyle(Color(hex: "#f2f5fa"))
+            .padding(.horizontal, 12)
+            .frame(height: 40)
+            .background(.white.opacity(0.07))
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .strokeBorder(.white.opacity(0.14))
+            }
+        }
+        .accessibilityLabel("Sort worlds")
+    }
+
+    /// Names the exact number of worlds the current filter is hiding behind
+    /// the paywall — a concrete count converts better than a generic pitch,
+    /// and it responds to whatever the user is browsing.
+    private var lockedBanner: some View {
+        Button {
+            isLockedWorldPaywallOpen = true
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(Color(hex: "#8fc7ff"))
+
+                Text("\(lockedVisibleCount) more world\(lockedVisibleCount == 1 ? "" : "s") here with Premium")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Color(hex: "#f2f5fa"))
+
+                Spacer(minLength: 4)
+
+                Text("Unlock")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color(hex: "#0a0e16"))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Capsule().fill(Color(hex: "#8fc7ff")))
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color(hex: "#8fc7ff").opacity(0.1))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(Color(hex: "#8fc7ff").opacity(0.28))
+            )
+        }
+        .buttonStyle(.plain)
     }
 
     private func climateChip(label: String, isActive: Bool, action: @escaping () -> Void) -> some View {
@@ -184,14 +289,18 @@ struct PlanetPickerView: View {
                             .aspectRatio(contentMode: .fill)
                             .opacity(isLocked ? 0.35 : 1)
                     }
-                    .overlay {
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .overlay(alignment: .topLeading) {
                         if isLocked {
                             Image(systemName: "lock.fill")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundStyle(.white)
+                                .font(.system(size: 15, weight: .bold))
+                                .foregroundStyle(Color(hex: "#0a0e16"))
+                                .frame(width: 30, height: 30)
+                                .background(Circle().fill(Color(hex: "#8fc7ff")))
+                                .overlay(Circle().strokeBorder(Color(hex: "#0a0e16").opacity(0.35), lineWidth: 1))
+                                .padding(8)
                         }
                     }
-                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                     .overlay {
                         RoundedRectangle(cornerRadius: 10, style: .continuous)
                             .strokeBorder(selected ? Color(hex: "#8fc7ff") : .clear, lineWidth: 2)
@@ -205,7 +314,10 @@ struct PlanetPickerView: View {
                     )
 
                 if isLocked {
-                    PremiumLockChip()
+                    Text("PREMIUM")
+                        .font(.system(size: 10, weight: .semibold))
+                        .tracking(0.8)
+                        .foregroundStyle(Color(hex: "#8fc7ff"))
                 } else if isDefault {
                     Text("SUITS THIS WEATHER")
                         .font(.system(size: 10))

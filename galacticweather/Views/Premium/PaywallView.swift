@@ -30,33 +30,6 @@ enum PaywallContext {
     }
 }
 
-/// A single row in the feature list: an SF Symbol, a title, and a one-line
-/// description of what premium unlocks.
-private struct PaywallFeature: Identifiable {
-    let id = UUID()
-    let symbol: String
-    let title: String
-    let detail: String
-
-    static let all: [PaywallFeature] = [
-        PaywallFeature(
-            symbol: "sparkles",
-            title: "Every premium world",
-            detail: "Unlock every locked world in the picker, plus every new one added later."
-        ),
-        PaywallFeature(
-            symbol: "shuffle",
-            title: "Weather Twin rotation",
-            detail: "Assign several worlds to one condition and let them rotate, one per day."
-        ),
-        PaywallFeature(
-            symbol: "bookmark.fill",
-            title: "Saved locations",
-            detail: "Bookmark up to \(PremiumGate.maxSavedLocations) favorite spots and jump back with one tap, synced across your devices."
-        )
-    ]
-}
-
 struct PaywallView: View {
     let context: PaywallContext
 
@@ -79,8 +52,8 @@ struct PaywallView: View {
                     header
 
                     VStack(alignment: .leading, spacing: 18) {
-                        ForEach(PaywallFeature.all) { feature in
-                            featureRow(feature)
+                        ForEach(PremiumPerk.all) { perk in
+                            featureRow(perk)
                         }
                     }
 
@@ -123,20 +96,21 @@ struct PaywallView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private func featureRow(_ feature: PaywallFeature) -> some View {
+    private func featureRow(_ perk: PremiumPerk) -> some View {
         HStack(alignment: .top, spacing: 14) {
-            Image(systemName: feature.symbol)
+            Image(systemName: perk.symbol)
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundStyle(accentColor)
                 .frame(width: 28)
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(feature.title)
+                Text(perk.title)
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(textColor)
-                Text(feature.detail)
+                Text(perk.detail)
                     .font(.system(size: 13))
                     .foregroundStyle(textColor.opacity(0.65))
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }

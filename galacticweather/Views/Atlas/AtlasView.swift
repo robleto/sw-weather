@@ -117,33 +117,43 @@ struct AtlasView: View {
         }
     }
 
+    @ViewBuilder
     private var summary: some View {
-        HStack(spacing: 12) {
-            Text(summaryText)
-                .font(.system(size: 13))
-                .foregroundStyle(.white.opacity(0.7))
-
-            if !PremiumGate.isPremium {
-                Button("Unlock everything") { isPaywallOpen = true }
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 12) {
+                Text(summaryText)
                     .font(.system(size: 13))
-                    .underline()
-                    .foregroundStyle(.white.opacity(0.85))
+                    .foregroundStyle(.white.opacity(0.7))
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Spacer(minLength: 0)
+
+                if viewModel.customizedCount > 0 {
+                    Button("Reset all") { viewModel.resetAll() }
+                        .font(.system(size: 13))
+                        .underline()
+                        .foregroundStyle(.white.opacity(0.85))
+                }
             }
 
-            if viewModel.customizedCount > 0 {
-                Button("Reset all") { viewModel.resetAll() }
-                    .font(.system(size: 13))
-                    .underline()
-                    .foregroundStyle(.white.opacity(0.85))
+            // Free users get the full pitch inline — this screen is where
+            // the value of unlocking is most legible, because they're
+            // already looking at the worlds they can't have yet. Premium
+            // users get none of it.
+            if !PremiumGate.isPremium {
+                PremiumUpsellCard(
+                    headline: "Unlock \(AtlasCatalog.premiumWorldCount) more worlds",
+                    subhead: "You're using \(AtlasCatalog.freeWorldCount) of \(WORLDS.count) worlds. Premium opens the rest of the catalog — plus daily rotation and saved locations."
+                ) {
+                    isPaywallOpen = true
+                }
             }
         }
     }
 
-    private static let premiumWorldCount = WORLDS.filter(\.isPremium).count
-
     private var summaryText: String {
         guard PremiumGate.isPremium else {
-            return "All \(SLOTS.count) conditions are yours to reassign. Premium adds \(Self.premiumWorldCount) more worlds to pick from, plus multi-assign."
+            return "All \(SLOTS.count) conditions are yours to reassign."
         }
         return viewModel.customizedCount == 0
             ? "\(SLOTS.count) conditions, all set to canon."

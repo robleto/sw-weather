@@ -12,7 +12,9 @@ struct ContentView: View {
     @State private var atlasViewModel = AtlasViewModel()
     @State private var savedLocationsViewModel = SavedLocationsViewModel()
     @State private var isAtlasOpen = false
-    @State private var isSavedLocationsOpen = false
+    @State private var isSettingsOpen = false
+    @State private var isAccountOpen = false
+    @State private var isCreditsOpen = false
 
     init() {
         let weatherViewModel = WeatherViewModel()
@@ -68,11 +70,17 @@ struct ContentView: View {
         .fullScreenCover(isPresented: $isAtlasOpen) {
             AtlasView(viewModel: atlasViewModel)
         }
-        .sheet(isPresented: $isSavedLocationsOpen) {
-            SavedLocationsView(viewModel: savedLocationsViewModel, weatherViewModel: weatherViewModel)
-                .presentationDetents([.fraction(0.7), .large])
-                .presentationDragIndicator(.visible)
-                .presentationBackground(Color(hex: "#0a0e16"))
+        .sheet(isPresented: $isSettingsOpen) {
+            SettingsView(
+                savedLocationsViewModel: savedLocationsViewModel,
+                weatherViewModel: weatherViewModel
+            )
+        }
+        .sheet(isPresented: $isAccountOpen) {
+            AccountView()
+        }
+        .sheet(isPresented: $isCreditsOpen) {
+            CreditsView()
         }
     }
 
@@ -111,61 +119,62 @@ struct ContentView: View {
         }
     }
 
-    /// Nav bar shown once weather is showing: "Saved" leading, "Weather
-    /// Twins" trailing (port of the web app's nav-bar `atlasButton`).
+    /// Nav bar shown once weather is showing: a single, deliberately quiet
+    /// menu button in the trailing corner. The planet art is the point of
+    /// this screen, so navigation stays out of its way until asked for.
     private var topBar: some View {
         HStack(spacing: 10) {
-            savedLocationsButton
             Spacer()
-            atlasButton
+            menuButton
         }
         .padding(.horizontal, 20)
     }
 
-    private var savedLocationsButton: some View {
-        Button {
-            isSavedLocationsOpen = true
-        } label: {
-            HStack(spacing: 6) {
-                Image(systemName: "bookmark.fill")
-                    .font(.system(size: 11, weight: .semibold))
-                Text("Saved")
-                    .font(.system(size: 11, weight: .semibold))
-                    .tracking(1.2)
-                    .textCase(.uppercase)
+    /// Atlas sits apart from the utility group: it's the thing people come
+    /// here to play with, the rest is housekeeping.
+    private var menuButton: some View {
+        Menu {
+            Button {
+                isAtlasOpen = true
+            } label: {
+                Label(atlasMenuTitle, systemImage: "globe.americas")
             }
-            .foregroundStyle(.white)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .background(Capsule().fill(.ultraThinMaterial))
-            .overlay(Capsule().strokeBorder(.white.opacity(0.22)))
-        }
-    }
 
-    private var atlasButton: some View {
-        Button {
-            isAtlasOpen = true
-        } label: {
-            HStack(spacing: 6) {
-                Text("Atlas")
-                    .font(.system(size: 11, weight: .semibold))
-                    .tracking(1.2)
-                    .textCase(.uppercase)
+            Section {
+                Button {
+                    isSettingsOpen = true
+                } label: {
+                    Label("Settings", systemImage: "gearshape")
+                }
 
-                if atlasViewModel.customizedCount > 0 {
-                    Text("\(atlasViewModel.customizedCount)")
-                        .font(.system(size: 10, weight: .bold))
-                        .frame(minWidth: 18, minHeight: 18)
-                        .background(Circle().fill(Color(hex: "#8fc7ff")))
-                        .foregroundStyle(Color(hex: "#0a0e16"))
+                Button {
+                    isAccountOpen = true
+                } label: {
+                    Label("Account", systemImage: "person.crop.circle")
+                }
+
+                Button {
+                    isCreditsOpen = true
+                } label: {
+                    Label("Credits", systemImage: "info.circle")
                 }
             }
-            .foregroundStyle(.white)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .background(Capsule().fill(.ultraThinMaterial))
-            .overlay(Capsule().strokeBorder(.white.opacity(0.22)))
+        } label: {
+            Image(systemName: "line.3.horizontal")
+                .font(.system(size: 16, weight: .medium))
+                .foregroundStyle(.white)
+                .frame(width: 40, height: 40)
+                .background(Circle().fill(.ultraThinMaterial))
+                .overlay(Circle().strokeBorder(.white.opacity(0.22)))
         }
+        .accessibilityLabel("Menu")
+    }
+
+    /// Surfaces the customization count in the menu item itself, since the
+    /// old badge on the nav button is gone.
+    private var atlasMenuTitle: String {
+        let count = atlasViewModel.customizedCount
+        return count > 0 ? "Atlas (\(count) customized)" : "Atlas"
     }
 
     @ViewBuilder

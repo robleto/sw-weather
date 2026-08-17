@@ -185,3 +185,11 @@ private let worldByID: [WorldId: World] = Dictionary(uniqueKeysWithValues: WORLD
 func getWorld(_ id: WorldId) -> World? { worldByID[id] }
 
 func isKnownWorld(_ id: String) -> Bool { worldByID[id] != nil }
+
+/// Catalog-wide counts, computed once. Used by upsell copy so the numbers
+/// track the catalog automatically as worlds are added — new worlds default
+/// to premium (`World.isPremium`), so this is the number that grows.
+enum AtlasCatalog {
+    static let premiumWorldCount = WORLDS.filter(\.isPremium).count
+    static let freeWorldCount = WORLDS.count - premiumWorldCount
+}
