@@ -1,0 +1,297 @@
+/* Mirrors Atlas.module.css — same overlay shell, same scrim, so the two
+   full-screen surfaces feel like one app. */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #f2f5fa;
+}
+
+/* Hovering a stamp you've earned paints that world behind the book. Unfound
+   worlds deliberately don't preview — you haven't been there. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  animation: fadeIn 320ms ease;
+}
+
+.backdropImage {
+  object-fit: cover;
+  object-position: center;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(6, 9, 16, 0.92) 0%,
+    rgba(6, 9, 16, 0.8) 45%,
+    rgba(6, 9, 16, 0.92) 100%
+  );
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  padding-bottom: 6rem;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 0.35rem;
+}
+
+.title {
+  font-family: var(--font-poiret), sans-serif;
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+.closeButton {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ── Score ───────────────────────────────────────────────────────────── */
+.summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  font-size: 0.9375rem;
+  margin-bottom: 0.75rem;
+}
+
+.score strong {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #8fc7ff;
+}
+
+.scoreDivider {
+  opacity: 0.35;
+}
+
+.scoreMuted {
+  opacity: 0.6;
+  font-size: 0.8125rem;
+}
+
+.blurb {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  opacity: 0.65;
+  max-width: 52ch;
+  margin-bottom: 2.25rem;
+}
+
+/* ── Biome pages ─────────────────────────────────────────────────────── */
+.biomes {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+
+.biomeTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: 0.75rem;
+}
+
+.biomeCount {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  opacity: 0.8;
+}
+
+.stampGrid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.5rem;
+}
+
+/* ── A stamp ─────────────────────────────────────────────────────────── */
+.stamp {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  transition: background 160ms ease, border-color 160ms ease, opacity 160ms ease;
+}
+
+/* Carries the row's layout and padding so the hit target fills the whole
+   stamp rather than just its text. The <li> keeps the visual shell. */
+.stampButton {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  background: none;
+  border: none;
+  border-radius: inherit;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Wild — solid ink. The find that counts. */
+.wild {
+  background: rgba(143, 199, 255, 0.1);
+  border-color: rgba(143, 199, 255, 0.32);
+}
+
+.wild:hover {
+  background: rgba(143, 199, 255, 0.16);
+}
+
+/* Chartered — a real find you steered toward, so: same information, dashed
+   border. Reads as a stamp you issued yourself. */
+.chartered {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.chartered:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Not yet found — named, because the Atlas picker already lists every world.
+   Hiding names would cost the hunt its target list and buy nothing. */
+.unfound {
+  opacity: 0.42;
+}
+
+.unfound .stampThumbImage {
+  filter: grayscale(1) contrast(0.8);
+}
+
+.stampThumb {
+  position: relative;
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stampThumbImage {
+  object-fit: cover;
+}
+
+.stampBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.stampName {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9375rem;
+}
+
+.stampCount {
+  font-size: 0.625rem;
+  font-variant-numeric: tabular-nums;
+  padding: 0.05rem 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  opacity: 0.85;
+}
+
+.stampPlace {
+  font-size: 0.8125rem;
+  opacity: 0.85;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stampMeta {
+  font-size: 0.6875rem;
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+}
+
+.stampHint {
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  opacity: 0.7;
+  margin-top: 0.15rem;
+}
+
+.charteredTag {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  opacity: 0.75;
+}
+
+@media (max-width: 560px) {
+  .stampGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .stampThumb {
+    width: 48px;
+    height: 48px;
+  }
+}

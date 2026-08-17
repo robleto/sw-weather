@@ -5,6 +5,7 @@ interface WeatherData {
 	};
 	weather: [
 		{
+			id: number;
 			main: string;
 			description: string;
 		}

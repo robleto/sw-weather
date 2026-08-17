@@ -1,74 +1,44 @@
 .footer {
   background-color: rgba(8, 7, 5, 0.95);
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  gap: 0.3rem;
   width: 100vw;
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 1.5rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  font-size: 13px;
+  text-align: center;
   z-index: 100; /* Ensure the footer is above other elements */
 }
 
-.footerText {
-  color: #FAFAFA;
-  opacity: 0.65;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+/* The bright line. Two stacked lines replaced the old single row, so both can
+   centre and wrap freely instead of competing for horizontal space. */
+.artworkCredit {
+  margin: 0;
+  max-width: 68ch;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(250, 250, 250, 0.82);
 }
 
-.inspiredText {
-  flex: 1;
+.meta {
+  margin: 0;
+  max-width: 68ch;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(250, 250, 250, 0.45);
 }
 
-.developedBy {
-  display: flex;
-  align-items: center;
+.footer a {
+  color: inherit;
+  text-underline-offset: 2px;
+  transition: color 140ms ease;
 }
 
-.iconContainer {
-  display: flex;
-  align-items: center;
-  margin-left: 0.5rem;
+.artworkCredit a {
+  color: #ffffff;
 }
 
-.socialIcon {
-  width: 24px;
-  height: 24px;
-}
-
-/* Enlarge hit target to 44px without changing visual size */
-.iconContainer a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
-  margin-left: 0.25rem;
-}
-
-@media (max-width: 600px) {
-  .footer {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .footerText {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    line-height: 1.15;
-  }
-
-  .inspiredText,
-  .developedBy {
-    margin: 0.15rem 0;
-  }
-
-  .iconContainer {
-    margin-top: 0.5rem;
-    justify-content: center;
-  }
+.footer a:hover {
+  color: #8fc7ff;
 }
