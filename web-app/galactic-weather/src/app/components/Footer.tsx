@@ -16,7 +16,7 @@ import styles from "../styles/Footer.module.css";
 const Footer: React.FC = () => (
 	<footer className={styles.footer}>
 		<p className={styles.artworkCredit}>
-			Every world here is an original painting — a travel poster for somewhere
+			Every world here is an original digital design — a travel poster for somewhere
 			that doesn&apos;t exist. Prints of the full set are at{" "}
 			<a
 				href="https://creativemadness.studio"

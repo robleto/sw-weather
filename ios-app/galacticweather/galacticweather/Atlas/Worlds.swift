@@ -117,7 +117,7 @@ let WORLDS: [World] = [
         climate: .storm,
         color: WorldColor(primary: "#9589A4", headline: "#686788"),
         textTone: .light,
-        textColor: "#706F8E"
+        textColor: "#6D6C8C"
     ),
     World(
         id: "ferrix",
