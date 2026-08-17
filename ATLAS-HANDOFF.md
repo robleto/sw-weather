@@ -18,13 +18,22 @@ planet art. It was formerly called Star Wars Weather and was renamed to remove
 trademark exposure ahead of a paid tier.
 
 **One monorepo**, at `/Users/greg.robleto/Dev/galactic-weather/`, with a single
-`.git` at the root and two remotes. It was two independent repositories when
-this document was first written; they were combined in `c529552`.
+`.git` at the root. It was two independent repositories when this document was
+first written; they were combined in `c529552`.
 
-| | path | remote | stack |
-|---|---|---|---|
-| Web | `web-app/galactic-weather` | `origin` → `robleto/galactic-weather` | Next.js 14.2.35, App Router, TypeScript, CSS Modules |
-| iOS | `ios-app/galacticweather` | `ios-origin` → `robleto/galactic-weather-ios` | SwiftUI, XcodeGen |
+| | path | stack |
+|---|---|---|
+| Web | `web-app/galactic-weather` | Next.js 14.2.35, App Router, TypeScript, CSS Modules |
+| iOS | `ios-app/galacticweather` | SwiftUI, XcodeGen |
+
+**`origin` (`robleto/galactic-weather`) is the only remote you can push to.**
+Both platforms live there. A second remote, `ios-origin`
+(`robleto/galactic-weather-ios`), is still configured locally and still appears
+in `git remote -v`, but that repository was **archived on GitHub and is
+read-only** — a push to it fails with a 403, and its `main` is frozen at
+`f7e7720`, the last iOS-only commit before the monorepo. That is the intended
+end state, not a repository that fell behind: do not try to sync it, and don't
+read its staleness as a problem to fix.
 
 Run the web app with:
 
