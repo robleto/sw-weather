@@ -176,46 +176,21 @@ struct SavedLocationsView: View {
     private var appMenu: some View {
         Menu {
             Button {
-                isAtlasOpen = true
+                isSettingsOpen = true
             } label: {
-                Label(atlasMenuTitle, systemImage: "globe.americas")
+                Label("Settings", systemImage: "gearshape")
             }
 
             Button {
-                isPassportOpen = true
+                isAccountOpen = true
             } label: {
-                Label(passportMenuTitle, systemImage: "checkmark.seal")
+                Label("Account", systemImage: "person.crop.circle")
             }
 
-            // Only offered when there's something to edit — an Edit List that
-            // opens onto nothing but the undeletable device location is a
-            // dead end.
-            if !viewModel.unlockedLocations.isEmpty {
-                Button {
-                    withAnimation { editMode = .active }
-                } label: {
-                    Label("Edit List", systemImage: "arrow.up.arrow.down")
-                }
-            }
-
-            Section {
-                Button {
-                    isSettingsOpen = true
-                } label: {
-                    Label("Settings", systemImage: "gearshape")
-                }
-
-                Button {
-                    isAccountOpen = true
-                } label: {
-                    Label("Account", systemImage: "person.crop.circle")
-                }
-
-                Button {
-                    isCreditsOpen = true
-                } label: {
-                    Label("Credits", systemImage: "info.circle")
-                }
+            Button {
+                isCreditsOpen = true
+            } label: {
+                Label("Credits", systemImage: "info.circle")
             }
         } label: {
             Image(systemName: "ellipsis")
@@ -227,17 +202,107 @@ struct SavedLocationsView: View {
         .accessibilityLabel("Menu")
     }
 
-    private var atlasMenuTitle: String {
+    // MARK: - Destinations
+
+    /// Atlas and Passport are the two things people come here to play with, so
+    /// they get real buttons rather than menu items. They sit where the
+    /// save-this-location row used to: that row offered to save whatever page
+    /// was selected, which included the device location — never in
+    /// `savedLocations`, so it always read as unsaved and the row never went
+    /// away. Searched locations are saved from the preview's own add button, so
+    /// nothing is lost by dropping it.
+    private var destinations: some View {
+        HStack(spacing: 10) {
+            destinationButton(
+                title: "Atlas",
+                detail: atlasDetail,
+                systemImage: "globe.americas.fill"
+            ) { isAtlasOpen = true }
+
+            destinationButton(
+                title: "Passport",
+                detail: passportDetail,
+                systemImage: "checkmark.seal.fill"
+            ) { isPassportOpen = true }
+        }
+    }
+
+    private func destinationButton(
+        title: String,
+        detail: String?,
+        systemImage: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            HStack(spacing: 10) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(accentColor)
+
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(title)
+                        .font(.system(size: 15, weight: .semibold))
+                    if let detail {
+                        Text(detail)
+                            .font(.system(size: 12))
+                            .foregroundStyle(textColor.opacity(0.6))
+                    }
+                }
+                .lineLimit(1)
+
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(.white.opacity(0.08))
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(detail.map { "\(title), \($0)" } ?? title)
+    }
+
+    private var atlasDetail: String? {
         let count = atlasViewModel.customizedCount
-        return count > 0 ? "Atlas (\(count) customized)" : "Atlas"
+        return count > 0 ? "\(count) customized" : nil
     }
 
     /// Shows the wild score rather than the total: it's the one that's
     /// completable without paying, so it's the one worth advertising.
-    private var passportMenuTitle: String {
+    private var passportDetail: String? {
         let progress = passportViewModel.progress
-        guard progress.found > 0 else { return "Passport" }
-        return "Passport (\(progress.wildFound)/\(progress.wildTotal) wild)"
+        guard progress.found > 0 else { return nil }
+        return "\(progress.wildFound)/\(progress.wildTotal) wild"
+    }
+
+    /// Edit List belongs to the list, so it sits under it rather than in the
+    /// dropdown, which is now only account and settings. Offered only when
+    /// there is something to edit — an edit mode opening onto nothing but the
+    /// undeletable device location is a dead end.
+    @ViewBuilder
+    private var editListRow: some View {
+        if !viewModel.unlockedLocations.isEmpty {
+            Button {
+                withAnimation { editMode = .active }
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "arrow.up.arrow.down")
+                        .font(.system(size: 13, weight: .semibold))
+                    Text("Edit List")
+                        .font(.system(size: 15, weight: .medium))
+                }
+                .foregroundStyle(textColor.opacity(0.75))
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(.white.opacity(0.06))
+                )
+            }
+            .buttonStyle(.plain)
+        }
     }
 
     // MARK: - Cards
@@ -260,7 +325,7 @@ struct SavedLocationsView: View {
     private var list: some View {
         List {
             if !isEditing {
-                saveCurrentRow.plainCardRow()
+                destinations.plainCardRow()
             }
 
             if let devicePage = weatherViewModel.pages.first(where: { $0.kind == .currentLocation }) {
@@ -291,6 +356,10 @@ struct SavedLocationsView: View {
                 for location in offsets.map({ viewModel.unlockedLocations[$0] }) {
                     viewModel.remove(location)
                 }
+            }
+
+            if !isEditing {
+                editListRow.plainCardRow()
             }
 
             if !PremiumGate.isPremium, !isEditing {
@@ -346,38 +415,7 @@ struct SavedLocationsView: View {
         return .ready(weather, weatherViewModel.resolvedWorld(for: kind, overrides: atlasViewModel.overrides))
     }
 
-    // MARK: - Save / upsell
-
-    /// Offers to bookmark whatever the pager is currently showing — in
-    /// practice, the place you just searched for.
-    @ViewBuilder
-    private var saveCurrentRow: some View {
-        if let landed = weatherViewModel.landedLocation,
-           !viewModel.isSaved(lat: landed.lat, lon: landed.lon) {
-            let atCap = !viewModel.canSaveMore
-
-            Button {
-                if atCap {
-                    isPaywallOpen = true
-                } else {
-                    viewModel.toggleSaved(displayName: landed.displayName, lat: landed.lat, lon: landed.lon)
-                }
-            } label: {
-                HStack(spacing: 10) {
-                    Image(systemName: atCap ? "lock.fill" : "plus.circle.fill")
-                        .foregroundStyle(accentColor)
-                    Text(atCap ? "Unlock more slots to save \(landed.displayName)" : "Save \(landed.displayName)")
-                        .font(.system(size: 15, weight: .medium))
-                        .lineLimit(1)
-                    Spacer()
-                }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 12)
-                .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(.white.opacity(0.08)))
-            }
-            .buttonStyle(.plain)
-        }
-    }
+    // MARK: - Upsell
 
     private var upsell: some View {
         VStack(alignment: .leading, spacing: 12) {
