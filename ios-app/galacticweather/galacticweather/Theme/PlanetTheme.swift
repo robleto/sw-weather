@@ -10,11 +10,18 @@ extension Color {
         var value: UInt64 = 0
         Scanner(string: hexString).scanHexInt64(&value)
 
-        let red = Double((value & 0xFF0000) >> 16) / 255
-        let green = Double((value & 0x00FF00) >> 8) / 255
-        let blue = Double(value & 0x0000FF) / 255
+        // Accept #RRGGBB and #RRGGBBAA. CSS understands the 8-digit form
+        // natively, so carrying alpha in the hex lets one generated value serve
+        // both platforms — see textColor in Atlas/Worlds.swift.
+        let hasAlpha = hexString.count == 8
+        let rgb = hasAlpha ? (value >> 8) : value
+        let alpha = hasAlpha ? Double(value & 0xFF) / 255 : 1
 
-        self.init(red: red, green: green, blue: blue)
+        let red = Double((rgb & 0xFF0000) >> 16) / 255
+        let green = Double((rgb & 0x00FF00) >> 8) / 255
+        let blue = Double(rgb & 0x0000FF) / 255
+
+        self.init(red: red, green: green, blue: blue, opacity: alpha)
     }
 }
 

@@ -20,8 +20,18 @@ describe("text tone", () => {
 	it("gives every world a tone and a text color", () => {
 		for (const world of WORLDS) {
 			expect(world.textTone, world.id).toMatch(/^(light|dark)$/);
-			expect(world.textColor, world.id).toMatch(/^#[0-9A-F]{6}$/);
+			// 6 digits, or 8 when it carries alpha (dark text is #222222CC).
+			expect(world.textColor, world.id).toMatch(/^#[0-9A-F]{6}([0-9A-F]{2})?$/);
 		}
+	});
+
+	it("uses one shared token for dark text so the art tints it", () => {
+		// A per-world dark color amplified hue artifacts: Crait's near-white
+		// #FDFCED darkened into olive. One translucent token lets the image
+		// supply the tint instead.
+		const dark = WORLDS.filter((w) => w.textTone === "dark");
+		expect(new Set(dark.map((w) => w.textColor)).size).toBe(1);
+		expect(dark[0].textColor).toHaveLength(9);
 	});
 
 	it("keeps the text color on the correct side of its tone", () => {
@@ -37,7 +47,7 @@ describe("text tone", () => {
 
 	it("resolves the text color through to the view layer", () => {
 		const resolvedWorld = resolveWorld("clear_temperate");
-		expect(resolvedWorld.textColor).toMatch(/^#[0-9A-F]{6}$/);
+		expect(resolvedWorld.textColor).toMatch(/^#[0-9A-F]{6}([0-9A-F]{2})?$/);
 		expect(resolvedWorld.textTone).toMatch(/^(light|dark)$/);
 	});
 

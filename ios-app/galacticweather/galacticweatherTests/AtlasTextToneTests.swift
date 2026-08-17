@@ -12,7 +12,8 @@ final class AtlasTextToneTests: XCTestCase {
     }
 
     private func luminance(_ hex: String) -> Double {
-        let h = hex.hasPrefix("#") ? String(hex.dropFirst()) : hex
+        var h = hex.hasPrefix("#") ? String(hex.dropFirst()) : hex
+        if h.count == 8 { h = String(h.prefix(6)) }   // ignore alpha for luminance
         let n = UInt32(h, radix: 16) ?? 0
         let r = Double((n >> 16) & 0xFF), g = Double((n >> 8) & 0xFF), b = Double(n & 0xFF)
         return 0.2126 * srgb(r) + 0.7152 * srgb(g) + 0.0722 * srgb(b)
@@ -21,10 +22,21 @@ final class AtlasTextToneTests: XCTestCase {
     func testEveryWorldHasAToneAndTextColor() {
         for world in WORLDS {
             XCTAssertTrue([.light, .dark].contains(world.textTone), world.id)
-            XCTAssertEqual(world.textColor.count, 7, "\(world.id): \(world.textColor)")
+            // 7 chars, or 9 when it carries alpha (dark text is #222222CC).
+            XCTAssertTrue([7, 9].contains(world.textColor.count),
+                          "\(world.id): \(world.textColor)")
             XCTAssertTrue(world.textColor.hasPrefix("#"), world.id)
             XCTAssertNotNil(UInt32(world.textColor.dropFirst(), radix: 16), world.id)
         }
+    }
+
+    func testDarkTextUsesOneSharedTokenSoTheArtTintsIt() {
+        // A per-world dark color amplified hue artifacts: Crait's near-white
+        // #FDFCED darkened into olive. One translucent token lets the image
+        // supply the tint instead.
+        let dark = WORLDS.filter { $0.textTone == .dark }
+        XCTAssertEqual(Set(dark.map(\.textColor)).count, 1)
+        XCTAssertEqual(dark.first?.textColor.count, 9)
     }
 
     func testTextColorIsOnTheCorrectSideOfItsTone() {

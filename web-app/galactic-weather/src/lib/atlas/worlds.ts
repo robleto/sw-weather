@@ -62,7 +62,7 @@ export const WORLDS: readonly World[] = [
 		climate: "urban",
 		color: { primary: "#6E7A93", headline: "#C3CEE4" },
 		textTone: "dark",
-		textColor: "#3F598D",
+		textColor: "#222222CC",
 		isPremium: true,
 	},
 	{
@@ -72,7 +72,7 @@ export const WORLDS: readonly World[] = [
 		climate: "desert",
 		color: { primary: "#8F1319", headline: "#FDFCED" },
 		textTone: "dark",
-		textColor: "#9A9211",
+		textColor: "#222222CC",
 		isPremium: true,
 	},
 	{
@@ -82,7 +82,7 @@ export const WORLDS: readonly World[] = [
 		climate: "forest",
 		color: { primary: "#48542D", headline: "#6C7858" },
 		textTone: "light",
-		textColor: "#C0C8B3",
+		textColor: "#C2C7B9",
 	},
 	{
 		id: "daiyu",
@@ -118,7 +118,7 @@ export const WORLDS: readonly World[] = [
 		climate: "storm",
 		color: { primary: "#9589A4", headline: "#686788" },
 		textTone: "light",
-		textColor: "#737294",
+		textColor: "#727190",
 	},
 	{
 		id: "ferrix",
@@ -174,7 +174,7 @@ export const WORLDS: readonly World[] = [
 		climate: "desert",
 		color: { primary: "#A8895A", headline: "#E8D09A" },
 		textTone: "dark",
-		textColor: "#6E5419",
+		textColor: "#222222CC",
 		isPremium: true,
 	},
 	{
@@ -194,7 +194,7 @@ export const WORLDS: readonly World[] = [
 		climate: "desert",
 		color: { primary: "#69865C", headline: "#FDD16E" },
 		textTone: "dark",
-		textColor: "#7D5702",
+		textColor: "#222222CC",
 		isPremium: true,
 	},
 	{
@@ -260,7 +260,7 @@ export const WORLDS: readonly World[] = [
 		climate: "desert",
 		color: { primary: "#517566", headline: "#A2C2A7" },
 		textTone: "dark",
-		textColor: "#36523A",
+		textColor: "#222222CC",
 	},
 	{
 		id: "mathleen-divide",
@@ -269,7 +269,7 @@ export const WORLDS: readonly World[] = [
 		climate: "ice",
 		color: { primary: "#548F8D", headline: "#D3DABF" },
 		textTone: "dark",
-		textColor: "#5C683C",
+		textColor: "#222222CC",
 		isPremium: true,
 	},
 	{
@@ -279,7 +279,7 @@ export const WORLDS: readonly World[] = [
 		climate: "temperate",
 		color: { primary: "#3A8176", headline: "#B2C78A" },
 		textTone: "dark",
-		textColor: "#48572A",
+		textColor: "#222222CC",
 		isPremium: true,
 	},
 	{
@@ -327,7 +327,7 @@ export const WORLDS: readonly World[] = [
 		climate: "volcanic",
 		color: { primary: "#36726A", headline: "#D0A921" },
 		textTone: "light",
-		textColor: "#EAD078",
+		textColor: "#E5D085",
 		isPremium: true,
 	},
 	{
@@ -357,7 +357,7 @@ export const WORLDS: readonly World[] = [
 		climate: "forest",
 		color: { primary: "#137769", headline: "#C9E6B7" },
 		textTone: "dark",
-		textColor: "#375C20",
+		textColor: "#222222CC",
 		isPremium: true,
 	},
 	{

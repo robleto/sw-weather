@@ -30,6 +30,12 @@ TS = ROOT / "web-app/galactic-weather/src/lib/atlas/worlds.ts"
 SWIFT = ROOT / "ios-app/galacticweather/galacticweather/Atlas/Worlds.swift"
 ART = ROOT / "web-app/galactic-weather/public/planets"
 
+# Dark text is one shared value at 80% opacity rather than a per-world color, so
+# the art bleeds through and tints it: Mathleen Divide reads faintly blue, Crait
+# faintly warm grey. Deriving a color per world instead amplified hue artifacts —
+# Crait's near-white #FDFCED darkened into olive.
+DARK_TEXT = "#222222CC"
+
 MIN_CONTRAST = 3.0    # WCAG AA for large text — the floor every world must clear
 AIM_CONTRAST = 3.0    # the same bar: the readout is large text, so 3.0 is the
                       # applicable standard. Aiming higher forced a third of the
@@ -53,20 +59,33 @@ def region_luminance(world):
     return sum(relum(p) for p in px) / len(px)
 
 def shift_lightness(hex_color, bg, darker):
-    """Push a color's lightness toward black or white, keeping hue and
-    saturation, until it clears AIM_CONTRAST against `bg` — or until it runs out
-    of range, in which case return the most extreme value available."""
-    r, g, b = [int(hex_color[i:i+2], 16)/255 for i in (1, 3, 5)]
-    h, l0, s = colorsys.rgb_to_hls(r, g, b)
+    """Move a color toward black or white until it clears AIM_CONTRAST against
+    `bg`, returning the most extreme value available if it never does.
+
+    Darkening scales the RGB channels proportionally and lightening blends
+    toward white, rather than dropping lightness in HLS. HLS saturation is
+    meaningless near the extremes — #FDFCED is a 16/255 channel spread but
+    reports S=0.8, so holding S while dropping L turned Crait's near-white
+    into a fully saturated olive. Scaling preserves the ratio between
+    channels, so a near-neutral stays neutral and a saturated color keeps
+    its character.
+    """
+    r0, g0, b0 = [int(hex_color[i:i+2], 16) for i in (1, 3, 5)]
     best, best_c = hex_color, contrast(lum_hex(hex_color), bg)
     steps = 60
     for i in range(1, steps + 1):
-        l = l0 * (1 - i/steps) if darker else l0 + (1 - l0) * (i/steps)
-        rgb = tuple(round(c*255) for c in colorsys.hls_to_rgb(h, l, s))
+        t = i / steps
+        if darker:
+            rgb = (r0 * (1 - t), g0 * (1 - t), b0 * (1 - t))
+        else:
+            rgb = (r0 + (255 - r0) * t, g0 + (255 - g0) * t, b0 + (255 - b0) * t)
+        rgb = tuple(round(c) for c in rgb)
         hx = "#%02X%02X%02X" % rgb
         c = contrast(relum(rgb), bg)
-        if c > best_c: best, best_c = hx, c
-        if c >= AIM_CONTRAST: return hx, c
+        if c > best_c:
+            best, best_c = hx, c
+        if c >= AIM_CONTRAST:
+            return hx, c
     return best, best_c
 
 def main():
@@ -82,11 +101,20 @@ def main():
         # Pure white is the lightest text available; if even that cannot clear the
         # floor, the art is too bright for light text and the world goes dark.
         tone = "light" if contrast(1.0, bg) >= MIN_CONTRAST else "dark"
-        have = contrast(lum_hex(headline), bg)
-        if have >= AIM_CONTRAST:
-            colour, got = headline, have      # already fine — leave it exactly as is
+        if tone == "dark":
+            # Composite the token over the measured background to get what the
+            # eye actually sees, then score that.
+            a = int(DARK_TEXT[7:9], 16) / 255
+            base = [int(DARK_TEXT[i:i+2], 16) for i in (1, 3, 5)]
+            bg_ch = 255 * (bg ** (1/2.2))          # approximate the region as grey
+            seen = tuple(a*c + (1-a)*bg_ch for c in base)
+            colour, got = DARK_TEXT, contrast(relum(seen), bg)
         else:
-            colour, got = shift_lightness(headline, bg, darker=(tone == "dark"))
+            have = contrast(lum_hex(headline), bg)
+            if have >= AIM_CONTRAST:
+                colour, got = headline, have   # already fine — leave it exactly as is
+            else:
+                colour, got = shift_lightness(headline, bg, darker=False)
         out[world] = (tone, colour)
         if colour != headline:
             changed.append((world, bg, tone, headline, colour, got))
@@ -118,7 +146,7 @@ def main():
             # Swift argument lists: `color:` needs a comma once something follows
             # it, and the last argument must not carry a trailing comma.
             text = re.sub(r'(color: WorldColor\([^\n]*\))(\n\s+textTone:)', r'\1,\2', text)
-            text = re.sub(r'(\n\s+textColor: "#[0-9A-Fa-f]{6}"),(\n\s+\))', r'\1\2', text)
+            text = re.sub(r'(\n\s+textColor: "#[0-9A-Fa-f]{6,8}"),(\n\s+\))', r'\1\2', text)
         path.write_text(text)
         print("updated", path.name)
 

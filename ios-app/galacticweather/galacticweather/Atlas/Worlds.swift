@@ -61,7 +61,7 @@ let WORLDS: [World] = [
         climate: .urban,
         color: WorldColor(primary: "#6E7A93", headline: "#C3CEE4"),
         textTone: .dark,
-        textColor: "#3F598D",
+        textColor: "#222222CC",
         isPremium: true
     ),
     World(
@@ -71,7 +71,7 @@ let WORLDS: [World] = [
         climate: .desert,
         color: WorldColor(primary: "#8F1319", headline: "#FDFCED"),
         textTone: .dark,
-        textColor: "#9A9211",
+        textColor: "#222222CC",
         isPremium: true
     ),
     World(
@@ -81,7 +81,7 @@ let WORLDS: [World] = [
         climate: .forest,
         color: WorldColor(primary: "#48542D", headline: "#6C7858"),
         textTone: .light,
-        textColor: "#C0C8B3"
+        textColor: "#C2C7B9"
     ),
     World(
         id: "daiyu",
@@ -117,7 +117,7 @@ let WORLDS: [World] = [
         climate: .storm,
         color: WorldColor(primary: "#9589A4", headline: "#686788"),
         textTone: .light,
-        textColor: "#737294"
+        textColor: "#727190"
     ),
     World(
         id: "ferrix",
@@ -173,7 +173,7 @@ let WORLDS: [World] = [
         climate: .desert,
         color: WorldColor(primary: "#A8895A", headline: "#E8D09A"),
         textTone: .dark,
-        textColor: "#6E5419",
+        textColor: "#222222CC",
         isPremium: true
     ),
     World(
@@ -193,7 +193,7 @@ let WORLDS: [World] = [
         climate: .desert,
         color: WorldColor(primary: "#69865C", headline: "#FDD16E"),
         textTone: .dark,
-        textColor: "#7D5702",
+        textColor: "#222222CC",
         isPremium: true
     ),
     World(
@@ -259,7 +259,7 @@ let WORLDS: [World] = [
         climate: .desert,
         color: WorldColor(primary: "#517566", headline: "#A2C2A7"),
         textTone: .dark,
-        textColor: "#36523A"
+        textColor: "#222222CC"
     ),
     World(
         id: "mathleen-divide",
@@ -268,7 +268,7 @@ let WORLDS: [World] = [
         climate: .ice,
         color: WorldColor(primary: "#548F8D", headline: "#D3DABF"),
         textTone: .dark,
-        textColor: "#5C683C",
+        textColor: "#222222CC",
         isPremium: true
     ),
     World(
@@ -278,7 +278,7 @@ let WORLDS: [World] = [
         climate: .temperate,
         color: WorldColor(primary: "#3A8176", headline: "#B2C78A"),
         textTone: .dark,
-        textColor: "#48572A",
+        textColor: "#222222CC",
         isPremium: true
     ),
     World(
@@ -326,7 +326,7 @@ let WORLDS: [World] = [
         climate: .volcanic,
         color: WorldColor(primary: "#36726A", headline: "#D0A921"),
         textTone: .light,
-        textColor: "#EAD078",
+        textColor: "#E5D085",
         isPremium: true
     ),
     World(
@@ -356,7 +356,7 @@ let WORLDS: [World] = [
         climate: .forest,
         color: WorldColor(primary: "#137769", headline: "#C9E6B7"),
         textTone: .dark,
-        textColor: "#375C20",
+        textColor: "#222222CC",
         isPremium: true
     ),
     World(

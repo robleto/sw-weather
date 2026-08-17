@@ -93,11 +93,23 @@ Regenerate after changing or adding planet art:
 python3 scripts/measure-text-tone.py
 ```
 
-It measures the region the text actually occupies, keeps a world's existing
-`headline` when that already clears 3:1, and otherwise shifts lightness while
-preserving hue. 3:1 is the bar because the readout is large text; aiming at 4.5
-forced a third of the catalog to flat white. It rewrites both catalogs and is
-idempotent. Needs Pillow (`pip install Pillow`), and only when art changes.
+It measures the region the text actually occupies. Dark-text worlds all get one
+shared token, `#222222CC` — 80% opacity, so the art bleeds through and tints it
+rather than each world deriving its own color. Deriving per world amplified hue
+artifacts: Crait's near-white `#FDFCED` has a 16/255 channel spread that reads as
+HLS saturation 0.8, so darkening it produced olive. Light-text worlds keep their
+`headline` when it already clears 3:1 and are otherwise blended toward white.
+3:1 is the bar because the readout is large text; aiming at 4.5 forced a third of
+the catalog to flat white. `Color(hex:)` on iOS accepts `#RRGGBBAA` so the one
+generated value works on both platforms. Rewrites both catalogs, idempotent.
+Needs Pillow (`pip install Pillow`), and only when art changes.
+
+**Caveat worth knowing: the two platforms do not show the same background.** iOS
+draws the planet photo full-bleed (`ContentView.backdropImage`); the web app
+draws only a CSS gradient from `planetStyles.module.css` and never loads the PNG
+behind the readout. The tone measurement is taken from the photo, so it describes
+iOS exactly and web only loosely. Worth reconciling — either by having web use
+the photo, or by measuring the gradient for web.
 
 **XcodeGen owns the Xcode project.** `ios-app/galacticweather/project.yml` is
 the source of truth; `galacticweather.xcodeproj` is generated. After adding or
