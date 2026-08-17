@@ -18,7 +18,8 @@ struct PlanetPickerView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var climate: Climate?
     @State private var query = ""
-    @State private var isPaywallOpen = false
+    @State private var isMultiAssignPaywallOpen = false
+    @State private var isLockedWorldPaywallOpen = false
 
     private static let availableClimates: [Climate] = orderedUnique(WORLDS.map(\.climate))
 
@@ -46,8 +47,11 @@ struct PlanetPickerView: View {
         .padding(.horizontal, 20)
         .padding(.top, 20)
         .foregroundStyle(Color(hex: "#f2f5fa"))
-        .sheet(isPresented: $isPaywallOpen) {
+        .sheet(isPresented: $isMultiAssignPaywallOpen) {
             PaywallView(context: .multiAssign)
+        }
+        .sheet(isPresented: $isLockedWorldPaywallOpen) {
+            PaywallView(context: .lockedWorld)
         }
     }
 
@@ -158,9 +162,12 @@ struct PlanetPickerView: View {
     private func worldCard(_ world: World) -> some View {
         let selected = assigned.contains(world.id)
         let isDefault = world.id == slot.defaultWorld
+        let isLocked = !PremiumGate.canUseWorld(world)
 
         return Button {
-            if canMultiAssign {
+            if isLocked {
+                isLockedWorldPaywallOpen = true
+            } else if canMultiAssign {
                 onToggleWorld(world.id)
             } else if assigned.contains(world.id) {
                 onResetSlot()
@@ -175,6 +182,14 @@ struct PlanetPickerView: View {
                         Image(world.id)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
+                            .opacity(isLocked ? 0.35 : 1)
+                    }
+                    .overlay {
+                        if isLocked {
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(.white)
+                        }
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                     .overlay {
@@ -185,9 +200,13 @@ struct PlanetPickerView: View {
                 Text(world.name)
                     .font(.system(size: 13))
                     .tracking(0.4)
-                    .foregroundStyle(selected ? Color(hex: "#8fc7ff") : Color(hex: "#f2f5fa"))
+                    .foregroundStyle(
+                        selected ? Color(hex: "#8fc7ff") : Color(hex: "#f2f5fa").opacity(isLocked ? 0.6 : 1)
+                    )
 
-                if isDefault {
+                if isLocked {
+                    PremiumLockChip()
+                } else if isDefault {
                     Text("SUITS THIS WEATHER")
                         .font(.system(size: 10))
                         .tracking(0.8)
@@ -196,6 +215,7 @@ struct PlanetPickerView: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityHint(isLocked ? "Premium unlocks this world" : "")
     }
 
     private var footer: some View {
@@ -212,7 +232,7 @@ struct PlanetPickerView: View {
             Spacer()
             if !canMultiAssign {
                 Button {
-                    isPaywallOpen = true
+                    isMultiAssignPaywallOpen = true
                 } label: {
                     HStack(spacing: 6) {
                         Text(PremiumGate.multiAssignUpsell)

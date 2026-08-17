@@ -87,7 +87,7 @@ struct WeatherTwinsView: View {
         }
         .foregroundStyle(Color(hex: "#f2f5fa"))
         .sheet(isPresented: $isPaywallOpen) {
-            PaywallView(context: .weatherTwinsSlot)
+            PaywallView(context: .general)
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
         }
@@ -139,9 +139,11 @@ struct WeatherTwinsView: View {
         }
     }
 
+    private static let premiumWorldCount = WORLDS.filter(\.isPremium).count
+
     private var summaryText: String {
         guard PremiumGate.isPremium else {
-            return "Free plan · \(PremiumGate.freeEditableSlotLimit) of \(SLOTS.count) conditions editable."
+            return "All \(SLOTS.count) conditions are yours to reassign. Premium adds \(Self.premiumWorldCount) more worlds to pick from, plus multi-assign."
         }
         return viewModel.customizedCount == 0
             ? "\(SLOTS.count) conditions, all set to canon."
@@ -173,15 +175,9 @@ struct WeatherTwinsView: View {
         let extraCount = assigned.count > 1 ? assigned.count - 1 : 0
         let rangeHint = SLOT_RANGE_HINT[slot.id]
         let isActive = activeSlot?.id == slot.id
-        let isLocked = !viewModel.canEdit(slot.id)
-        let contentOpacity = isLocked ? 0.45 : 1.0
 
         return Button {
-            if isLocked {
-                isPaywallOpen = true
-            } else {
-                activeSlot = (activeSlot?.id == slot.id) ? nil : slot
-            }
+            activeSlot = (activeSlot?.id == slot.id) ? nil : slot
         } label: {
             HStack(spacing: 14) {
                 Image(resolved.planet)
@@ -189,7 +185,6 @@ struct WeatherTwinsView: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 56, height: 40)
                     .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                    .opacity(contentOpacity)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(slot.label)
@@ -201,7 +196,6 @@ struct WeatherTwinsView: View {
                             .monospacedDigit()
                     }
                 }
-                .opacity(contentOpacity)
 
                 Spacer(minLength: 8)
 
@@ -210,24 +204,19 @@ struct WeatherTwinsView: View {
                         .font(.system(size: 14))
                         .foregroundStyle(.white.opacity(0.9))
                         .lineLimit(1)
-                        .opacity(contentOpacity)
 
-                    if isLocked {
-                        PremiumLockChip()
-                    } else {
-                        if extraCount > 0 {
-                            Text("+\(extraCount)")
-                                .font(.system(size: 11))
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Capsule().fill(.white.opacity(0.18)))
-                        }
+                    if extraCount > 0 {
+                        Text("+\(extraCount)")
+                            .font(.system(size: 11))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Capsule().fill(.white.opacity(0.18)))
+                    }
 
-                        if resolved.customized {
-                            Circle()
-                                .fill(Color(hex: "#8fc7ff"))
-                                .frame(width: 6, height: 6)
-                        }
+                    if resolved.customized {
+                        Circle()
+                            .fill(Color(hex: "#8fc7ff"))
+                            .frame(width: 6, height: 6)
                     }
                 }
             }
@@ -243,6 +232,5 @@ struct WeatherTwinsView: View {
             }
         }
         .buttonStyle(.plain)
-        .accessibilityHint(isLocked ? "Premium unlocks this condition" : "")
     }
 }

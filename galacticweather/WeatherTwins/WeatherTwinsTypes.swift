@@ -43,6 +43,24 @@ struct World: Identifiable {
     let description: String
     let climate: Climate
     let color: WorldColor
+    /// Locked in the planet picker for free users; premium unlocks it.
+    let isPremium: Bool
+
+    init(
+        id: WorldId,
+        name: String,
+        description: String,
+        climate: Climate,
+        color: WorldColor,
+        isPremium: Bool = false
+    ) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.climate = climate
+        self.color = color
+        self.isPremium = isPremium
+    }
 }
 
 /// Slots are grouped purely for display in Weather Twins.

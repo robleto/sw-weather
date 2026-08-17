@@ -3,14 +3,14 @@ import SwiftUI
 /// Where the user came from, so the headline speaks to what they just hit.
 enum PaywallContext {
     case general
-    case weatherTwinsSlot // tapped a locked Weather Twins condition
-    case multiAssign      // tried to put a second world on one condition
-    case savedLocations   // opened Saved Locations while free
+    case lockedWorld     // tapped a locked premium world in the picker
+    case multiAssign     // tried to put a second world on one condition
+    case savedLocations  // opened Saved Locations while free
 
     var headline: String {
         switch self {
         case .general: return "Galactic Weather Premium"
-        case .weatherTwinsSlot: return "Unlock every condition"
+        case .lockedWorld: return "Unlock every world"
         case .multiAssign: return "Assign several worlds"
         case .savedLocations: return "Keep your favorite skies"
         }
@@ -20,8 +20,8 @@ enum PaywallContext {
         switch self {
         case .general:
             return "Make the whole sky yours."
-        case .weatherTwinsSlot:
-            return "You've used your one free condition. Premium opens all 22."
+        case .lockedWorld:
+            return "Premium adds this world — and every other locked one — to your picker, forever."
         case .multiAssign:
             return "Give one condition a handful of worlds and let them rotate, one per day."
         case .savedLocations:
@@ -41,18 +41,13 @@ private struct PaywallFeature: Identifiable {
     static let all: [PaywallFeature] = [
         PaywallFeature(
             symbol: "sparkles",
-            title: "All 22 Weather Twins conditions",
-            detail: "Free includes one editable slot. Premium opens the whole chart."
+            title: "Every premium world",
+            detail: "Unlock every locked world in the picker, plus every new one added later."
         ),
         PaywallFeature(
             symbol: "shuffle",
             title: "Weather Twin rotation",
             detail: "Assign several worlds to one condition and let them rotate, one per day."
-        ),
-        PaywallFeature(
-            symbol: "paintpalette",
-            title: "The full world library",
-            detail: "Every world unlocked, including ones no condition uses by default."
         ),
         PaywallFeature(
             symbol: "bookmark.fill",
@@ -245,7 +240,7 @@ struct PaywallView: View {
 }
 
 #Preview {
-    PaywallView(context: .weatherTwinsSlot)
+    PaywallView(context: .lockedWorld)
 }
 
 #Preview("General") {

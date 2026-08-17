@@ -23,7 +23,7 @@ let SLOTS: [Slot] = [
 
     // ── Atmosphere ───────────────────────────────────────────────────────
     Slot(id: "mist", label: "Mist", group: .atmosphere, defaultWorld: "endor"),
-    Slot(id: "fog", label: "Fog", group: .atmosphere, defaultWorld: "mortis"),
+    Slot(id: "fog", label: "Fog", group: .atmosphere, defaultWorld: "endor"),
     Slot(id: "haze", label: "Haze", group: .atmosphere, defaultWorld: "niamos"),
     Slot(id: "smoke", label: "Smoke & ash", group: .atmosphere, defaultWorld: "mustafar"),
     Slot(id: "jakku", label: "Dust & sand", group: .atmosphere, defaultWorld: "jakku"),
@@ -51,7 +51,7 @@ let SLOTS: [Slot] = [
     ),
     Slot(id: "clear_warm", label: "Clear · warm", group: .clearSkies, defaultWorld: "scarif"),
     Slot(id: "clear_temperate", label: "Clear · mild", group: .clearSkies, defaultWorld: "naboo"),
-    Slot(id: "clear_cool", label: "Clear · cool", group: .clearSkies, defaultWorld: "alderaan"),
+    Slot(id: "clear_cool", label: "Clear · cool", group: .clearSkies, defaultWorld: "naboo"),
     Slot(id: "clear_chilly", label: "Clear · chilly", group: .clearSkies, defaultWorld: "kashyyyk"),
     Slot(
         id: "clear_cold",
@@ -60,7 +60,7 @@ let SLOTS: [Slot] = [
         defaultWorld: "hoth",
         defaultDescription: "A frozen wasteland of biting cold and clear, pale skies."
     ),
-    Slot(id: "clear_freezing", label: "Clear · freezing", group: .clearSkies, defaultWorld: "ilum"),
+    Slot(id: "clear_freezing", label: "Clear · freezing", group: .clearSkies, defaultWorld: "hoth"),
 ]
 
 let SLOT_GROUP_ORDER: [SlotGroup] = [.clearSkies, .cloudCover, .precipitation, .atmosphere]

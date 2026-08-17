@@ -12,14 +12,16 @@ let WORLDS: [World] = [
         name: "Ahch-To",
         description: "A remote ocean world of jagged island peaks, sea spray, and restless grey water.",
         climate: .ocean,
-        color: WorldColor(primary: "#5C7684", headline: "#B4CEDA")
+        color: WorldColor(primary: "#5C7684", headline: "#B4CEDA"),
+        isPremium: true
     ),
     World(
         id: "alderaan",
         name: "Alderaan",
         description: "A peaceful, beautiful world of rolling hills and crisp, clear air.",
         climate: .temperate,
-        color: WorldColor(primary: "#5F749E", headline: "#C4D8E8")
+        color: WorldColor(primary: "#5F749E", headline: "#C4D8E8"),
+        isPremium: true
     ),
     World(
         id: "at-attin",
@@ -40,7 +42,8 @@ let WORLDS: [World] = [
         name: "Coruscant",
         description: "A city that covers a world entirely — endless towers under a haze of traffic light.",
         climate: .urban,
-        color: WorldColor(primary: "#6E7A93", headline: "#C3CEE4")
+        color: WorldColor(primary: "#6E7A93", headline: "#C3CEE4"),
+        isPremium: true
     ),
     World(
         id: "dagobah",
@@ -82,7 +85,8 @@ let WORLDS: [World] = [
         name: "Ilum",
         description: "A frigid, crystal-lined world with clear skies and severe cold.",
         climate: .ice,
-        color: WorldColor(primary: "#A4B3C1", headline: "#A9CEEF")
+        color: WorldColor(primary: "#A4B3C1", headline: "#A9CEEF"),
+        isPremium: true
     ),
     World(
         id: "jakku",
@@ -117,7 +121,8 @@ let WORLDS: [World] = [
         name: "Mortis",
         description: "A realm between worlds, shrouded in thick fog and an otherworldly stillness.",
         climate: .storm,
-        color: WorldColor(primary: "#7A7090", headline: "#B0A8C8")
+        color: WorldColor(primary: "#7A7090", headline: "#B0A8C8"),
+        isPremium: true
     ),
     World(
         id: "mustafar",
@@ -145,7 +150,8 @@ let WORLDS: [World] = [
         name: "Nur",
         description: "A dark ocean moon of perpetual rain, lashed by wind above a black sea.",
         climate: .ocean,
-        color: WorldColor(primary: "#4A5A6B", headline: "#9DB2C4")
+        color: WorldColor(primary: "#4A5A6B", headline: "#9DB2C4"),
+        isPremium: true
     ),
     World(
         id: "scarif",

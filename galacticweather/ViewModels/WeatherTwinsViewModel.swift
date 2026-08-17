@@ -29,16 +29,15 @@ final class WeatherTwinsViewModel {
 
     var customizedCount: Int { overrides.count }
 
-    @MainActor func canEdit(_ slotId: SlotId) -> Bool {
-        PremiumGate.canEditSlot(slotId, overrides: overrides)
-    }
-
     @MainActor var canAssignMultipleWorlds: Bool { PremiumGate.canAssignMultipleWorlds }
 
-    /// Replace a slot's assignment. An empty list restores the default.
+    /// Replace a slot's assignment. An empty list restores the default. Every
+    /// slot is freely editable; locked (premium) worlds are silently dropped
+    /// rather than trusted from the caller — the picker UI should never let
+    /// one through, but this keeps the guarantee here too.
     @MainActor func assignSlot(_ slotId: SlotId, worldIds: [WorldId]) {
-        guard canEdit(slotId) else { return }
-        let unique = orderedUnique(worldIds)
+        let allowed = worldIds.filter { id in getWorld(id).map(PremiumGate.canUseWorld) ?? false }
+        let unique = orderedUnique(allowed)
         if unique.isEmpty {
             overrides.removeValue(forKey: slotId)
         } else {
@@ -47,17 +46,17 @@ final class WeatherTwinsViewModel {
         WeatherTwinsStorage.save(overrides)
     }
 
-    /// The free-tier assignment path: replaces the slot's entire assignment
-    /// with a single world rather than appending to it.
+    /// The single-assign path: replaces the slot's entire assignment with one
+    /// world rather than appending to it.
     @MainActor func assignSingleWorld(slotId: SlotId, worldId: WorldId) {
-        guard canEdit(slotId) else { return }
+        guard let world = getWorld(worldId), PremiumGate.canUseWorld(world) else { return }
         overrides[slotId] = [worldId]
         WeatherTwinsStorage.save(overrides)
     }
 
     /// Add or remove a single world from a slot, for multi-assign.
     @MainActor func toggleWorld(slotId: SlotId, worldId: WorldId) {
-        guard canEdit(slotId) else { return }
+        guard let world = getWorld(worldId), PremiumGate.canUseWorld(world) else { return }
         let existing = overrides[slotId] ?? []
         guard canAssignMultipleWorlds || existing.isEmpty || existing.contains(worldId) else { return }
 

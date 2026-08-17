@@ -14,19 +14,13 @@ import Foundation
 /// `@State`/`@Environment` wrapper for read-only checks — that's deliberate.
 @MainActor
 enum PremiumGate {
-    /// How many Weather Twins slots a free user may have customized at once.
-    static let freeEditableSlotLimit = 1
-
     static var isPremium: Bool { PremiumStore.shared.isPremium }
 
-    /// Free users get one slot, and they choose which one: any slot is
-    /// editable while they have spent no customization, and the slot they
-    /// already customized stays editable so they can change their mind.
-    /// Resetting a slot to canon frees the allowance again.
-    static func canEditSlot(_ slotId: SlotId, overrides: WeatherTwinsOverrides) -> Bool {
-        if isPremium { return true }
-        if overrides.keys.contains(slotId) { return true }
-        return overrides.count < freeEditableSlotLimit
+    /// Every slot is freely reassignable for everyone — free users work from
+    /// the same base catalog, just a smaller one. What's gated is *which
+    /// worlds* they can assign (see `canUseWorld`) and multi-assign.
+    static func canUseWorld(_ world: World) -> Bool {
+        !world.isPremium || isPremium
     }
 
     /// Assigning several worlds to one slot (they rotate daily) is premium.
