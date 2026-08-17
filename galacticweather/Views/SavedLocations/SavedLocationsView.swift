@@ -9,6 +9,8 @@ struct SavedLocationsView: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var isPaywallOpen = false
+    @State private var renaming: SavedLocation?
+    @State private var draftName = ""
 
     private var backgroundColor: Color { Color(hex: "#0a0e16") }
     private var textColor: Color { Color(hex: "#f2f5fa") }
@@ -39,6 +41,38 @@ struct SavedLocationsView: View {
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
         }
+        .alert("Rename location", isPresented: renameAlertBinding, presenting: renaming) { location in
+            TextField(location.displayName, text: $draftName)
+                .autocorrectionDisabled()
+
+            Button("Save") {
+                viewModel.rename(location, to: draftName)
+                renaming = nil
+            }
+
+            if location.isRenamed {
+                Button("Use \(location.displayName)") {
+                    viewModel.rename(location, to: nil)
+                    renaming = nil
+                }
+            }
+
+            Button("Cancel", role: .cancel) { renaming = nil }
+        } message: { location in
+            Text("Weather data reports this as \(location.displayName). Call it whatever you like.")
+        }
+    }
+
+    private var renameAlertBinding: Binding<Bool> {
+        Binding(
+            get: { renaming != nil },
+            set: { if !$0 { renaming = nil } }
+        )
+    }
+
+    private func beginRename(_ location: SavedLocation) {
+        draftName = location.customName ?? ""
+        renaming = location
     }
 
     private var header: some View {
@@ -114,23 +148,46 @@ struct SavedLocationsView: View {
     }
 
     private func locationRow(_ location: SavedLocation) -> some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 12) {
             Button {
                 Task { await weatherViewModel.goToLocation(lat: location.lat, lon: location.lon) }
                 dismiss()
             } label: {
-                Text(location.displayName)
-                    .font(.system(size: 15))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(location.name)
+                        .font(.system(size: 15))
+                    // Keep the reported name visible once renamed, so a
+                    // custom label never hides which place this actually is.
+                    if location.isRenamed {
+                        Text(location.displayName)
+                            .font(.system(size: 12))
+                            .foregroundStyle(textColor.opacity(0.45))
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             .buttonStyle(.plain)
+
+            Button {
+                beginRename(location)
+            } label: {
+                Image(systemName: "pencil")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(accentColor)
+                    .frame(width: 32, height: 32)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Rename \(location.name)")
 
             Button {
                 viewModel.remove(location)
             } label: {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundStyle(textColor.opacity(0.4))
+                    .frame(width: 32, height: 32)
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Remove \(location.name)")
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)

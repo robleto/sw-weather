@@ -10,13 +10,16 @@ struct WeatherDetailsView: View {
     /// value to reach for.
     var weatherData: WeatherResponse
     var weatherInfo: ResolvedWorld
+    /// Shown instead of `weatherData.name`, so a renamed saved location keeps
+    /// its user-chosen label here too.
+    var locationName: String
 
     var body: some View {
         let info = weatherInfo
         let headline = Color(hex: info.color.headline)
 
             VStack(spacing: 10) {
-                Text("Today's Forecast for \(weatherData.name)")
+                Text("Today's Forecast for \(locationName)")
                     .font(.system(size: 13, weight: .medium))
                     .tracking(1.5)
                     .textCase(.uppercase)
@@ -26,7 +29,7 @@ struct WeatherDetailsView: View {
                     .font(.custom("RussoOne-Regular", size: 36))
                     .foregroundStyle(headline)
 
-                Text("\(weatherData.name) feels like being on")
+                Text("\(locationName) feels like being on")
                     .font(.system(size: 13))
                     .tracking(1.5)
                     .textCase(.uppercase)

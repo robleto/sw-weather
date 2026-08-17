@@ -165,7 +165,11 @@ struct ContentView: View {
                 }
 
                 if let weather = state.weather {
-                    WeatherDetailsView(weatherData: weather, weatherInfo: info)
+                    WeatherDetailsView(
+                        weatherData: weather,
+                        weatherInfo: info,
+                        locationName: weatherViewModel.displayName(for: page.kind)
+                    )
                 }
 
                 Spacer(minLength: 0)

@@ -5,13 +5,31 @@ import Foundation
 /// see `PremiumGate.canUseSavedLocations`.
 struct SavedLocation: Codable, Identifiable, Hashable {
     let id: String
+    /// The name the geocoder/weather API gave this place. Kept even after a
+    /// rename so "Reset name" can restore it.
     let displayName: String
+    /// A user-chosen label. The API's name for a place is often not what
+    /// someone calls it — the nearest reporting station rather than their
+    /// town, say — so this takes precedence wherever the location is shown.
+    var customName: String?
     let lat: Double
     let lon: Double
 
-    init(displayName: String, lat: Double, lon: Double) {
+    /// What to actually show. Blank/whitespace custom names fall back rather
+    /// than rendering an empty row.
+    var name: String {
+        guard let trimmed = customName?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !trimmed.isEmpty
+        else { return displayName }
+        return trimmed
+    }
+
+    var isRenamed: Bool { name != displayName }
+
+    init(displayName: String, customName: String? = nil, lat: Double, lon: Double) {
         self.id = Self.id(lat: lat, lon: lon)
         self.displayName = displayName
+        self.customName = customName
         self.lat = lat
         self.lon = lon
     }

@@ -51,4 +51,13 @@ final class SavedLocationsViewModel {
         locations.removeAll { $0.id == location.id }
         SavedLocationsStorage.save(locations)
     }
+
+    /// Sets a user-chosen label. Passing nil, or anything blank, clears the
+    /// override and falls back to the name the API supplied.
+    func rename(_ location: SavedLocation, to newName: String?) {
+        guard let index = locations.firstIndex(where: { $0.id == location.id }) else { return }
+        let trimmed = newName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        locations[index].customName = (trimmed?.isEmpty ?? true) ? nil : trimmed
+        SavedLocationsStorage.save(locations)
+    }
 }

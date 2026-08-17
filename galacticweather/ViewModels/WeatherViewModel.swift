@@ -68,7 +68,7 @@ final class WeatherViewModel {
             WeatherPage(
                 kind: .saved(saved.id),
                 coordinate: WeatherPage.Coordinate(lat: saved.lat, lon: saved.lon),
-                displayName: saved.displayName
+                displayName: saved.name
             )
         }
 
@@ -87,6 +87,18 @@ final class WeatherViewModel {
 
     func state(for kind: WeatherPageKind) -> WeatherPageState {
         states[kind] ?? WeatherPageState()
+    }
+
+    /// The label to show for a page. A saved location's user-chosen name wins
+    /// over whatever the weather API reports for those coordinates — renaming
+    /// is there precisely because the reported name is often the nearest
+    /// station rather than the place someone means.
+    func displayName(for kind: WeatherPageKind) -> String {
+        let pageName = pages.first { $0.kind == kind }?.displayName
+        if case .saved = kind {
+            return pageName ?? ""
+        }
+        return state(for: kind).weather?.name ?? pageName ?? ""
     }
 
     var selectedState: WeatherPageState { state(for: selection) }
