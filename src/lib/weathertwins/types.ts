@@ -24,6 +24,13 @@ export interface World {
 	description: string;
 	climate: Climate;
 	color: WorldColor;
+	/**
+	 * Marks a world premium-only on iOS (locked in the picker there unless
+	 * purchased). Data parity with the iOS catalog only — the web app has no
+	 * premium tier and never gates on this; every world stays freely pickable
+	 * here regardless.
+	 */
+	isPremium?: boolean;
 }
 
 /** A weather bucket the app can land in. One slot resolves to one world. */

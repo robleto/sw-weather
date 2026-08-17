@@ -25,7 +25,7 @@ export const SLOTS: readonly Slot[] = [
 
 	// ── Atmosphere ─────────────────────────────────────────────────────────
 	{ id: "mist", label: "Mist", group: "Atmosphere", defaultWorld: "endor" },
-	{ id: "fog", label: "Fog", group: "Atmosphere", defaultWorld: "mortis" },
+	{ id: "fog", label: "Fog", group: "Atmosphere", defaultWorld: "endor" },
 	{ id: "haze", label: "Haze", group: "Atmosphere", defaultWorld: "niamos" },
 	{ id: "smoke", label: "Smoke & ash", group: "Atmosphere", defaultWorld: "mustafar" },
 	{ id: "jakku", label: "Dust & sand", group: "Atmosphere", defaultWorld: "jakku" },
@@ -54,7 +54,7 @@ export const SLOTS: readonly Slot[] = [
 	},
 	{ id: "clear_warm", label: "Clear · warm", group: "Clear skies", defaultWorld: "scarif" },
 	{ id: "clear_temperate", label: "Clear · mild", group: "Clear skies", defaultWorld: "naboo" },
-	{ id: "clear_cool", label: "Clear · cool", group: "Clear skies", defaultWorld: "alderaan" },
+	{ id: "clear_cool", label: "Clear · cool", group: "Clear skies", defaultWorld: "naboo" },
 	{ id: "clear_chilly", label: "Clear · chilly", group: "Clear skies", defaultWorld: "kashyyyk" },
 	{
 		id: "clear_cold",
@@ -63,7 +63,7 @@ export const SLOTS: readonly Slot[] = [
 		defaultWorld: "hoth",
 		defaultDescription: "A frozen wasteland of biting cold and clear, pale skies.",
 	},
-	{ id: "clear_freezing", label: "Clear · freezing", group: "Clear skies", defaultWorld: "ilum" },
+	{ id: "clear_freezing", label: "Clear · freezing", group: "Clear skies", defaultWorld: "hoth" },
 ] as const;
 
 export const SLOT_GROUP_ORDER: readonly SlotGroup[] = [

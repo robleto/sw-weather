@@ -14,6 +14,7 @@ export const WORLDS: readonly World[] = [
 		description: "A remote ocean world of jagged island peaks, sea spray, and restless grey water.",
 		climate: "ocean",
 		color: { primary: "#5C7684", headline: "#B4CEDA" },
+		isPremium: true,
 	},
 	{
 		id: "alderaan",
@@ -21,6 +22,7 @@ export const WORLDS: readonly World[] = [
 		description: "A peaceful, beautiful world of rolling hills and crisp, clear air.",
 		climate: "temperate",
 		color: { primary: "#5F749E", headline: "#C4D8E8" },
+		isPremium: true,
 	},
 	{
 		id: "at-attin",
@@ -42,6 +44,7 @@ export const WORLDS: readonly World[] = [
 		description: "A city that covers a world entirely — endless towers under a haze of traffic light.",
 		climate: "urban",
 		color: { primary: "#6E7A93", headline: "#C3CEE4" },
+		isPremium: true,
 	},
 	{
 		id: "dagobah",
@@ -84,6 +87,7 @@ export const WORLDS: readonly World[] = [
 		description: "A frigid, crystal-lined world with clear skies and severe cold.",
 		climate: "ice",
 		color: { primary: "#A4B3C1", headline: "#A9CEEF" },
+		isPremium: true,
 	},
 	{
 		id: "jakku",
@@ -119,6 +123,7 @@ export const WORLDS: readonly World[] = [
 		description: "A realm between worlds, shrouded in thick fog and an otherworldly stillness.",
 		climate: "storm",
 		color: { primary: "#7A7090", headline: "#B0A8C8" },
+		isPremium: true,
 	},
 	{
 		id: "mustafar",
@@ -147,6 +152,7 @@ export const WORLDS: readonly World[] = [
 		description: "A dark ocean moon of perpetual rain, lashed by wind above a black sea.",
 		climate: "ocean",
 		color: { primary: "#4A5A6B", headline: "#9DB2C4" },
+		isPremium: true,
 	},
 	{
 		id: "scarif",
