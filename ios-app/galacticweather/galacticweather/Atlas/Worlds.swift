@@ -125,6 +125,22 @@ let WORLDS: [World] = [
         isPremium: true
     ),
     World(
+        id: "janix",
+        name: "Janix",
+        description: "A skyline of glass towers under a deep, star-thick twilight.",
+        climate: .urban,
+        color: WorldColor(primary: "#172B6B", headline: "#C4A4BC"),
+        isPremium: true
+    ),
+    World(
+        id: "jedha",
+        name: "Jedha",
+        description: "A desert moon of pilgrim cities, its air thick with golden dust.",
+        climate: .desert,
+        color: WorldColor(primary: "#69865C", headline: "#FDD16E"),
+        isPremium: true
+    ),
+    World(
         id: "kamino",
         name: "Kamino",
         description: "A water planet that experiences frequent, heavy rainfall.",
@@ -139,6 +155,21 @@ let WORLDS: [World] = [
         color: WorldColor(primary: "#6C7F74", headline: "#7C9688")
     ),
     World(
+        id: "kef-bir",
+        name: "Kef Bir",
+        description: "An ocean moon of grey rolling swells and hard wind off open water.",
+        climate: .ocean,
+        color: WorldColor(primary: "#2D7787", headline: "#96BBC3"),
+        isPremium: true
+    ),
+    World(
+        id: "kessel",
+        name: "Kessel",
+        description: "A mining world under permanent stacks of black industrial smoke.",
+        climate: .urban,
+        color: WorldColor(primary: "#342F2E", headline: "#F1B26E")
+    ),
+    World(
         id: "kijimi",
         name: "Kijimi",
         description: "A cold mountain world with ancient cities dusted in light snowfall.",
@@ -151,6 +182,37 @@ let WORLDS: [World] = [
         description: "Wide grass plains beneath an enormous, cloudless sky.",
         climate: .temperate,
         color: WorldColor(primary: "#2C7FA6", headline: "#FBDD97"),
+        isPremium: true
+    ),
+    World(
+        id: "mandalore",
+        name: "Mandalore",
+        description: "Glassed plains and drowned spires, half-lost in pale grey mist.",
+        climate: .desert,
+        color: WorldColor(primary: "#517566", headline: "#A2C2A7")
+    ),
+    World(
+        id: "mathleen-divide",
+        name: "Mathleen Divide",
+        description: "A high range of snowbound peaks under a thin, pale sun.",
+        climate: .ice,
+        color: WorldColor(primary: "#548F8D", headline: "#D3DABF"),
+        isPremium: true
+    ),
+    World(
+        id: "mina-rau",
+        name: "Mina-Rau",
+        description: "A quiet farm world of golden grain under a wide, clear sky.",
+        climate: .temperate,
+        color: WorldColor(primary: "#3A8176", headline: "#B2C78A"),
+        isPremium: true
+    ),
+    World(
+        id: "mon-cala",
+        name: "Mon Cala",
+        description: "An ocean world seen from below — coral canyons and slanting light.",
+        climate: .ocean,
+        color: WorldColor(primary: "#1B708C", headline: "#6AD1D7"),
         isPremium: true
     ),
     World(
@@ -176,6 +238,14 @@ let WORLDS: [World] = [
         color: WorldColor(primary: "#7A609B", headline: "#B5C0EE")
     ),
     World(
+        id: "nevarro",
+        name: "Nevarro",
+        description: "A warm volcanic world where tall clouds pile above a sunlit town.",
+        climate: .volcanic,
+        color: WorldColor(primary: "#36726A", headline: "#D0A921"),
+        isPremium: true
+    ),
+    World(
         id: "niamos",
         name: "Niamos",
         description: "A sunny, tropical beach planet known for its vibrant resorts and relaxing atmosphere.",
@@ -192,11 +262,43 @@ let WORLDS: [World] = [
         isPremium: true
     ),
     World(
+        id: "ossus",
+        name: "Ossus",
+        description: "Green mountain forest beneath towering white cloud.",
+        climate: .forest,
+        color: WorldColor(primary: "#137769", headline: "#C9E6B7"),
+        isPremium: true
+    ),
+    World(
+        id: "ryloth",
+        name: "Ryloth",
+        description: "Red canyon spires beneath a violent violet-and-orange dusk.",
+        climate: .desert,
+        color: WorldColor(primary: "#282586", headline: "#F5A65B"),
+        isPremium: true
+    ),
+    World(
         id: "scarif",
         name: "Scarif",
         description: "A warm tropical world with clear skies and bright coastal weather.",
         climate: .ocean,
         color: WorldColor(primary: "#237691", headline: "#95E1F6")
+    ),
+    World(
+        id: "sorgan",
+        name: "Sorgan",
+        description: "A humid marsh of paddy ponds and thatched roofs, warm and still.",
+        climate: .forest,
+        color: WorldColor(primary: "#2C786D", headline: "#CFD575"),
+        isPremium: true
+    ),
+    World(
+        id: "takodana",
+        name: "Takodana",
+        description: "Forested lake country under bright, drifting cumulus.",
+        climate: .forest,
+        color: WorldColor(primary: "#3B619F", headline: "#CBDBE8"),
+        isPremium: true
     ),
     World(
         id: "tatooine",

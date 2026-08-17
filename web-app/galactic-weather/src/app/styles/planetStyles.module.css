@@ -226,3 +226,81 @@
      fallback iOS PlanetTheme applies to worlds with no bespoke gradient. */
   background: linear-gradient(180deg, #2C7FA6 0%, #FBDD97 100%);
 }
+
+.janix {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #172B6B 0%, #C4A4BC 100%);
+}
+
+.jedha {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #69865C 0%, #FDD16E 100%);
+}
+
+.kef-bir {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #2D7787 0%, #96BBC3 100%);
+}
+
+.kessel {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #342F2E 0%, #F1B26E 100%);
+}
+
+.mandalore {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #517566 0%, #A2C2A7 100%);
+}
+
+.mathleen-divide {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #548F8D 0%, #D3DABF 100%);
+}
+
+.mina-rau {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #3A8176 0%, #B2C78A 100%);
+}
+
+.mon-cala {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #1B708C 0%, #6AD1D7 100%);
+}
+
+.nevarro {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #36726A 0%, #D0A921 100%);
+}
+
+.ossus {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #137769 0%, #C9E6B7 100%);
+}
+
+.ryloth {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #282586 0%, #F5A65B 100%);
+}
+
+.sorgan {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #2C786D 0%, #CFD575 100%);
+}
+
+.takodana {
+  /* Synthesized from primary -> headline, matching the iOS
+     PlanetTheme fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #3B619F 0%, #CBDBE8 100%);
+}

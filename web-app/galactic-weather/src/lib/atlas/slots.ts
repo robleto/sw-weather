@@ -35,9 +35,9 @@ export const SLOTS: readonly Slot[] = [
 
 	// ── Atmosphere ─────────────────────────────────────────────────────────
 	{ id: "mist", label: "Mist", group: "Atmosphere", defaultWorld: "endor" },
-	{ id: "fog", label: "Fog", group: "Atmosphere", defaultWorld: "endor" },
+	{ id: "fog", label: "Fog", group: "Atmosphere", defaultWorld: "mandalore" },
 	{ id: "haze", label: "Haze", group: "Atmosphere", defaultWorld: "corellia" },
-	{ id: "smoke", label: "Smoke & ash", group: "Atmosphere", defaultWorld: "mustafar" },
+	{ id: "smoke", label: "Smoke & ash", group: "Atmosphere", defaultWorld: "kessel" },
 	{ id: "jakku", label: "Dust & sand", group: "Atmosphere", defaultWorld: "tatooine" },
 
 	// ── Cloud cover ────────────────────────────────────────────────────────
