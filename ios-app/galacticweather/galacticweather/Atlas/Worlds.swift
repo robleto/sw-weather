@@ -53,6 +53,14 @@ let WORLDS: [World] = [
         isPremium: true
     ),
     World(
+        id: "crait",
+        name: "Crait",
+        description: "Salt flats of blinding white, cut open to the red mineral beneath.",
+        climate: .desert,
+        color: WorldColor(primary: "#8F1319", headline: "#FDFCED"),
+        isPremium: true
+    ),
+    World(
         id: "dagobah",
         name: "Dagobah",
         description: "A swampy, mist-laden world with a damp atmosphere that matches steady light rain.",
@@ -93,6 +101,14 @@ let WORLDS: [World] = [
         description: "A close-built foundry town where terracotta roofs hold the last of the sun.",
         climate: .urban,
         color: WorldColor(primary: "#B5622F", headline: "#F6CE93"),
+        isPremium: true
+    ),
+    World(
+        id: "geonosis",
+        name: "Geonosis",
+        description: "A burnt-orange desert of stone spires, its air always thick with dust.",
+        climate: .desert,
+        color: WorldColor(primary: "#C84304", headline: "#EC9D3A"),
         isPremium: true
     ),
     World(

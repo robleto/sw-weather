@@ -194,22 +194,22 @@ describe("storage sanitize", () => {
 
 describe("huntStateFor", () => {
 	it("stays in hunting for most of the book", () => {
-		expect(huntStateFor(0, 21, 0, 41)).toBe("hunting");
-		expect(huntStateFor(17, 21, 17, 41)).toBe("hunting");
+		expect(huntStateFor(0, 21, 0, 43)).toBe("hunting");
+		expect(huntStateFor(17, 21, 17, 43)).toBe("hunting");
 	});
 
 	it("switches to closing with three or fewer wild worlds left", () => {
-		expect(huntStateFor(18, 21, 18, 41)).toBe("closing");
-		expect(huntStateFor(20, 21, 20, 41)).toBe("closing");
+		expect(huntStateFor(18, 21, 18, 43)).toBe("closing");
+		expect(huntStateFor(20, 21, 20, 43)).toBe("closing");
 	});
 
 	it("marks the Wild book done before the catalog is", () => {
-		expect(huntStateFor(21, 21, 21, 41)).toBe("wildComplete");
-		expect(huntStateFor(21, 21, 40, 41)).toBe("wildComplete");
+		expect(huntStateFor(21, 21, 21, 43)).toBe("wildComplete");
+		expect(huntStateFor(21, 21, 42, 43)).toBe("wildComplete");
 	});
 
 	it("only says complete when every world is found", () => {
-		expect(huntStateFor(21, 21, 41, 41)).toBe("complete");
+		expect(huntStateFor(21, 21, 43, 43)).toBe("complete");
 	});
 
 	it("names no world in any state, so no line can go stale", () => {
@@ -266,7 +266,7 @@ describe("progress", () => {
 
 		const progress = buildProgress(book);
 		expect([progress.wildFound, progress.wildTotal]).toEqual([21, 21]);
-		expect([progress.found, progress.total]).toEqual([21, 41]);
+		expect([progress.found, progress.total]).toEqual([21, 43]);
 	});
 
 	it("fills the remaining pages by chartering, without moving the wild score", () => {
@@ -279,7 +279,7 @@ describe("progress", () => {
 		}
 
 		const progress = buildProgress(book);
-		expect([progress.found, progress.total]).toEqual([41, 41]);
+		expect([progress.found, progress.total]).toEqual([43, 43]);
 		expect(progress.wildFound).toBe(21);
 
 		const ocean = progress.biomes.find((b) => b.climate === "ocean")!;

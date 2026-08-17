@@ -54,6 +54,14 @@ export const WORLDS: readonly World[] = [
 		isPremium: true,
 	},
 	{
+		id: "crait",
+		name: "Crait",
+		description: "Salt flats of blinding white, cut open to the red mineral beneath.",
+		climate: "desert",
+		color: { primary: "#8F1319", headline: "#FDFCED" },
+		isPremium: true,
+	},
+	{
 		id: "dagobah",
 		name: "Dagobah",
 		description: "A swampy, mist-laden world with a damp atmosphere that matches steady light rain.",
@@ -94,6 +102,14 @@ export const WORLDS: readonly World[] = [
 		description: "A close-built foundry town where terracotta roofs hold the last of the sun.",
 		climate: "urban",
 		color: { primary: "#B5622F", headline: "#F6CE93" },
+		isPremium: true,
+	},
+	{
+		id: "geonosis",
+		name: "Geonosis",
+		description: "A burnt-orange desert of stone spires, its air always thick with dust.",
+		climate: "desert",
+		color: { primary: "#C84304", headline: "#EC9D3A" },
 		isPremium: true,
 	},
 	{

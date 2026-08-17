@@ -280,22 +280,22 @@ final class PassportTests: XCTestCase {
     // MARK: - Hunt state
 
     func testHuntStateStaysInHuntingForMostOfTheBook() {
-        XCTAssertEqual(huntStateFor(wildFound: 0, wildTotal: 21, found: 0, total: 41), .hunting)
-        XCTAssertEqual(huntStateFor(wildFound: 17, wildTotal: 21, found: 17, total: 41), .hunting)
+        XCTAssertEqual(huntStateFor(wildFound: 0, wildTotal: 21, found: 0, total: 43), .hunting)
+        XCTAssertEqual(huntStateFor(wildFound: 17, wildTotal: 21, found: 17, total: 43), .hunting)
     }
 
     func testHuntStateClosesWithThreeOrFewerWildWorldsLeft() {
-        XCTAssertEqual(huntStateFor(wildFound: 18, wildTotal: 21, found: 18, total: 41), .closing)
-        XCTAssertEqual(huntStateFor(wildFound: 20, wildTotal: 21, found: 20, total: 41), .closing)
+        XCTAssertEqual(huntStateFor(wildFound: 18, wildTotal: 21, found: 18, total: 43), .closing)
+        XCTAssertEqual(huntStateFor(wildFound: 20, wildTotal: 21, found: 20, total: 43), .closing)
     }
 
     func testHuntStateMarksTheWildBookDoneBeforeTheCatalog() {
-        XCTAssertEqual(huntStateFor(wildFound: 21, wildTotal: 21, found: 21, total: 41), .wildComplete)
-        XCTAssertEqual(huntStateFor(wildFound: 21, wildTotal: 21, found: 40, total: 41), .wildComplete)
+        XCTAssertEqual(huntStateFor(wildFound: 21, wildTotal: 21, found: 21, total: 43), .wildComplete)
+        XCTAssertEqual(huntStateFor(wildFound: 21, wildTotal: 21, found: 42, total: 43), .wildComplete)
     }
 
     func testHuntStateOnlySaysCompleteWhenEveryWorldIsFound() {
-        XCTAssertEqual(huntStateFor(wildFound: 21, wildTotal: 21, found: 41, total: 41), .complete)
+        XCTAssertEqual(huntStateFor(wildFound: 21, wildTotal: 21, found: 43, total: 43), .complete)
     }
 
     func testNoBlurbNamesAWorldSoNoLineCanGoStale() {
@@ -364,7 +364,7 @@ final class PassportTests: XCTestCase {
         XCTAssertEqual(progress.wildFound, 21)
         XCTAssertEqual(progress.wildTotal, 21)
         XCTAssertEqual(progress.found, 21)
-        XCTAssertEqual(progress.total, 41)
+        XCTAssertEqual(progress.total, 43)
     }
 
     func testCharteringTheRestCompletesTheCatalogWithoutMovingTheWildScore() throws {
@@ -383,7 +383,7 @@ final class PassportTests: XCTestCase {
         }
 
         let progress = buildProgress(book)
-        XCTAssertEqual(progress.found, 41)
+        XCTAssertEqual(progress.found, 43)
         XCTAssertEqual(progress.wildFound, 21, "chartered finds fill pages, never the wild score")
 
         let ocean = try XCTUnwrap(progress.biomes.first { $0.climate == .ocean })

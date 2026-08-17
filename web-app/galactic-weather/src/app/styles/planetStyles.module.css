@@ -304,3 +304,15 @@
      PlanetTheme fallback for worlds with no bespoke gradient. */
   background: linear-gradient(180deg, #3B619F 0%, #CBDBE8 100%);
 }
+
+.crait {
+  /* The salt flat is near-white, so a sampled sky gradient would leave the
+     headline invisible. These are the art's two signature colors instead. */
+  background: linear-gradient(180deg, #8F1319 0%, #FDFCED 100%);
+}
+
+.geonosis {
+  /* Synthesized from primary -> headline, matching the iOS PlanetTheme
+     fallback for worlds with no bespoke gradient. */
+  background: linear-gradient(180deg, #C84304 0%, #EC9D3A 100%);
+}
