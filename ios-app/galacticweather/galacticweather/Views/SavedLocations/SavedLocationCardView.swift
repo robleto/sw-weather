@@ -62,11 +62,24 @@ struct SavedLocationCardView: View {
             switch mode {
             case .ready(_, let world):
                 PlanetTheme.background(for: world.planet)
-                Image(PlanetTheme.imageName(for: world.planet))
-                    .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: .infinity, maxHeight: 132, alignment: .bottom)
-                    .clipped()
+                // Explicit dimensions from a GeometryReader, the same way
+                // LocationPreviewView, AtlasView and ContentView.backdropImage
+                // do it. A flexible `.frame(maxWidth: .infinity, maxHeight:)`
+                // lets aspect-fill report its own width instead of the card's,
+                // which left a sliver of the layer beneath showing down one
+                // edge — the art is landscape and the card is far wider than
+                // tall, so the shortfall is small but visible.
+                GeometryReader { geometry in
+                    Image(PlanetTheme.imageName(for: world.planet))
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(
+                            width: geometry.size.width,
+                            height: geometry.size.height,
+                            alignment: .bottom
+                        )
+                        .clipped()
+                }
                 // The art runs bright in places; without this the white type
                 // washes out over the lighter planets.
                 LinearGradient(
