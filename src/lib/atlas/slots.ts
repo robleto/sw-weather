@@ -31,9 +31,9 @@ export const SLOTS: readonly Slot[] = [
 	{ id: "jakku", label: "Dust & sand", group: "Atmosphere", defaultWorld: "tatooine" },
 
 	// ── Cloud cover ────────────────────────────────────────────────────────
-	{ id: "clouds_warm", label: "Cloudy · warm", group: "Cloud cover", defaultWorld: "bespin" },
-	{ id: "clouds_temperate", label: "Cloudy · mild", group: "Cloud cover", defaultWorld: "bespin" },
-	{ id: "clouds_cool", label: "Cloudy · cool", group: "Cloud cover", defaultWorld: "bespin" },
+	{ id: "clouds_warm", label: "Cloudy · warm", group: "Cloud cover", defaultWorld: "at-attin" },
+	{ id: "clouds_temperate", label: "Cloudy · mild", group: "Cloud cover", defaultWorld: "yavin" },
+	{ id: "clouds_cool", label: "Cloudy · cool", group: "Cloud cover", defaultWorld: "ghorman" },
 	{ id: "clouds_cold", label: "Cloudy · cold", group: "Cloud cover", defaultWorld: "bespin" },
 
 	// ── Clear skies ────────────────────────────────────────────────────────

@@ -30,7 +30,6 @@ export const WORLDS: readonly World[] = [
 		description: "A rumored paradise world — warm and hazy beneath a blanket of soft clouds.",
 		climate: "temperate",
 		color: { primary: "#7A9E8A", headline: "#C8E0D0" },
-		isPremium: true,
 	},
 	{
 		id: "bespin",
@@ -74,7 +73,6 @@ export const WORLDS: readonly World[] = [
 		description: "A temperate trade world of grey overcast skies and quiet, cultural streets.",
 		climate: "urban",
 		color: { primary: "#7A8090", headline: "#B8C0C8" },
-		isPremium: true,
 	},
 	{
 		id: "hoth",
@@ -177,7 +175,6 @@ export const WORLDS: readonly World[] = [
 		description: "A jungle moon draped in warm humidity and overcast tropical skies.",
 		climate: "forest",
 		color: { primary: "#6B7A4A", headline: "#B8C890" },
-		isPremium: true,
 	},
 ] as const;
 
