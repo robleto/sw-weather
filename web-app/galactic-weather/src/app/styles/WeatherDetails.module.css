@@ -27,6 +27,22 @@
 }
 
 /* ── Orienting metadata — where are we? ─────────────────────────────── */
+
+/*
+ * Both lines are weight 500, matching WeatherDetailsView.swift's
+ * .system(size:weight: .medium).
+ *
+ * A real medium, not a faked one: `.main` now inherits the variable Exo 2 that
+ * next/font self-hosts, which carries the full weight axis. It resolved to the
+ * legacy `css?family=Exo+2` CDN face until recently, and that serves 400 alone
+ * — asking it for 500 got synthetic bold, the same smearing the note on
+ * .planetName warns about for Poiret.
+ */
+.location,
+.city {
+  font-weight: 500;
+}
+
 .location {
   font-size: 0.8125rem;        /* 13px — label territory */
   letter-spacing: 0.1em;
@@ -38,9 +54,9 @@
 /*
  * The city, on its own line, directly under the eyebrow.
  *
- * Same face as .location — inherited from .main, not declared — four points
- * larger and at full opacity. The two read as one unit: a label and the thing
- * it labels.
+ * Same face and weight as .location — set together above — four points larger
+ * and at full opacity. The two read as one unit: a label and the thing it
+ * labels.
  *
  * This was PoiretOne at clamp(1.5rem, 3.5vw, 2.25rem). Setting it in the
  * display face put it in competition with .planetName below, which is the

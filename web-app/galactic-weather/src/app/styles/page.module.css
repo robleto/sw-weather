@@ -1,12 +1,16 @@
 
 @import url(https://fonts.googleapis.com/css?family=Poiret+One);
-@import url(https://fonts.googleapis.com/css?family=Exo+2);
 @import url(https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/
 weather-icons.min.css);
 
 .main {
   font-size: clamp(14px, 16px, 5vw);
-  font-family: "Exo 2", sans-serif;
+  /* The variable font next/font self-hosts and preloads (see layout.tsx),
+     not the CDN copy. The `css?family=Exo+2` import this replaced was the
+     legacy Google API, which serves weight 400 alone — so every heavier
+     weight in the app was the browser faking one. This carries the full
+     axis, and costs a render-blocking external stylesheet less. */
+  font-family: var(--font-exo2), sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
