@@ -74,13 +74,16 @@ weather-icons.min.css);
   flex-shrink: 0;
 }
 
+/* The fill is deliberately well clear of a hairline tint: these pills sit
+   directly over the planet art wherever the bar itself is translucent, and at
+   10% white the label was competing with whatever weather was behind it. */
 .navAction {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.38);
   color: #fafafa;
   border-radius: 999px;
   padding: 0.4rem 0.9rem;
@@ -90,10 +93,23 @@ weather-icons.min.css);
   cursor: pointer;
   white-space: nowrap;
   transition: background 160ms ease;
+  /* Only bites where something shows through; harmless over the opaque bar. */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .navAction:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.34);
+}
+
+/* Matches the icons iOS puts on the same two destinations, in the same accent
+   (SavedLocationsView.destinationButton). Sized in em so it tracks the label
+   down at the mobile step below. */
+.navIcon {
+  width: 1.15em;
+  height: 1.15em;
+  flex-shrink: 0;
+  color: #8fc7ff;
 }
 
 .navCount {

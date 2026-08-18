@@ -11,6 +11,7 @@ import WeatherDetails from "./components/WeatherDetails";
 import Atlas from "./components/Atlas";
 import Passport from "./components/Passport";
 import Footer from "./components/Footer";
+import { GlobeIcon, SealCheckIcon } from "./components/NavIcons";
 import { useAtlas } from "./hooks/useAtlas";
 import { usePassport, useStampOnDwell } from "./hooks/usePassport";
 import { resolveWorld } from "@/lib/atlas/resolve";
@@ -255,6 +256,7 @@ const Home = () => {
                   track(SIGNALS.atlasOpened);
                 }}
               >
+                <GlobeIcon className={styles.navIcon} />
                 Atlas
                 {atlas.customizedCount > 0 && (
                   <span className={styles.navCount}>
@@ -267,6 +269,7 @@ const Home = () => {
                 className={styles.navAction}
                 onClick={() => setIsPassportOpen(true)}
               >
+                <SealCheckIcon className={styles.navIcon} />
                 Passport
                 {passport.progress.found > 0 && (
                   <span className={styles.navCount}>
