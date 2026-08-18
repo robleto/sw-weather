@@ -32,27 +32,24 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0.65;
-  margin-bottom: 0.125rem;     /* Tight — it's an eyebrow on the city */
+  margin-bottom: 0.25rem;      /* Tight — it's an eyebrow on the city */
 }
 
 /*
- * The city, on its own line.
+ * The city, on its own line, directly under the eyebrow.
  *
- * Sits between the eyebrow and the temperature deliberately: swapping between
- * locations changes this line and the readout under it, and the city was hard
- * to pick out when it was buried in a 13px uppercase label.
+ * Same face as .location — inherited from .main, not declared — four points
+ * larger and at full opacity. The two read as one unit: a label and the thing
+ * it labels.
  *
- * PoiretOne uppercase, matching how the iOS saved-location cards already set a
- * location name. The face has exactly one weight, so emphasis is caps,
- * tracking and full opacity rather than a heavier cut — `font-weight: 700`
- * here would only trigger the browser's synthetic bold, which thickens the
- * joints of a hairline Art Deco face and loses what makes it worth using.
- *
- * Sized well under .planetName so the reveal still wins the page.
+ * This was PoiretOne at clamp(1.5rem, 3.5vw, 2.25rem). Setting it in the
+ * display face put it in competition with .planetName below, which is the
+ * reveal the page is built around; in the body face it stays the caption it
+ * is. Mirrors WeatherDetailsView.swift, where the same line is
+ * .system(size: 17, weight: .medium).
  */
 .city {
-  font-family: var(--font-poiret), sans-serif;
-  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  font-size: 1.0625rem;        /* 17px — a step over the eyebrow, not a jump */
   letter-spacing: 0.1em;
   text-transform: uppercase;
   line-height: 1.15;

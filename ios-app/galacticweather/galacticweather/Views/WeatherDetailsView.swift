@@ -21,33 +21,31 @@ struct WeatherDetailsView: View {
         let headline = Color(hex: info.textColor)
 
             VStack(spacing: 10) {
-                Text("Today's Forecast for")
-                    .font(.system(size: 13, weight: .medium))
-                    .tracking(1.5)
-                    .textCase(.uppercase)
-                    .foregroundStyle(headline.opacity(0.78))
+                // The eyebrow and the city read as one unit — a label and the
+                // thing it labels — so they share a face and sit closer to each
+                // other than to anything else in the stack.
+                //
+                // The city was PoiretOne 30. Setting it in the display face put
+                // it in competition with the planet name below, which is the
+                // reveal this screen is built around; in the system face it
+                // stays the caption it is. Full opacity and a few points over
+                // the eyebrow carry the emphasis instead.
+                VStack(spacing: 4) {
+                    Text("Today's Forecast for")
+                        .font(.system(size: 13, weight: .medium))
+                        .tracking(1.5)
+                        .textCase(.uppercase)
+                        .foregroundStyle(headline.opacity(0.78))
 
-                // The city, on its own line.
-                //
-                // Sits between the eyebrow and the temperature deliberately:
-                // paging between saved locations changes this line and the
-                // readout under it, and the city was hard to pick out at a
-                // glance when it was buried in a 13pt uppercase label.
-                //
-                // PoiretOne uppercase, matching how `SavedLocationCardView`
-                // already sets a location name. The face has one weight, so
-                // emphasis here is caps, tracking and full opacity rather than
-                // a heavier cut — faux-bolding a hairline Art Deco face thickens
-                // the joints and loses exactly what makes it worth using.
-                // Sized well under the planet name so the reveal still wins.
-                Text(locationName)
-                    .font(.custom("PoiretOne-Regular", size: 30))
-                    .tracking(2)
-                    .textCase(.uppercase)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.6)
-                    .foregroundStyle(headline)
+                    Text(locationName)
+                        .font(.system(size: 17, weight: .medium))
+                        .tracking(1.5)
+                        .textCase(.uppercase)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.6)
+                        .foregroundStyle(headline)
+                }
 
                 Text(temperatureLine(for: weatherData))
                     .font(.custom("PoiretOne-Regular", size: 42))
