@@ -147,12 +147,25 @@ else
 fi
 
 # ── archive ─────────────────────────────────────────────────────────────────
+# Archives go into Xcode's own Archives folder, NOT into the repo.
+#
+# Organizer only lists archives found under ~/Library/Developer/Xcode/Archives,
+# in a folder named for the day. An archive anywhere else does not appear there —
+# which means "Distribute App" is nowhere to be found, because Distribute App is
+# a button on the Organizer row that does not exist. Writing to build/archives/
+# produced exactly that dead end, and the fix was copying the archive in by hand
+# afterwards, which is a step nobody remembers.
+#
+# The optional --export .ipa still lands in the repo under build/, since that one
+# is for feeding Transporter and you want it somewhere you can find.
+#
 # Unique path per run. Nothing is ever deleted here — see the deletion policy in
 # CLAUDE.md; old archives are left for you to clear by hand.
 stamp=$(date +%Y%m%d-%H%M%S)
-OUT_DIR="$REPO_ROOT/build/archives"
-ARCHIVE="$OUT_DIR/galacticweather-$version-$build-$stamp.xcarchive"
-mkdir -p "$OUT_DIR"
+ARCHIVE_ROOT="$HOME/Library/Developer/Xcode/Archives/$(date +%Y-%m-%d)"
+ARCHIVE="$ARCHIVE_ROOT/galacticweather-$version-$build-$stamp.xcarchive"
+OUT_DIR="$REPO_ROOT/build"
+mkdir -p "$ARCHIVE_ROOT" "$OUT_DIR"
 
 echo "${BOLD}archive${OFF} ${DIM}— xcodegen generate + xcodebuild archive (Release)${OFF}"
 log=$(mktemp -t galactic-archive)
@@ -223,6 +236,12 @@ fi
 
 # ── next ────────────────────────────────────────────────────────────────────
 echo "${BOLD}next${OFF}"
-echo "  Open the archive in Xcode's Organizer and use Distribute App:"
-echo "    ${DIM}open '$ARCHIVE'${OFF}"
+echo "  In Xcode: ${BOLD}Window -> Organizer -> Archives${OFF}, pick"
+echo "  ${DIM}galacticweather-$version-$build${OFF}, then ${BOLD}Distribute App${OFF}."
+echo
+echo "  ${DIM}Distribute App is a button on the Organizer row, so the archive has to"
+echo "  be somewhere Organizer looks — which is why this wrote to"
+echo "  ~/Library/Developer/Xcode/Archives rather than into the repo:"
+echo "    $ARCHIVE${OFF}"
+echo
 echo "  Then follow TESTFLIGHT.md from Part 4."

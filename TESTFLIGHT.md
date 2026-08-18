@@ -100,14 +100,20 @@ all, which the script treats as a hard stop rather than a warning.
 ```
 
 Runs the preflight, refuses to archive on failing tests, regenerates the Xcode
-project, and writes a timestamped `.xcarchive` under `build/archives/`.
+project, and writes a timestamped `.xcarchive` into **Xcode's own Archives
+folder** — `~/Library/Developer/Xcode/Archives/<today>/`.
 
-Then upload. **Xcode's Organizer is the reliable path** — open the archive,
-Distribute App, App Store Connect, Upload:
+That location is deliberate. **Organizer only lists archives found there**, and
+Distribute App is a button on the Organizer row — so an archive written anywhere
+else leaves you hunting for a button that cannot exist. An earlier version of this
+script wrote to `build/archives/` and produced exactly that dead end.
 
-```bash
-open build/archives/<the-archive>.xcarchive
-```
+Then upload, via **Xcode → Window → Organizer → Archives**: select the build, then
+**Distribute App → App Store Connect → Upload**.
+
+**Expect a distribution-certificate prompt the first time.** Only an *Apple
+Development* certificate exists in the keychain; App Store distribution needs an
+*Apple Distribution* one, and Xcode will offer to create it. Let it.
 
 `./scripts/archive.sh --export` will also produce a signed `.ipa` if you would
 rather use Transporter. Uploading is deliberately not automated here: it needs App
