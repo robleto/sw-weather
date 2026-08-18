@@ -41,6 +41,14 @@ targets:
       path: galacticweather/Info.plist
       properties:
         CFBundleDisplayName: "Galactic Weather"
+        # Without these two, XcodeGen injects its own defaults of "1.0" and "1"
+        # into the generated Info.plist, and a literal in the plist outranks the
+        # build setting. Bumping CURRENT_PROJECT_VERSION then renamed the archive
+        # — archive.sh greps project.yml for the filename — while the bundle
+        # inside stayed stamped build 1, and App Store Connect only rejects the
+        # duplicate after the upload finishes.
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait

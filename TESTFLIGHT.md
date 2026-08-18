@@ -128,6 +128,17 @@ wrong.
 Connect rejects a build number it has already seen, which is a confusing error to
 hit after a long upload.
 
+That bump only works because `Info.plist` now reads
+`$(CURRENT_PROJECT_VERSION)` and `$(MARKETING_VERSION)` rather than literals. It
+used to hardcode `1`, which outranked the build setting — so bumping `project.yml`
+renamed the archive while still stamping the bundle build 1, and the duplicate was
+only discovered after the upload. **Verify before uploading**, since the archive
+filename is not evidence:
+
+```bash
+/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$(ls -td ~/Library/Developer/Xcode/Archives/*/*.xcarchive | head -1)/Products/Applications/galacticweather.app/Info.plist"
+```
+
 Expect an export-compliance question. The app makes ordinary HTTPS calls and uses
 no custom cryptography, which normally lands in the standard exemption — answer
 per the App Store Connect prompts rather than from memory.
