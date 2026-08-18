@@ -1,6 +1,7 @@
 # IP review — the distribution surface
 
-Status: **review complete 2026-08-18. One blocking finding. Not yet remediated.**
+Status: **review complete 2026-08-18. The blocking finding is remediated; one
+broadcast-art item and two policy decisions remain.**
 
 **This is not legal advice.** It is an audit of the broadcast assets against the
 rule this project already set for itself, recorded in `ATLAS-HANDOFF.md`:
@@ -21,66 +22,69 @@ filenames. Two ambiguous details were cropped and upscaled before being judged.
 
 ---
 
-## BLOCKING — the committed icon is stale, and the stale one ships vehicles
-
-**Corrected 2026-08-18.** The first version of this section read as though the
-poster composite were the intended icon. It is not. A replacement already exists
-— original art, no franchise content — but it has not been wired into the
-appiconset, so the old asset is still what a build produces. The finding is a
-wiring gap, not a design problem. Details at the end of this section.
-
+## RESOLVED — the app icon
 
 `ios-app/galacticweather/galacticweather/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png`
 
-The icon is a composite of two travel posters, Naboo and Hoth. It contains:
+**What the icon was.** A composite of the Naboo and Hoth travel posters, carrying
+an AT-AT walker at centre right, several more in that poster's background, roughly
+four starfighters over Naboo, three or four further craft across Hoth, a laser
+turret, and NABOO / HOTH in large display type. Protected vehicle designs on the
+most broadcast asset the product has — store listing, search results, every home
+screen, and the first thing a reviewer sees.
 
-- **An AT-AT walker**, large, centered in the right-hand poster, unmistakable.
-- **Several more AT-ATs** in that poster's background.
-- **Roughly four starfighters** in formation, upper left of the Naboo poster.
-- **Three or four additional craft** across the Hoth poster.
-- **A laser turret / artillery emplacement**, lower left of the Hoth poster.
-- **NABOO and HOTH** set in large display type.
+**What it is now.** Twin suns behind a cloud over dune ridges. Original art: no
+vehicles, no franchise names, no protected designs. Also the stronger icon on
+craft grounds — large simple shapes and high contrast that survive 40×40, where
+the poster composite collapsed into grey.
 
-This is the single most broadcast asset in the entire product. It appears in the
-App Store listing, in store search results, and on every device home screen. It
-is the first thing an App Store reviewer sees. Of all the places for a
-specifically protected vehicle design to appear, this is the worst one, and it is
-a direct violation of the rule above rather than a borderline call.
+**Two spec violations found and fixed while wiring it in.** Both would have failed
+App Store validation rather than review:
 
-**The replacement exists and is clean — it is just not in the repo.**
+| Property | Was | Now | Apple requires |
+|---|---|---|---|
+| Dimensions | 1254×1254 | 1024×1024 | exactly 1024×1024 |
+| Colour mode | RGBA | RGB | no alpha channel |
 
-| File | Modified | State |
-|---|---|---|
-| `~/Downloads/app-icon.png` | 2026-08-17 09:49 | 1254px raster |
-| `~/Desktop/app-icon.svg` | 2026-08-17 13:04 | vector wrapper around an embedded raster |
+`Contents.json` declared the slot as `1024x1024` while the file was 1254px, and
+the image carried a fully-opaque alpha channel — enough on its own to trigger
+"the app icon can't contain an alpha channel." Resized with LANCZOS and flattened
+to RGB; re-opened afterwards to confirm no visible artefacts. The corners are
+square and unmasked, which is correct — iOS applies the rounded mask itself.
 
-Twin suns behind a cloud over dune ridges. Original art: no vehicles, no
-franchise names, no protected designs. It is also the stronger icon on craft
-grounds — large simple shapes and high contrast that hold together at 40×40,
-where the poster composite collapses into grey.
+**The `design/` folder is gone on purpose, and source art stays outside the repo.**
+An earlier pass of this review moved the vector and a full-resolution master into
+`design/app-icon/`; that was reverted at the owner's direction along with the rest
+of the folder. The tracked copy of the icon is therefore the single conformed
+1024×1024 RGB PNG in the appiconset, and the higher-resolution originals live in
+`~/Downloads/app-icon.png` and `~/Desktop/app-icon.svg`.
+
+The consequence, stated once: if those two local files are lost, the icon can only
+be recovered by upscaling the 1024px shipping asset. That is a deliberate trade,
+not an oversight.
+
+One identity worth recording, because git surfaced it and it would be easy to
+misread later: `~/Desktop/app-icon.svg` is byte-identical to the
+`public/galactic-weather-logo.svg` deleted in the same commit — both hash to
+`45ea15af`. **The site logo and the app icon are one artwork, not two.** Nothing
+referenced the logo from `public/`, so its removal breaks nothing, but anything
+wanting a web-facing logo later needs a copy put back deliberately.
 
 A franchise-term sweep of the SVG returns four apparent hits for "hoth." All four
 sit inside base64 raster data — coincidental byte sequences, not metadata. Clean.
 
-Two notes on provenance, since this tripped up the first version of this review:
+**One provenance note, because it caused a wrong call in the first draft of this
+review.** The old `icon-1024.png` had an mtime of 2026-08-16 and `git log --all`
+showed no branch touching that path since `b0a7b16` grafted the iOS app in — two
+days untouched while the repo moved 23 commits. That staleness was the signal that
+the committed asset was not the intended design, and it was misread as intent. The
+four earlier concepts under `design/app-icon/` had already been superseded and
+deleted; that deletion is now committed rather than dangling in the working tree.
 
-- The committed `icon-1024.png` has an mtime of 2026-08-16 01:35 and `git log
-  --all` shows no branch has modified that path since `b0a7b16` grafted the iOS
-  app in. It went stale while the rest of the repo moved 23 commits.
-- `design/app-icon/` — which held four earlier abstract concepts — is deleted in
-  the working tree, uncommitted. Those concepts were superseded by the icon
-  above. Do not go looking for them.
-
-**The remaining work is wiring, not design:** generate the appiconset from
-`app-icon.png`, move the source art into the repo so it stops living in
-`~/Downloads`, and commit the `design/app-icon/` deletion so the tree is honest
-about what was abandoned.
-
-There is also a **non-IP reason** to abandon the current icon regardless: it is
-two tilted rectangles on a light field with black letterbox bars top and bottom.
-At the sizes an icon is actually rendered — down to 40×40 in search results and
-Spotlight — the posters become an illegible grey smudge and the bars eat a third
-of the canvas. The abstract concepts are the better icon on craft grounds alone.
+**Still open, and not an IP matter:** `web-app/galactic-weather/public/icon-1024.png`
+is unreferenced by any source file. Next.js App Router picks favicons up from
+`src/app/icon.png` by convention, not from `public/`, so a file in that location
+does nothing on its own. Either wire it up or drop it.
 
 ---
 
@@ -185,11 +189,12 @@ icon and OG art both need regenerating anyway, fix it in the same pass.
 
 ## Before submission
 
-1. **Wire in the new app icon.** Generate the appiconset from
-   `~/Downloads/app-icon.png`, bring the source art into the repo, and commit the
-   `design/app-icon/` deletion. Blocking only because a build today still
-   produces the old composite.
-2. **Remove the Kamino aircraft** from `galactic-weather.png`.
+1. ~~**Wire in the new app icon.**~~ **Done.** New art in the appiconset,
+   conformed to 1024×1024 RGB, source art committed under `design/app-icon/`,
+   superseded concepts' deletion committed. Suites green afterwards: 164 web, 85
+   iOS.
+2. **Remove the Kamino aircraft** from `galactic-weather.png`. Now the only
+   remaining IP item on a broadcast surface.
 3. **Decide the franchise-name-as-broadcast-art question**, and amend the rule
    in `ATLAS-HANDOFF.md` to say what was decided either way.
 4. **Decide whether `public/posters/` counts as broadcast**, given the files are
