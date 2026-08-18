@@ -21,7 +21,14 @@ filenames. Two ambiguous details were cropped and upscaled before being judged.
 
 ---
 
-## BLOCKING — the app icon ships protected vehicle designs
+## BLOCKING — the committed icon is stale, and the stale one ships vehicles
+
+**Corrected 2026-08-18.** The first version of this section read as though the
+poster composite were the intended icon. It is not. A replacement already exists
+— original art, no franchise content — but it has not been wired into the
+appiconset, so the old asset is still what a build produces. The finding is a
+wiring gap, not a design problem. Details at the end of this section.
+
 
 `ios-app/galacticweather/galacticweather/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png`
 
@@ -40,15 +47,34 @@ is the first thing an App Store reviewer sees. Of all the places for a
 specifically protected vehicle design to appear, this is the worst one, and it is
 a direct violation of the rule above rather than a borderline call.
 
-**The remedy is already in the repo.** `design/app-icon/` holds four original
-abstract concepts with no franchise content whatsoever:
+**The replacement exists and is clean — it is just not in the repo.**
 
-- `concept-a-binary-dawn.svg`
-- `concept-b-two-suns.svg`
-- `concept-c-ringed-world.svg`
-- `concept-d-storm-eye.svg`
+| File | Modified | State |
+|---|---|---|
+| `~/Downloads/app-icon.png` | 2026-08-17 09:49 | 1254px raster |
+| `~/Desktop/app-icon.svg` | 2026-08-17 13:04 | vector wrapper around an embedded raster |
 
-Pick one and generate the appiconset from it.
+Twin suns behind a cloud over dune ridges. Original art: no vehicles, no
+franchise names, no protected designs. It is also the stronger icon on craft
+grounds — large simple shapes and high contrast that hold together at 40×40,
+where the poster composite collapses into grey.
+
+A franchise-term sweep of the SVG returns four apparent hits for "hoth." All four
+sit inside base64 raster data — coincidental byte sequences, not metadata. Clean.
+
+Two notes on provenance, since this tripped up the first version of this review:
+
+- The committed `icon-1024.png` has an mtime of 2026-08-16 01:35 and `git log
+  --all` shows no branch has modified that path since `b0a7b16` grafted the iOS
+  app in. It went stale while the rest of the repo moved 23 commits.
+- `design/app-icon/` — which held four earlier abstract concepts — is deleted in
+  the working tree, uncommitted. Those concepts were superseded by the icon
+  above. Do not go looking for them.
+
+**The remaining work is wiring, not design:** generate the appiconset from
+`app-icon.png`, move the source art into the repo so it stops living in
+`~/Downloads`, and commit the `design/app-icon/` deletion so the tree is honest
+about what was abandoned.
 
 There is also a **non-IP reason** to abandon the current icon regardless: it is
 two tilted rectangles on a light field with black letterbox bars top and bottom.
@@ -159,8 +185,10 @@ icon and OG art both need regenerating anyway, fix it in the same pass.
 
 ## Before submission
 
-1. **Replace the app icon** with one of the four `design/app-icon/` concepts.
-   Blocking.
+1. **Wire in the new app icon.** Generate the appiconset from
+   `~/Downloads/app-icon.png`, bring the source art into the repo, and commit the
+   `design/app-icon/` deletion. Blocking only because a build today still
+   produces the old composite.
 2. **Remove the Kamino aircraft** from `galactic-weather.png`.
 3. **Decide the franchise-name-as-broadcast-art question**, and amend the rule
    in `ATLAS-HANDOFF.md` to say what was decided either way.
