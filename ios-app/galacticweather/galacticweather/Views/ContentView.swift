@@ -150,6 +150,19 @@ struct ContentView: View {
                 pager
             }
 
+            // Above the docked bar in the file, and therefore *below* it on
+            // screen. The hero used to come last, which put it on top: the
+            // idle search dropdown opens upward (`dropdownPosition: .above`)
+            // into exactly the space this copy occupies, so a query with
+            // several matches drew the heading straight through the results
+            // list. ZStack order is z-order, and the floating list has to win.
+            if weatherViewModel.appPhase == .idle {
+                IdleHeroView(
+                    pageError: weatherViewModel.pageError,
+                    locationStatus: locationAuthorization.status
+                )
+            }
+
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
 
@@ -162,13 +175,6 @@ struct ContentView: View {
                         .padding(.horizontal, 20)
                         .padding(.bottom, 16)
                 }
-            }
-
-            if weatherViewModel.appPhase == .idle {
-                IdleHeroView(
-                    pageError: weatherViewModel.pageError,
-                    locationStatus: locationAuthorization.status
-                )
             }
         }
         .animation(.easeInOut(duration: 0.5), value: weatherViewModel.appPhase)
