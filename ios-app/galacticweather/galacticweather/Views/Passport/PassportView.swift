@@ -10,6 +10,8 @@ import SwiftUI
 struct PassportView: View {
     var viewModel: PassportViewModel
 
+    @Environment(\.dismiss) private var dismiss
+
     @State private var isPaywallOpen = false
     @State private var posterEntry: WorldProgress?
 
@@ -33,6 +35,9 @@ struct PassportView: View {
 
             biomes
         }
+        // Reached from the list, and thrown back to it the same way the
+        // weather screen is.
+        .tossToDismiss { dismiss() }
         .sheet(isPresented: $isPaywallOpen) {
             PaywallView(context: .lockedWorld)
                 .presentationDetents([.large])

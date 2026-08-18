@@ -27,6 +27,10 @@ struct MenuScreen<Content: View>: View {
                 .padding(.top, 28)
                 .padding(.bottom, 48)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                // Inert unless something above asked to be tossable — which
+                // Passport does, and the sheet-presented screens don't need
+                // to, having the system's own drag-to-dismiss.
+                .tossScrollAnchor()
             }
         }
         .foregroundStyle(Color(hex: "#f2f5fa"))

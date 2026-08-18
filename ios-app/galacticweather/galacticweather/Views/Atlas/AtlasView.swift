@@ -29,6 +29,9 @@ struct AtlasView: View {
             content
         }
         .ignoresSafeArea()
+        // Reached from the list, and thrown back to it the same way the
+        // weather screen is.
+        .tossToDismiss { dismiss() }
         .sheet(item: $activeSlot) { slot in
             PlanetPickerView(
                 slot: slot,
@@ -87,6 +90,7 @@ struct AtlasView: View {
             .padding(.horizontal, 20)
             .padding(.top, 60)
             .padding(.bottom, 60)
+            .tossScrollAnchor()
         }
         .foregroundStyle(Color(hex: "#f2f5fa"))
         .sheet(isPresented: $isPaywallOpen) {
