@@ -71,6 +71,7 @@ struct PlanetPickerView: View {
         VStack(alignment: .leading, spacing: 0) {
             header
             hint
+            currentAssignment
             controls
             worldGrid
             footer
@@ -150,6 +151,107 @@ struct PlanetPickerView: View {
             return "Pick one world for this condition."
         }
         return "Pick one world, or several to randomize between them daily."
+    }
+
+    private var assignedWorlds: [World] { assigned.compactMap(getWorld) }
+
+    /// What this slot resolves to right now, pinned directly above the grid.
+    ///
+    /// The grid does mark an assigned world — a 2pt border and a tinted name —
+    /// but it sits wherever it falls alphabetically among 43 worlds, so
+    /// answering "what is this set to?" meant hunting for a thin outline. It
+    /// matters most with multi-assign, where tapping a world *adds* to the set:
+    /// swapping one world for another otherwise means finding the old one in
+    /// the grid and switching it off first. Each chip carries that removal, so
+    /// overriding is a visible action rather than a deduced one.
+    ///
+    /// Sits above `worldGrid` — the only scrolling part — so it stays on screen
+    /// while you browse.
+    @ViewBuilder
+    private var currentAssignment: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("NOW SET TO")
+                .font(.system(size: 11, weight: .medium))
+                .tracking(1.6)
+                .foregroundStyle(.white.opacity(0.55))
+
+            if assignedWorlds.isEmpty {
+                // No custom assignment, so the slot is on its canon world.
+                // Shown without a remove control because there is nothing to
+                // remove — canon is where removal returns you to.
+                if let canon = getWorld(slot.defaultWorld) {
+                    assignedChip(canon, onRemove: nil)
+                }
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(assignedWorlds) { world in
+                            assignedChip(world) { unassign(world) }
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.bottom, 14)
+    }
+
+    /// Removal only — these chips exist for worlds that are already assigned.
+    /// Routed the same way as tapping the world's own card, so there is one
+    /// removal path rather than two that can drift apart.
+    private func unassign(_ world: World) {
+        if canMultiAssign {
+            onToggleWorld(world.id)
+        } else {
+            onResetSlot()
+        }
+    }
+
+    private func assignedChip(_ world: World, onRemove: (() -> Void)?) -> some View {
+        HStack(spacing: 8) {
+            Image(world.id)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 40, height: 30)
+                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+
+            Text(world.name)
+                .font(.system(size: 13, weight: .medium))
+                .lineLimit(1)
+
+            if let onRemove {
+                Button(action: onRemove) {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(Color(hex: "#f2f5fa"))
+                        .frame(width: 22, height: 22)
+                        .background(Circle().fill(.white.opacity(0.16)))
+                        // Reaches out to a 44pt target without widening the chip.
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Remove \(world.name) from \(slot.label)")
+            } else {
+                Text("CANON")
+                    .font(.system(size: 10, weight: .semibold))
+                    .tracking(0.8)
+                    .foregroundStyle(.white.opacity(0.5))
+            }
+        }
+        .padding(.leading, 8)
+        .padding(.trailing, onRemove == nil ? 12 : 0)
+        .padding(.vertical, 6)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(.white.opacity(0.08))
+        )
+        // The same accent as the grid's selected border, so the two read as one
+        // idea — but here it is at a fixed place near the top rather than
+        // somewhere in a scrolling grid.
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(Color(hex: "#8fc7ff").opacity(onRemove == nil ? 0.25 : 0.45))
+        )
     }
 
     private var controls: some View {

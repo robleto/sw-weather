@@ -47,6 +47,17 @@ const PlanetPicker: React.FC<PlanetPickerProps> = ({
 	const isCustomized = assigned.length > 0;
 	const selectionCount = isCustomized ? assigned.length : 0;
 
+	// What the slot resolves to right now. The grid already marks an assigned
+	// world with a 2px accent border, but it sits wherever it falls
+	// alphabetically among 43 worlds, so answering "what is this set to?" meant
+	// hunting for a thin outline. It matters most because tapping a world *adds*
+	// to the set: swapping one world for another otherwise means finding the old
+	// one in the grid and switching it off first.
+	const assignedWorlds = assigned
+		.map((id) => getWorld(id))
+		.filter((world): world is NonNullable<typeof world> => Boolean(world));
+	const canonWorld = getWorld(slot.defaultWorld);
+
 	return (
 		<>
 		<div className={styles.sheet} role="dialog" aria-label={`Choose a world for ${slot.label}`}>
@@ -65,6 +76,66 @@ const PlanetPicker: React.FC<PlanetPickerProps> = ({
 					? `${selectionCount} worlds assigned — one is chosen each day.`
 					: "Pick one world, or several to randomize between them daily."}
 			</p>
+
+			{/* Above the grid, which is the only scrolling part, so it stays on
+			    screen while you browse. Each chip carries its own removal, so
+			    overriding is a visible action rather than a deduced one. */}
+			<div className={styles.currentAssignment}>
+				<p className={styles.eyebrow}>Now set to</p>
+				{assignedWorlds.length === 0
+					? canonWorld && (
+							// Nothing custom, so the slot is on its canon world. No
+							// remove control, because there is nothing to remove —
+							// canon is where removal returns you to.
+							<span className={`${styles.assignedChip} ${styles.assignedChipCanon}`}>
+								<span className={styles.assignedThumb}>
+									<Image
+										src={planetImageSrc(canonWorld.id)}
+										alt=""
+										fill
+										sizes="40px"
+										className={styles.thumbImage}
+									/>
+								</span>
+								<span className={styles.assignedName}>{canonWorld.name}</span>
+								<span className={styles.canonBadge}>Canon</span>
+							</span>
+					  )
+					: (
+							<ul className={styles.assignedRow}>
+								{assignedWorlds.map((world) => (
+									<li key={world.id} className={styles.assignedChip}>
+										<span className={styles.assignedThumb}>
+											<Image
+												src={planetImageSrc(world.id)}
+												alt=""
+												fill
+												sizes="40px"
+												className={styles.thumbImage}
+											/>
+										</span>
+										<span className={styles.assignedName}>{world.name}</span>
+										<button
+											type="button"
+											className={styles.removeButton}
+											onClick={() => onToggleWorld(world.id)}
+											aria-label={`Remove ${world.name} from ${slot.label}`}
+										>
+											<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+												<path
+													d="M6 6l12 12M18 6L6 18"
+													fill="none"
+													stroke="currentColor"
+													strokeWidth="2.5"
+													strokeLinecap="round"
+												/>
+											</svg>
+										</button>
+									</li>
+								))}
+							</ul>
+					  )}
+			</div>
 
 			<div className={styles.controls}>
 				<div className={styles.chipRow}>

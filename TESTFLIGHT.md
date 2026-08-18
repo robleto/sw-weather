@@ -345,6 +345,18 @@ Do the local versions now via Debug on device; they cover the app's own logic:
 - [x] Saved-location cap goes from 1 to 20 — **run 2, Debug on device**
 - [ ] …and back to 1 when premium is toggled off
 - [x] Multi-assign accepts several worlds on one condition — **run 2, Debug on device**
+- [x] **Entitlement survives a relaunch on its own**, with no Restore tap — **run 2, Debug on device** —
+      `refreshEntitlement()` runs from `start()` and reads
+      `Transaction.currentEntitlements`, so this is the architecture working: Apple's ID
+      *is* the account system, and Restore is only a manual nudge for the same mechanism
+- [x] **Restore with nothing to restore** reports "No previous purchase found on this
+      Apple ID" rather than hanging or silently granting premium — **run 2, Debug on device** — the
+      transaction was deleted in Xcode → Debug → StoreKit → Manage Transactions first,
+      so inactive was the truth and the app said so
+- [ ] Restore tapped *with* a transaction present, completing silently. Both halves are
+      verified separately — `AppStore.sync()` did not throw in the negative case, and
+      `refreshEntitlement()` is proven by the relaunch — but the success branch has not
+      been watched end to end
 
 Then, once the agreement is Active:
 

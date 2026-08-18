@@ -60,6 +60,99 @@
   margin: 0.5rem 0 0.875rem;
 }
 
+/* ── Now set to ──────────────────────────────────────────────────────────
+   A fixed place showing what the slot currently resolves to. The grid marks
+   the assignment with an accent border, but it sits wherever it falls
+   alphabetically, so this exists to stop the hunt — and to put the remove
+   control somewhere findable, since tapping a world in the grid adds rather
+   than replaces. */
+.currentAssignment {
+  margin-bottom: 1rem;
+}
+
+.assignedRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.assignedChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.375rem 0.375rem 0.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  /* The same accent as the grid's selected border, so the two read as one
+     idea — but here it is in a fixed spot rather than somewhere in a grid. */
+  border: 1px solid rgba(143, 199, 255, 0.45);
+}
+
+.assignedChipCanon {
+  border-color: rgba(143, 199, 255, 0.25);
+  padding-right: 0.75rem;
+}
+
+.assignedThumb {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 40px;
+  height: 30px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.assignedName {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.canonBadge {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.removeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  /* 22px mark inside a 44px target — the chip stays compact without shrinking
+     the hit area below the accessible minimum. */
+  width: 44px;
+  height: 44px;
+  margin: -0.6875rem -0.6875rem -0.6875rem 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+.removeButton svg {
+  width: 22px;
+  height: 22px;
+  padding: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  box-sizing: border-box;
+  transition: background-color 140ms ease;
+}
+
+.removeButton:hover svg,
+.removeButton:focus-visible svg {
+  background: rgba(255, 255, 255, 0.3);
+}
+
 /* ── Filters ─────────────────────────────────────────────────────────── */
 .controls {
   display: flex;
