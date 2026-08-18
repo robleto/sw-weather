@@ -36,15 +36,27 @@ enum PlanetTheme {
     static let idleBackgroundColor = Color(hex: "#05070A")
 
     /// The idle *screen*'s background, as distinct from the flat fallback
-    /// above. A shallow lift toward deep blue at the top: with the star
-    /// streaks gone, flat near-black read as a screen that had failed to load
-    /// rather than a designed one, and the first page is now somewhere people
-    /// actually land instead of a half-second flash.
+    /// above. A shallow lift toward deep blue at the top, sitting under
+    /// `idleImageName` as the base color while that loads — the same
+    /// arrangement the landed pages use, where the planet gradient shows
+    /// through until the photo arrives.
     static let idleBackground = LinearGradient(
         colors: [Color(hex: "#0C1526"), Color(hex: "#05070A")],
         startPoint: .top,
         endPoint: .bottom
     )
+
+    /// The idle page's full-bleed art. Not a world and not in the Atlas
+    /// catalog — it's the one backdrop that stands for "nowhere yet" — so it
+    /// carries the leading underscore its file has and is named here rather
+    /// than reached through `imageName(for:)`, which maps world keys.
+    ///
+    /// Being outside the catalog also puts it outside `measure-text-tone.py`,
+    /// which derives per-world text colors from the art. The idle copy's
+    /// colors are hand-set in `IdleHeroView`, so if this image is ever
+    /// replaced with something lighter, that copy has to be re-checked by eye
+    /// — nothing here will go red.
+    static let idleImageName = "_hyperspace"
 
     /// Returns the themed background for `planet`. Pass `"default"` (or any
     /// unrecognized key) for the idle/no-weather-yet look.

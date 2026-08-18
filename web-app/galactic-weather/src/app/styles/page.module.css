@@ -15,7 +15,7 @@ weather-icons.min.css);
   display: flex;
   flex-direction: column;
   padding-top: 52px;
-  overflow: hidden; /* contain pseudo-element hyperspace streaks */
+  overflow: hidden;
 }
 
 /* ── Full-bleed planet photo ───────────────────────────────────────────────
@@ -151,17 +151,17 @@ weather-icons.min.css);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   HYPERSPACE HERO  —  idle state: centred CTA over the star-warp background
+   IDLE HERO  —  centred CTA shown before anywhere has been chosen
    ══════════════════════════════════════════════════════════════════════════ */
 
-.hyperspaceHero {
+.idleHero {
   position: fixed;
   inset: 0;
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* no background — the .default class on .main provides the starfield */
+  /* no background — the .default class on .main provides it */
 }
 
 .heroContent {

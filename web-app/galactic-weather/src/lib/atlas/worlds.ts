@@ -148,7 +148,7 @@ export const WORLDS: readonly World[] = [
 		climate: "urban",
 		color: { primary: "#7A8090", headline: "#B8C0C8" },
 		textTone: "light",
-		textColor: "#F3F4F6",
+		textColor: "#F3F4F6CC",
 	},
 	{
 		id: "hoth",
@@ -457,6 +457,17 @@ export const CLIMATE_ORDER: readonly Climate[] = [
  * same images from Assets.xcassets/Planets instead.
  */
 export const planetImageSrc = (id: WorldId): string => `/planets/${id}.jpg`;
+
+/**
+ * The idle page's backdrop — "nowhere yet", before anywhere has been chosen.
+ *
+ * Sits alongside the world art but is deliberately not a `WorldId`: it never
+ * appears in the Atlas, is never a weather slot's answer, and carries the
+ * leading underscore to keep it out of the catalog's namespace. Named here so
+ * the extension stays in this one file, same reason as above. iOS draws it from
+ * `PlanetTheme.idleImageName`.
+ */
+export const IDLE_BACKDROP_SRC = "/planets/_hyperspace.jpg";
 
 const WORLD_BY_ID = new Map<WorldId, World>(WORLDS.map((w) => [w.id, w]));
 

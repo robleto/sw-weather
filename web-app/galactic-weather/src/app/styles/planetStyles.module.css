@@ -190,11 +190,16 @@
 }
 
 
-/* ── Hyperspace default state ──────────────────────────────────────────── */
+/* ── Idle default state ────────────────────────────────────────────────── */
 
 .default {
   position: relative;
   overflow: hidden;
+  /* Matches iOS `PlanetTheme.idleBackground`. This carried no background at
+     all until now, on the assumption that a starfield component was drawing
+     over it — nothing had imported that component in some time, so the idle
+     page was rendering as bare near-black. */
+  background: linear-gradient(180deg, #0c1526 0%, #05070a 100%);
 }
 
 .corellia {

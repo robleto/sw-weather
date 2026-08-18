@@ -144,6 +144,8 @@ struct ContentView: View {
             if weatherViewModel.appPhase == .idle {
                 PlanetTheme.background(for: "default")
                     .ignoresSafeArea()
+                backdropImage(named: PlanetTheme.idleImageName)
+                    .ignoresSafeArea()
             } else {
                 pager
             }

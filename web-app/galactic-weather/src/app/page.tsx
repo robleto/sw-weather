@@ -24,7 +24,7 @@ import {
   atlasWorldAssignedPayload,
   forecastLandedPayload,
 } from "@/lib/analytics/signals";
-import { planetImageSrc } from "@/lib/atlas/worlds";
+import { IDLE_BACKDROP_SRC, planetImageSrc } from "@/lib/atlas/worlds";
 
 // ─── types ────────────────────────────────────────────────────────────────────
 
@@ -208,22 +208,34 @@ const Home = () => {
       : null
   );
 
-  // idle → hyperspace background; landed → planet theme
+  // idle → default background; landed → planet theme
   const bgClass =
     appPhase === "landed"
       ? (planetStyles[weatherInfo.planet] ?? planetStyles.default)
       : planetStyles.default;
+
+  // The full-bleed photo, if this phase has one. Idle gets its own art rather
+  // than a world's — it's the "nowhere yet" backdrop, so it lives outside the
+  // Atlas catalog and is referenced by path instead of through
+  // planetImageSrc(), which maps world ids. iOS draws the same two images from
+  // PlanetTheme.
+  const backdropSrc =
+    appPhase === "idle"
+      ? IDLE_BACKDROP_SRC
+      : appPhase === "landed" && weatherInfo.planet !== "default"
+        ? planetImageSrc(weatherInfo.planet)
+        : null;
 
   // ─── render ───────────────────────────────────────────────────────────────
 
   return (
     <main className={`${styles.main} ${bgClass}`} data-phase={appPhase}>
 
-      {/* ── Planet photo, the same backdrop iOS draws ──────────────────────── */}
-      {appPhase === "landed" && weatherInfo.planet !== "default" && (
+      {/* ── Full-bleed photo, the same backdrop iOS draws ──────────────────── */}
+      {backdropSrc && (
         <div className={styles.backdrop} aria-hidden="true">
           <Image
-            src={planetImageSrc(weatherInfo.planet)}
+            src={backdropSrc}
             alt=""
             fill
             priority
@@ -282,9 +294,9 @@ const Home = () => {
         )}
       </nav>
 
-      {/* ── IDLE: hyperspace hero ─────────────────────────────────────────── */}
+      {/* ── IDLE: hero ────────────────────────────────────────────────────── */}
       {appPhase === "idle" && (
-        <div className={styles.hyperspaceHero}>
+        <div className={styles.idleHero}>
           <div className={styles.heroContent}>
             <p className={styles.heroEyebrow}>
               Somewhere out there, it feels just like this…
