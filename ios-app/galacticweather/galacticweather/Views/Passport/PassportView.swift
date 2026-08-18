@@ -9,6 +9,8 @@ import SwiftUI
 /// on a phone. A dark, legible list is the honest translation.
 struct PassportView: View {
     var viewModel: PassportViewModel
+    /// See `AtlasView.onClose` — this is a layer over the list, not a cover.
+    var onClose: () -> Void
 
     @State private var isPaywallOpen = false
     @State private var posterEntry: WorldProgress?
@@ -19,7 +21,8 @@ struct PassportView: View {
         MenuScreen(
             eyebrow: "YOUR PASSPORT",
             title: "Worlds you've found",
-            isTossable: true
+            isTossable: true,
+            onClose: onClose
         ) {
             score
             blurb

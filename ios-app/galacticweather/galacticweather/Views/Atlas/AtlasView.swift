@@ -6,7 +6,11 @@ import SwiftUI
 /// web app's `src/app/components/Atlas.tsx`.
 struct AtlasView: View {
     @Bindable var viewModel: AtlasViewModel
-    @Environment(\.dismiss) private var dismiss
+    /// Asked for rather than taken from `\.dismiss`, because this is a layer
+    /// stacked over the list rather than a cover presented above it — see
+    /// `SavedLocationsView.destinationLayers` for why that distinction is the
+    /// whole reason the toss looks right.
+    var onClose: () -> Void
 
     @State private var activeSlot: Slot?
     @State private var isPaywallOpen = false
@@ -116,9 +120,9 @@ struct AtlasView: View {
                 }
                 Spacer(minLength: 0)
             }
-            .tossHandle(offset: $tossOffset) { dismiss() }
+            .tossHandle(offset: $tossOffset) { onClose() }
 
-            CloseButton { dismiss() }
+            CloseButton { onClose() }
         }
     }
 

@@ -13,13 +13,25 @@ struct MenuScreen<Content: View>: View {
     /// Whether the title block can be grabbed to throw the screen back where
     /// it came from. Off for the screens presented as sheets — they already
     /// have the system's own drag-to-dismiss — and on for Passport, which is
-    /// a full-screen cover and otherwise has only the X.
+    /// a stacked layer and otherwise has only the X.
     var isTossable: Bool = false
+    /// Supplied by a screen that isn't presented — Passport is a layer stacked
+    /// over the list, and there's no presentation for `\.dismiss` to end. The
+    /// sheet-presented screens leave it nil and get the environment's.
+    var onClose: (() -> Void)?
     @ViewBuilder var content: () -> Content
 
     @Environment(\.dismiss) private var dismiss
 
     @State private var tossOffset: CGFloat = 0
+
+    private func close() {
+        if let onClose {
+            onClose()
+        } else {
+            dismiss()
+        }
+    }
 
     var body: some View {
         ZStack {
@@ -57,9 +69,9 @@ struct MenuScreen<Content: View>: View {
                 }
                 Spacer(minLength: 0)
             }
-            .tossHandle(offset: $tossOffset, isEnabled: isTossable) { dismiss() }
+            .tossHandle(offset: $tossOffset, isEnabled: isTossable) { close() }
 
-            CloseButton { dismiss() }
+            CloseButton { close() }
         }
     }
 }

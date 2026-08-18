@@ -46,6 +46,8 @@ struct SavedLocationsView: View {
                 list
                 searchBar
             }
+
+            destinationLayers
         }
         .foregroundStyle(textColor)
         .environment(\.editMode, $editMode)
@@ -64,12 +66,6 @@ struct SavedLocationsView: View {
         .task(id: isVisible) {
             guard isVisible else { return }
             await weatherViewModel.refreshPagesForList()
-        }
-        .fullScreenCover(isPresented: $isAtlasOpen) {
-            AtlasView(viewModel: atlasViewModel)
-        }
-        .fullScreenCover(isPresented: $isPassportOpen) {
-            PassportView(viewModel: passportViewModel)
         }
         .sheet(isPresented: $isSettingsOpen) {
             SettingsView(savedLocationsViewModel: viewModel)
@@ -202,6 +198,38 @@ struct SavedLocationsView: View {
         .accessibilityLabel("Menu")
     }
 
+    // MARK: - Destination layers
+
+    /// Atlas and Passport sit *on* this screen rather than being presented
+    /// over it, which is the same arrangement `ContentView` makes for the
+    /// weather screen and the list, and for the same reason: a full-screen
+    /// cover takes its presenter out of the visible hierarchy, so throwing one
+    /// off the bottom peeled it away from an empty white window instead of
+    /// from the list underneath. As layers, what's revealed is the list — it
+    /// was there the whole time.
+    ///
+    /// Both slide in and out from the bottom the way the covers did. On a
+    /// toss the screen is already off-screen by the time the flag flips, so
+    /// the removal has nothing left to animate.
+    @ViewBuilder
+    private var destinationLayers: some View {
+        if isAtlasOpen {
+            AtlasView(viewModel: atlasViewModel) {
+                withAnimation(.easeOut(duration: 0.28)) { isAtlasOpen = false }
+            }
+            .zIndex(1)
+            .transition(.move(edge: .bottom))
+        }
+
+        if isPassportOpen {
+            PassportView(viewModel: passportViewModel) {
+                withAnimation(.easeOut(duration: 0.28)) { isPassportOpen = false }
+            }
+            .zIndex(1)
+            .transition(.move(edge: .bottom))
+        }
+    }
+
     // MARK: - Destinations
 
     /// Atlas and Passport are the two things people come here to play with, so
@@ -217,13 +245,13 @@ struct SavedLocationsView: View {
                 title: "Atlas",
                 detail: atlasDetail,
                 systemImage: "globe.americas.fill"
-            ) { isAtlasOpen = true }
+            ) { withAnimation(.easeOut(duration: 0.32)) { isAtlasOpen = true } }
 
             destinationButton(
                 title: "Passport",
                 detail: passportDetail,
                 systemImage: "checkmark.seal.fill"
-            ) { isPassportOpen = true }
+            ) { withAnimation(.easeOut(duration: 0.32)) { isPassportOpen = true } }
         }
     }
 
