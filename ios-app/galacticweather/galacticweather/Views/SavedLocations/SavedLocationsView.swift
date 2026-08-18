@@ -212,16 +212,29 @@ struct SavedLocationsView: View {
     /// away. Searched locations are saved from the preview's own add button, so
     /// nothing is lost by dropping it.
     private var destinations: some View {
-        HStack(spacing: 10) {
+        // Each detail line appears only once there's something to say —
+        // Atlas's after a slot is customized, which a free user can't do at
+        // all, and Passport's after the first stamp. So the common case is one
+        // card with a second line and one without, which left them visibly
+        // different heights side by side. Whenever either has a detail, the
+        // other holds the same line open empty rather than shrinking to its
+        // own content; when neither does, both stay short.
+        let atlas = atlasDetail
+        let passport = passportDetail
+        let reservesDetailLine = atlas != nil || passport != nil
+
+        return HStack(spacing: 10) {
             destinationButton(
                 title: "Atlas",
-                detail: atlasDetail,
+                detail: atlas,
+                reservesDetailLine: reservesDetailLine,
                 systemImage: "globe.americas.fill"
             ) { isAtlasOpen = true }
 
             destinationButton(
                 title: "Passport",
-                detail: passportDetail,
+                detail: passport,
+                reservesDetailLine: reservesDetailLine,
                 systemImage: "checkmark.seal.fill"
             ) { isPassportOpen = true }
         }
@@ -230,6 +243,7 @@ struct SavedLocationsView: View {
     private func destinationButton(
         title: String,
         detail: String?,
+        reservesDetailLine: Bool,
         systemImage: String,
         action: @escaping () -> Void
     ) -> some View {
@@ -242,8 +256,11 @@ struct SavedLocationsView: View {
                 VStack(alignment: .leading, spacing: 1) {
                     Text(title)
                         .font(.system(size: 15, weight: .semibold))
-                    if let detail {
-                        Text(detail)
+                    if reservesDetailLine {
+                        // A space, not an empty string: `Text("")` collapses
+                        // to nothing and the card would go back to being the
+                        // shorter of the two.
+                        Text(detail ?? " ")
                             .font(.system(size: 12))
                             .foregroundStyle(textColor.opacity(0.6))
                     }
