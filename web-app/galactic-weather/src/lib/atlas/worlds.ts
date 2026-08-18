@@ -148,7 +148,7 @@ export const WORLDS: readonly World[] = [
 		climate: "urban",
 		color: { primary: "#7A8090", headline: "#B8C0C8" },
 		textTone: "light",
-		textColor: "#F3F4F6CC",
+		textColor: "#F4F6F7CC",
 	},
 	{
 		id: "hoth",
@@ -157,7 +157,7 @@ export const WORLDS: readonly World[] = [
 		climate: "ice",
 		color: { primary: "#39657F", headline: "#6DB3DC" },
 		textTone: "light",
-		textColor: "#72B6DD",
+		textColor: "#96C9E6",
 	},
 	{
 		id: "ilum",
@@ -214,7 +214,7 @@ export const WORLDS: readonly World[] = [
 		climate: "forest",
 		color: { primary: "#6C7F74", headline: "#7C9688" },
 		textTone: "light",
-		textColor: "#D6DED9",
+		textColor: "#D3DCD7",
 	},
 	{
 		id: "kef-bir",
@@ -319,7 +319,7 @@ export const WORLDS: readonly World[] = [
 		climate: "temperate",
 		color: { primary: "#7A609B", headline: "#B5C0EE" },
 		textTone: "light",
-		textColor: "#D0D7F4",
+		textColor: "#CED5F4",
 	},
 	{
 		id: "nevarro",
@@ -338,7 +338,7 @@ export const WORLDS: readonly World[] = [
 		climate: "ocean",
 		color: { primary: "#7B9684", headline: "#DBDFBF" },
 		textTone: "light",
-		textColor: "#E7EAD4",
+		textColor: "#E8EBD6",
 		isPremium: true,
 	},
 	{

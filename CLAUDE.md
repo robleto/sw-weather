@@ -111,11 +111,13 @@ are served as viewport-sized WebP rather than raw. The planet gradient stays on 
 underneath as the base color while the image loads. If web ever stops drawing
 the photo, the generated `textTone` stops describing what it shows.
 
-**Planet art is JPEG at 2048px wide.** Downsampled from ~4000px originals and
-converted from PNG, which took the set from 208 MB to 8.9 MB — shipped app size
-on iOS, page weight on web. PNG was the wrong format for painterly artwork; the
-same pixels cost 76 MB as PNG and 8.9 MB as JPEG at quality 85. The superseded
-PNGs are in the gitignored `archive/superseded-planet-png/`.
+**Planet art is JPEG, sized by height** — see "Constrain height, never width"
+below for the target and why. Downsampled from ~4000px originals and converted
+from PNG, which took the set from 208 MB to single-digit MB — shipped app size on
+iOS, page weight on web. PNG was the wrong format for painterly artwork; at the
+original 2048px-wide sizing the same pixels cost 76 MB as PNG against 8.9 MB as
+JPEG. The superseded PNGs are in the gitignored
+`archive/superseded-planet-png/`.
 
 The web extension lives in exactly one place, `planetImageSrc` in
 `lib/atlas/worlds.ts` — it was hardcoded in eight components, which is what made
@@ -129,12 +131,30 @@ python3 scripts/downsample-art.py        # or --width N / --height N
 ```
 
 It resizes in place and syncs the iOS imageset copies; the originals stay in git
-history. Note the art is landscape but cover-fits portrait phones, so height is
-the binding dimension there: 2048 wide gives ~1540px of height, which a
-2868px-tall phone upscales ~1.8x. That is invisible on this flat, painterly
-artwork but would not be on photography. Re-run `measure-text-tone.py`
-afterwards — it reads this art, though the measurement has proven stable across
-resolutions.
+history. Re-run `measure-text-tone.py` afterwards — it reads this art, though the
+measurement has proven stable across resolutions.
+
+**Constrain height, never width.** The art is landscape but cover-fits portrait
+phones, so height is the binding dimension and width is what gets cropped. The
+script defaults to `--height 2868`, which clears the tallest current iPhone
+backing store (1320x2868) so nothing upscales. Raise it if a taller device
+ships; measure before lowering it.
+
+This replaced a `--width 2048` default that read as visibly fuzzy artwork on
+TestFlight (2026-08-18). Width 2048 left the height at ~1612px, so a Pro Max
+upscaled 1.78x *and* cropped 64% of the width — only ~742 of 2048 columns were
+ever on screen, stretching ~1.2 MP of source over a 3.16 MP display. The
+originals were always tall enough at 3000px; the pixels were being discarded in
+this step. The old note here claimed the upscale was "invisible on this flat,
+painterly artwork" — it is not, and the reason is that the art is not flat: it
+carries film grain, which is both what JPEG handles worst and what upscaling
+magnifies. Quality is 90 rather than 85 for the same reason.
+
+If you are ever tempted to trade sharpness back for bytes, note that the phone
+crops most of the width anyway, so a portrait crop would be far cheaper per
+visible pixel than a shorter landscape one. It is not done because both
+platforms must draw the *same* photo for one `measure-text-tone.py` run to be
+valid for both, and the saved-location cards want the landscape framing.
 
 ## Analytics
 
