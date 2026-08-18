@@ -73,6 +73,36 @@ the paywall in a TestFlight build shows "—", because
 hardcodes a number, so the two files disagreeing surfaces as a wrong price on the
 paywall rather than as a crash.
 
+### The Paid Apps Agreement, and the order nothing tells you
+
+A first paid product needs a **Paid Apps Agreement**, and a brand-new account does
+not have one — it has only a Free Apps Agreement. Until the paid one reaches
+**Active**, `Product.products(for:)` returns an **empty array** rather than throwing,
+so the paywall shows no price and nothing anywhere explains why. This is the default
+state of every new developer account, not an edge case.
+
+The sequence that gets there, discovered the hard way on 2026-08-18:
+
+1. **Accept the updated Apple Developer Program License Agreement.** This is the
+   gate, and it does not announce itself as one. App Store Connect shows a yellow
+   banner saying the Account Holder must accept it; developer.apple.com/account →
+   **Agreements** is where the accept action lives. If that page shows nothing to
+   accept while the banner persists, it is a stale session — sign in again in a
+   private window rather than concluding there is nothing to do.
+2. **The Paid Apps Agreement row then appears** under Business → Agreements. There is
+   no "request" button and no way to add it directly; it materialises once the
+   license agreement is current. Looking for a way to create it is a dead end.
+3. **Its status starts at "Pending User Info"** — which is not Active, and does not
+   yet let StoreKit return products. Apple is waiting on contact details, banking
+   information, and tax forms (a W-9 for a US individual).
+4. **Once those are complete and verified, the status becomes Active** and products
+   start loading. Verification is on Apple's timeline — days, not minutes.
+
+Two things follow from this. Everything else in Part 2 can be done while the
+agreement is pending, so it should not stall the build. And premium is still
+testable in the meantime by running Debug to a device against
+`StoreKitConfig/Products.storekit` — see Part 7.
+
 **Fill in App Privacy.** The app sends analytics through TelemetryDeck, so data
 collection has to be declared. `shared/analytics-signals.json` is the honest
 inventory of what actually goes out — six signals, and a `payloadKeyAllowlist`
