@@ -212,29 +212,16 @@ struct SavedLocationsView: View {
     /// away. Searched locations are saved from the preview's own add button, so
     /// nothing is lost by dropping it.
     private var destinations: some View {
-        // Each detail line appears only once there's something to say —
-        // Atlas's after a slot is customized, which a free user can't do at
-        // all, and Passport's after the first stamp. So the common case is one
-        // card with a second line and one without, which left them visibly
-        // different heights side by side. Whenever either has a detail, the
-        // other holds the same line open empty rather than shrinking to its
-        // own content; when neither does, both stay short.
-        let atlas = atlasDetail
-        let passport = passportDetail
-        let reservesDetailLine = atlas != nil || passport != nil
-
-        return HStack(spacing: 10) {
+        HStack(spacing: 10) {
             destinationButton(
                 title: "Atlas",
-                detail: atlas,
-                reservesDetailLine: reservesDetailLine,
+                detail: atlasDetail,
                 systemImage: "globe.americas.fill"
             ) { isAtlasOpen = true }
 
             destinationButton(
                 title: "Passport",
-                detail: passport,
-                reservesDetailLine: reservesDetailLine,
+                detail: passportDetail,
                 systemImage: "checkmark.seal.fill"
             ) { isPassportOpen = true }
         }
@@ -242,8 +229,7 @@ struct SavedLocationsView: View {
 
     private func destinationButton(
         title: String,
-        detail: String?,
-        reservesDetailLine: Bool,
+        detail: String,
         systemImage: String,
         action: @escaping () -> Void
     ) -> some View {
@@ -256,14 +242,9 @@ struct SavedLocationsView: View {
                 VStack(alignment: .leading, spacing: 1) {
                     Text(title)
                         .font(.system(size: 15, weight: .semibold))
-                    if reservesDetailLine {
-                        // A space, not an empty string: `Text("")` collapses
-                        // to nothing and the card would go back to being the
-                        // shorter of the two.
-                        Text(detail ?? " ")
-                            .font(.system(size: 12))
-                            .foregroundStyle(textColor.opacity(0.6))
-                    }
+                    Text(detail)
+                        .font(.system(size: 12))
+                        .foregroundStyle(textColor.opacity(0.6))
                 }
                 .lineLimit(1)
 
@@ -278,19 +259,24 @@ struct SavedLocationsView: View {
             )
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(detail.map { "\(title), \($0)" } ?? title)
+        .accessibilityLabel("\(title), \(detail)")
     }
 
-    private var atlasDetail: String? {
-        let count = atlasViewModel.customizedCount
-        return count > 0 ? "\(count) customized" : nil
+    /// Both details are always present, zero included. They used to appear
+    /// only once there was something to report, which meant a free user — who
+    /// can't customize a slot at all — saw a bare "Atlas" next to a Passport
+    /// carrying a score, so the two cards stood at different heights. Reading
+    /// "0 customized" at rest also says the thing the blank didn't: that
+    /// customizing is what this screen is for.
+    private var atlasDetail: String {
+        "\(atlasViewModel.customizedCount) customized"
     }
 
     /// Shows the wild score rather than the total: it's the one that's
-    /// completable without paying, so it's the one worth advertising.
-    private var passportDetail: String? {
+    /// completable without paying, so it's the one worth advertising. At zero
+    /// it doubles as the pitch — there are that many out there to find.
+    private var passportDetail: String {
         let progress = passportViewModel.progress
-        guard progress.found > 0 else { return nil }
         return "\(progress.wildFound)/\(progress.wildTotal) wild"
     }
 
