@@ -1,7 +1,10 @@
 # TestFlight — getting a build to real people
 
-Status: **nothing has been set up in App Store Connect yet.** The code side is
-ready; the account side is untouched.
+Status: **build 1.0 (1) uploaded to App Store Connect on 2026-08-18.** Parts 1
+through 4 are done — App ID with iCloud, app record, in-app purchase at $2.99,
+archive built and uploaded. What remains is Part 5 (invite testers) and Part 7,
+the device checklist, which is where this stops being a setup task and starts
+producing findings.
 
 This is the step between "the app works on my machine" and "strangers have
 opinions." It comes before any launch channel — `MEASUREMENT.md` sets bars that
@@ -165,6 +168,109 @@ no-backend architecture rests on.
 
 ---
 
+## Part 7 — First run on a real device
+
+**Nothing in this app has ever been seen running by a human.** Browser preview and
+Simulator control are both DLP-blocked in the environment it was written in, so
+every feature here was built, unit-tested, and shipped without anyone clicking it.
+The TestFlight install is the first time that changes.
+
+Ordered by risk, not by how the app is laid out. Work down it and write what breaks
+directly into this section — a finding recorded here is worth more than a finding
+remembered.
+
+### 1. The plain forecast path
+
+Launch, allow location, see a world. Not Atlas, not Passport — the landed screen.
+
+This is first because it is the highest-risk thing in the build. Atlas rewrote
+`page.tsx`'s core render path from `getWeatherDescription` to `getSlotForWeather` +
+`resolveWorld`, and the iOS port mirrors that. If it is wrong, everything below is
+moot. Also worth trying **city search** as well as geolocation, since a first-run
+user who declines the location prompt has only that path.
+
+- [ ] Landed screen renders a world, temperature, and condition
+- [ ] City search resolves and renders
+- [ ] Text over the art is legible — this is what `measure-text-tone.py` generates
+      `textColor` for, and it has never been checked against a real screen
+
+### 2. The paywall price
+
+Open the paywall and read the button.
+
+- [ ] Shows **$2.99** → the App Store Connect product is fetchable in sandbox
+- [ ] Shows **—** → it is not. `PremiumStore.displayPrice` falls back to that when
+      `Product.products(for:)` returns nothing, deliberately, so the failure is
+      visible. Fix is App Store Connect, not the app: check the product ID matches
+      `com.robleto.galacticweather.premium` exactly and that its state and price
+      have finished saving.
+
+This also settles a question that could not be answered from the console — whether
+a product in "Prepare for Submission" is fetchable in sandbox.
+
+### 3. The purchase and the restore
+
+Full detail in Part 6. The short version: sandbox charges nothing, and **Restore
+Purchases after a delete-and-reinstall is the test that matters** — it is what
+proves Apple's ID works as the account system this app has instead of a backend.
+
+- [ ] Purchase completes, premium worlds unlock
+- [ ] Delete the app, reinstall, Restore Purchases returns entitlement
+- [ ] Saved-location cap goes from 1 to 20
+
+### 4. Atlas
+
+- [ ] Opens from the header
+- [ ] Lists all 26 conditions
+- [ ] Reassigning a condition actually changes the landed background
+- [ ] Assignments survive a force-quit
+- [ ] Multi-assign rotates by day rather than per render (needs two days, or a
+      device date change)
+
+### 5. Passport
+
+- [ ] Opens, shows biome grouping and progress
+- [ ] A stamp is earned by landing on a world
+- [ ] **Unfound worlds show a hunt hint** — "Heavy snow or Clear · cold. Winter at
+      altitude or high latitude — the Alps, the Rockies, Hokkaido." First time that
+      copy exists outside a test assertion.
+- [ ] Premium alternates instead show "No forecast leads here — assign it in Atlas"
+
+### 6. The things changed most recently
+
+Least likely to be broken, most likely to look wrong, because none of it has been
+seen at real size on a real screen.
+
+- [ ] **App icon** on the home screen. Conformed to 1024×1024 RGB with no alpha for
+      App Store validation, but never viewed small. Check it is legible at icon
+      size and that the corners mask cleanly.
+- [ ] **Picker banner** reads "N more to swap in here" / "Every condition already
+      has a world"
+- [ ] Fonts render as intended — Poiret One and Russo One are bundled, and the web
+      side had a real bug where a font resolved to a synthetic weight
+
+### 7. iCloud sync
+
+Needs a second device on the same Apple ID.
+
+- [ ] Atlas assignments appear on device two
+- [ ] Saved locations appear on device two
+
+This is the entitlement that made Part 1 necessary. If it silently does nothing,
+check that the App ID still has iCloud Key-Value Storage enabled and that the
+signed build carries `com.apple.developer.ubiquity-kvstore-identifier`.
+
+### 8. Analytics actually arriving
+
+- [ ] TelemetryDeck dashboard shows `App.launched` and `Forecast.landed`
+
+The build was verified to carry a substituted `TELEMETRYDECK_APP_ID`, so signals
+should flow. If the dashboard stays empty, that is worth chasing before inviting
+anyone else — a round with no data cannot answer the questions in `MEASUREMENT.md`,
+which is the entire reason for running it.
+
+---
+
 ## Gotchas, in rough order of likelihood
 
 1. **Provisioning fails without mentioning iCloud.** Part 1. The App ID needs
@@ -184,8 +290,8 @@ no-backend architecture rests on.
 
 ## What only you can do
 
-Everything in Parts 1, 2, and 5, plus the upload in Part 4 and the device testing
-in Part 6. Those need your Apple account and your machine.
+Everything in Parts 1, 2 and 5, the upload in Part 4, and all of Parts 6 and 7.
+Those need your Apple account, your device, and your eyes.
 
 Worth stating plainly: the Simulator is DLP-blocked in this environment, so no
 assistant session can see this app running. `xcodebuild` archives and tests fine —
