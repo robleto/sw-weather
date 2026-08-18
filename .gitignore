@@ -35,3 +35,9 @@ node_modules/
 DerivedData/
 xcuserdata/
 .swiftpm/
+
+# Release archives from scripts/archive.sh. Root-anchored because this is the one
+# build directory the script owns. An .xcarchive runs to hundreds of MB and a new
+# one lands on every run — the script never deletes old ones, per the deletion
+# policy in CLAUDE.md, so without this rule they accumulate straight into commits.
+/build/
