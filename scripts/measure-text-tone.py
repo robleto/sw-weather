@@ -36,6 +36,19 @@ ART = ROOT / "web-app/galactic-weather/public/planets"
 # Crait's near-white #FDFCED darkened into olive.
 DARK_TEXT = "#222222CC"
 
+# Per-world opacity for *light* text, as the alpha byte appended to whatever
+# color the measurement produces.
+#
+# Contrast is a floor, not a target. A world can clear 3:1 and still be too
+# loud: Ghorman's art is deliberately quiet — flat overcast grey — and because
+# that art is low-contrast, the blend below pushed its headline all the way to
+# near-white, so the readout shouted over a scene that doesn't. Dropping the
+# opacity lets the grey through and puts it back in the picture.
+#
+# Scored after compositing, same as DARK_TEXT, so a world can't be quietened
+# below the readable floor without the weak-contrast report catching it.
+LIGHT_TEXT_ALPHA = {"ghorman": "CC"}   # CC = 80%, the DARK_TEXT alpha
+
 MIN_CONTRAST = 3.0    # WCAG AA for large text — the floor every world must clear
 AIM_CONTRAST = 3.0    # the same bar: the readout is large text, so 3.0 is the
                       # applicable standard. Aiming higher forced a third of the
@@ -51,6 +64,17 @@ def lum_hex(h):
 def contrast(a, b):
     hi, lo = sorted([a, b], reverse=True)
     return (hi + 0.05) / (lo + 0.05)
+
+def composited_luminance(hex8, bg):
+    """What the eye actually sees for a translucent text color: the token
+    composited over the measured background, approximating that region as flat
+    grey. Scoring the opaque swatch instead would overstate every alpha'd
+    color, since the art showing through is what softens it.
+    """
+    a = int(hex8[7:9], 16) / 255
+    base = [int(hex8[i:i+2], 16) for i in (1, 3, 5)]
+    bg_ch = 255 * (bg ** (1/2.2))
+    return relum(tuple(a*c + (1-a)*bg_ch for c in base))
 
 def region_luminance(world):
     im = Image.open(ART / f"{world}.jpg").convert("RGB").resize((200, 157))
@@ -102,19 +126,18 @@ def main():
         # floor, the art is too bright for light text and the world goes dark.
         tone = "light" if contrast(1.0, bg) >= MIN_CONTRAST else "dark"
         if tone == "dark":
-            # Composite the token over the measured background to get what the
-            # eye actually sees, then score that.
-            a = int(DARK_TEXT[7:9], 16) / 255
-            base = [int(DARK_TEXT[i:i+2], 16) for i in (1, 3, 5)]
-            bg_ch = 255 * (bg ** (1/2.2))          # approximate the region as grey
-            seen = tuple(a*c + (1-a)*bg_ch for c in base)
-            colour, got = DARK_TEXT, contrast(relum(seen), bg)
+            colour, got = DARK_TEXT, contrast(composited_luminance(DARK_TEXT, bg), bg)
         else:
             have = contrast(lum_hex(headline), bg)
             if have >= AIM_CONTRAST:
                 colour, got = headline, have   # already fine — leave it exactly as is
             else:
                 colour, got = shift_lightness(headline, bg, darker=False)
+            # Re-scored against the composite, so quietening a world can still
+            # land it in the weak list rather than silently dipping under.
+            if alpha := LIGHT_TEXT_ALPHA.get(world):
+                colour = colour + alpha
+                got = contrast(composited_luminance(colour, bg), bg)
         out[world] = (tone, colour)
         if colour != headline:
             changed.append((world, bg, tone, headline, colour, got))

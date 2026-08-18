@@ -146,7 +146,7 @@ let WORLDS: [World] = [
         climate: .urban,
         color: WorldColor(primary: "#7A8090", headline: "#B8C0C8"),
         textTone: .light,
-        textColor: "#F3F4F6"
+        textColor: "#F3F4F6CC"
     ),
     World(
         id: "hoth",
