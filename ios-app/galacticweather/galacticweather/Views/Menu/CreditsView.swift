@@ -43,6 +43,7 @@ struct CreditsView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     Text(inspiredLine)
                     Text(developedByLine)
+                    Text(weatherDataLine)
                 }
                 .font(.system(size: 14))
                 .tint(Color(hex: "#8fc7ff"))
@@ -129,6 +130,21 @@ struct CreditsView: View {
         link.underlineStyle = .single
         result += link
         result += AttributedString(" from long ago.")
+        return result
+    }
+
+    /// A license condition, not a courtesy: OpenWeather requires visible
+    /// attribution on the free tier, and their data is offered under
+    /// CC BY-SA. It had only ever appeared in the web app's privacy policy, as
+    /// a description of where coordinates go, which is not the same thing as
+    /// crediting the source in the product.
+    private var weatherDataLine: AttributedString {
+        var result = AttributedString("Weather data by ")
+        var link = AttributedString("OpenWeather")
+        link.link = URL(string: "https://openweathermap.org/")
+        link.underlineStyle = .single
+        result += link
+        result += AttributedString(".")
         return result
     }
 

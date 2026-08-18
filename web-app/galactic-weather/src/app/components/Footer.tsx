@@ -12,6 +12,12 @@ import styles from "../styles/Footer.module.css";
  * Deliberately text only. Poster thumbnails belong on iOS's Credits screen —
  * a place you navigate to — but in a 13px bar pinned under the forecast they'd
  * read as an ad strip, which is the one thing this must not become.
+ *
+ * The OpenWeather credit is a license condition, not a courtesy: attribution is
+ * required on their free tier and is meant to be visible in the product rather
+ * than buried in a policy page. It had only ever appeared inside /privacy, as a
+ * description of where coordinates go. iOS carries the same credit on its
+ * Credits screen.
  */
 const Footer: React.FC = () => (
 	<footer className={styles.footer}>
@@ -45,7 +51,16 @@ const Footer: React.FC = () => (
 			>
 				Greg Robleto
 			</a>
-			. <Link href="/privacy">Privacy</Link>.
+			. Weather data by{" "}
+			<a
+				href="https://openweathermap.org/"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				OpenWeather
+			</a>
+			. <Link href="/privacy">Privacy</Link> ·{" "}
+			<Link href="/terms">Terms</Link>
 		</p>
 	</footer>
 );

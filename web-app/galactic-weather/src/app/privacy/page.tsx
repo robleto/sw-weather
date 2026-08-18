@@ -147,6 +147,26 @@ const PrivacyPage = () => (
 				<li>Your search history or the places you look up.</li>
 				<li>Anything at all that is sold or shared with data brokers.</li>
 			</ul>
+			{/*
+			  Stated explicitly, in close to the statutory words, rather than left to
+			  be inferred from the list above. California's rule is that a business
+			  which genuinely doesn't sell or share personal information isn't
+			  required to post a "Do Not Sell or Share" link — but it does have to
+			  say so plainly. "Share" there is a term of art meaning
+			  cross-context behavioral advertising, which is why the ad sentence sits
+			  next to it. If this app ever gains an ad SDK or a retargeting pixel,
+			  this paragraph stops being true and a link becomes required.
+			*/}
+			<p>
+				<strong>
+					We do not sell your personal information, and we do not share it for
+					cross-context behavioral advertising.
+				</strong>{" "}
+				There is no advertising in Galactic Weather, no ad network, and no
+				tracking of you across other apps or websites — so there is nothing to
+				opt out of. Browsers that send a Global Privacy Control signal are
+				honored anyway, and switch analytics off entirely.
+			</p>
 
 			<h2 className={styles.subheading}>Children</h2>
 			<p>
@@ -172,7 +192,7 @@ const PrivacyPage = () => (
 			</p>
 
 			<p className={styles.back}>
-				<Link href="/">← Back to the forecast</Link>
+				<Link href="/">← Back to the forecast</Link> · <Link href="/terms">Terms</Link>
 			</p>
 		</article>
 	</main>
