@@ -61,6 +61,26 @@ targets:
         # "All interface orientations must be supported unless the app
         # requires full screen."
         UIRequiresFullScreen: true
+        # Export compliance, declared here so App Store Connect stops asking.
+        #
+        # Without this key every upload lands in "Missing Compliance" and cannot
+        # go to a tester until someone clicks through the encryption
+        # questionnaire — a gate that stalls a build for no reason once the
+        # answer is known and unchanging.
+        #
+        # False is the accurate answer, not a shortcut. The app implements no
+        # encryption of its own: every linked library is Apple's, HTTPS goes
+        # through URLSession, and the only crypto framework present is Apple's
+        # own CryptoKit (weak-linked, used by TelemetryDeck to hash
+        # identifierForVendor — and hashing is not encryption anyway). There is
+        # no OpenSSL, libsodium, CryptoSwift or BoringSSL in the binary. That
+        # puts it squarely inside the exemption for apps that only use the
+        # encryption iOS provides.
+        #
+        # Revisit if the app ever bundles its own crypto or does end-to-end
+        # encryption of user data — at which point this becomes a wrong answer
+        # rather than a stale one.
+        ITSAppUsesNonExemptEncryption: false
         NSLocationWhenInUseUsageDescription: "Galactic Weather uses your location to show today's forecast and match it to a world."
         OPENWEATHERMAP_API_KEY: "$(OPENWEATHERMAP_API_KEY)"
         # Absent from Secrets.xcconfig means analytics stays off entirely —
