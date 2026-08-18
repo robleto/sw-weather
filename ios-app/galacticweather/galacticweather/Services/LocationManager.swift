@@ -7,6 +7,17 @@ enum LocationManagerError: Error, LocalizedError {
     case authorizationRestricted
     case locationUnavailable
 
+    /// Whether this is the permission saying no, rather than a fix failing to
+    /// arrive. The idle hero reads the permission directly and explains those
+    /// two cases itself, so repeating them as an error line under its own copy
+    /// would say the same thing twice.
+    var isAuthorizationFailure: Bool {
+        switch self {
+        case .authorizationDenied, .authorizationRestricted: return true
+        case .locationUnavailable: return false
+        }
+    }
+
     var errorDescription: String? {
         switch self {
         case .authorizationDenied:
@@ -42,6 +53,12 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         super.init()
         manager.delegate = self
     }
+
+    /// The current permission, read without prompting — reading this never
+    /// shows the dialog, only `requestOneShotLocation()` does. Lets a caller
+    /// decide whether asking is appropriate *before* handing over, instead of
+    /// discovering it by having the system alert appear.
+    var authorizationStatus: CLAuthorizationStatus { manager.authorizationStatus }
 
     /// Requests a single, one-shot location fix, requesting when-in-use
     /// authorization first if needed. Resumes as soon as a location arrives,

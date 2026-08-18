@@ -30,15 +30,28 @@ extension Color {
 /// photo. Port of the original web app's per-planet CSS gradients
 /// (`planetStyles.module.css`).
 enum PlanetTheme {
-    /// Idle/default state: solid near-black, no gradient.
+    /// Idle/default state: solid near-black, no gradient. Still the fallback
+    /// for an unrecognized planet key, where a designed background would imply
+    /// a world that isn't there.
     static let idleBackgroundColor = Color(hex: "#05070A")
+
+    /// The idle *screen*'s background, as distinct from the flat fallback
+    /// above. A shallow lift toward deep blue at the top: with the star
+    /// streaks gone, flat near-black read as a screen that had failed to load
+    /// rather than a designed one, and the first page is now somewhere people
+    /// actually land instead of a half-second flash.
+    static let idleBackground = LinearGradient(
+        colors: [Color(hex: "#0C1526"), Color(hex: "#05070A")],
+        startPoint: .top,
+        endPoint: .bottom
+    )
 
     /// Returns the themed background for `planet`. Pass `"default"` (or any
     /// unrecognized key) for the idle/no-weather-yet look.
     @ViewBuilder
     static func background(for planet: String) -> some View {
         if planet == "default" {
-            idleBackgroundColor
+            idleBackground
         } else if let gradient = bespokeGradients[planet] {
             gradient
         } else if let color = colorByPlanetKey[planet] {

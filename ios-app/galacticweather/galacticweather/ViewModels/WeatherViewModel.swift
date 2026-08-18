@@ -4,7 +4,7 @@ import Observation
 /// The two high-level phases of the app's root screen (port of the original
 /// web app's `AppPhase` union type).
 enum AppPhase {
-    /// Hyperspace hero, search box, no weather yet.
+    /// Idle hero, search box, no weather yet.
     case idle
     /// Weather is showing or loading.
     case landed
@@ -350,14 +350,26 @@ final class WeatherViewModel {
 
     // MARK: - Device location
 
-    /// Call once on launch. Failure stays silent, mirroring the web app's
-    /// behavior on a denied geolocation prompt — but rather than stranding
-    /// someone on the hero when they have saved locations they can't reach
-    /// (the pager and its indicator only exist once landed), fall back to
-    /// their first saved location.
+    /// Call once on launch. Only asks the device for a fix when permission has
+    /// *already* been granted — a first-run user gets the hero, and the system
+    /// alert waits until they tap the location button.
+    ///
+    /// Prompting from here (which the web app still does, having no better
+    /// option) put the alert dead-centre over the hero copy explaining what the
+    /// app is, on the one launch where someone has to read it; and then, on
+    /// allow, dismissed that screen half a second later. So the hero was either
+    /// unreadable or unseen. Deferring costs a returning user nothing: by then
+    /// this is authorized and the launch goes straight to their weather.
+    ///
+    /// Failure still stays silent — but rather than stranding someone on the
+    /// hero when they have saved locations they can't reach (the pager and its
+    /// indicator only exist once landed), fall back to their first saved
+    /// location.
     @MainActor
     func resolveInitialLocation() async {
-        await requestCurrentLocation(surfaceErrors: false)
+        if locationManager.authorizationStatus.isAuthorized {
+            await requestCurrentLocation(surfaceErrors: false)
+        }
 
         guard currentCoordinate == nil, appPhase == .idle, let first = savedLocations.first else { return }
         selection = .saved(first.id)
@@ -386,7 +398,13 @@ final class WeatherViewModel {
             appPhase = .landed
             await load(.currentLocation, coordinate: currentCoordinate!)
         } catch {
-            if surfaceErrors {
+            // A denial isn't reported here even when errors are being
+            // surfaced: `useCurrentLocation()` is only reachable from the idle
+            // hero, and the hero already restates itself around the permission
+            // and offers the Settings hand-off. Adding a red line saying the
+            // same thing would just be the sentence above it, in red.
+            let isAuthorizationFailure = (error as? LocationManagerError)?.isAuthorizationFailure ?? false
+            if surfaceErrors, !isAuthorizationFailure {
                 var failed = state(for: .currentLocation)
                 failed.error = (error as? LocalizedError)?.errorDescription ?? "We couldn't determine your location."
                 states[.currentLocation] = failed

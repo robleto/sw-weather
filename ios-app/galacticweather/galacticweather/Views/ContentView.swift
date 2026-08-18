@@ -1,9 +1,9 @@
 import SwiftUI
 
 /// The app's root view: owns the `WeatherViewModel` and `LocationSearchViewModel`,
-/// and mirrors the original web app's idle/landed phase switch — a hyperspace
-/// hero over a starfield while idle, and a full-bleed planet photo with the
-/// forecast text pinned to the top half once landed.
+/// and mirrors the original web app's idle/landed phase switch — the idle hero
+/// over a plain backdrop before anywhere is chosen, and a full-bleed planet
+/// photo with the forecast text pinned to the top half once landed.
 ///
 /// Once landed the screen is deliberately bare: planet art, the page dots,
 /// and one button out to the list. Search, the app menu, and everything
@@ -17,6 +17,10 @@ struct ContentView: View {
     @State private var passportViewModel = PassportViewModel()
     @State private var savedLocationsViewModel = SavedLocationsViewModel()
     @State private var isListOpen = false
+    /// Read, never requested — see `LocationAuthorization`. Observing it here
+    /// means a user who leaves for iOS Settings, flips location on and comes
+    /// back finds the hero already offering the arrow again, with no relaunch.
+    private var locationAuthorization: LocationAuthorization { .shared }
     /// How far the weather screen has been dragged down. Drives the throw —
     /// see `tossGesture`.
     @State private var pagerOffset: CGFloat = 0
@@ -140,8 +144,6 @@ struct ContentView: View {
             if weatherViewModel.appPhase == .idle {
                 PlanetTheme.background(for: "default")
                     .ignoresSafeArea()
-                HyperspaceStarsView()
-                    .ignoresSafeArea()
             } else {
                 pager
             }
@@ -161,7 +163,10 @@ struct ContentView: View {
             }
 
             if weatherViewModel.appPhase == .idle {
-                HyperspaceHeroView(pageError: weatherViewModel.pageError)
+                IdleHeroView(
+                    pageError: weatherViewModel.pageError,
+                    locationStatus: locationAuthorization.status
+                )
             }
         }
         .animation(.easeInOut(duration: 0.5), value: weatherViewModel.appPhase)
@@ -442,12 +447,19 @@ struct ContentView: View {
                 dropdownPosition: .above
             )
 
-            currentLocationButton
+            // Dropped once the answer is fixed at "no": iOS won't re-prompt
+            // after a denial, so the arrow could only spin and fail. The hero
+            // says why it's gone and offers the one thing that brings it back.
+            if locationAuthorization.canRequest {
+                currentLocationButton
+            }
         }
         .frame(maxWidth: .infinity)
     }
 
     /// "Use my current location" button, docked right after the search field.
+    /// This is now the only thing that triggers the system permission alert —
+    /// see `WeatherViewModel.resolveInitialLocation()`.
     private var currentLocationButton: some View {
         Button {
             Task { await weatherViewModel.useCurrentLocation() }

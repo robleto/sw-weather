@@ -39,6 +39,18 @@ final class LocationAuthorization: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    /// Whether an in-app "use my location" control could still do anything.
+    /// Once denied or restricted iOS won't prompt again, so such a control can
+    /// only ever fail — the honest move is to not offer it and point at
+    /// Settings instead, the same reasoning `SettingsView.locationRow` makes.
+    var canRequest: Bool {
+        switch status {
+        case .notDetermined, .authorizedWhenInUse, .authorizedAlways: return true
+        case .denied, .restricted: return false
+        @unknown default: return false
+        }
+    }
+
     var summary: String {
         switch status {
         case .notDetermined:
@@ -56,5 +68,18 @@ final class LocationAuthorization: NSObject, CLLocationManagerDelegate {
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         status = manager.authorizationStatus
+    }
+}
+
+extension CLAuthorizationStatus {
+    /// True only when a location fix can be had without showing the user
+    /// anything. `.notDetermined` is deliberately false: it *would* succeed,
+    /// but only by prompting.
+    var isAuthorized: Bool {
+        switch self {
+        case .authorizedWhenInUse, .authorizedAlways: return true
+        case .notDetermined, .denied, .restricted: return false
+        @unknown default: return false
+        }
     }
 }
