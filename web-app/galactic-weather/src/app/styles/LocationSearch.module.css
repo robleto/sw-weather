@@ -34,6 +34,12 @@
   background-color: #e4e8f1;
 }
 
+/* ── Candidate dropdown ────────────────────────────────────────────────────
+   Ports the iOS list (LocationSearchView.candidateRow / .dropdownSurface):
+   translucent card over the planet art rather than a flat panel, rows that
+   read as one surface you're choosing within, and flag + city + region so two
+   same-named places can be told apart. */
+
 .candidateList {
   position: absolute;
   top: calc(100% + 6px);
@@ -43,34 +49,97 @@
   width: 100%;
   list-style: none;
   margin: 0;
-  padding: 4px;
-  background: #3b4154;
-  border-radius: 10px;
-  border: 2px solid #d5dbea;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
-  max-height: 180px;
+  padding: 0;
+  /* Material + tint, matching iOS's .ultraThinMaterial under #3b4154 at 72%. */
+  background: rgba(59, 65, 84, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+  max-height: 260px;
   overflow-y: auto;
+}
+
+/* Hairlines between rows rather than gaps, inset past the flag: the list reads
+   as one surface, not a stack of separate chips. */
+.candidateList li + li::before {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-left: 52px;
+  background: rgba(241, 244, 251, 0.12);
 }
 
 .candidateButton {
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   text-align: left;
   border: none;
   background: transparent;
   color: #f1f4fb;
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 11px 14px;
   cursor: pointer;
+  font: inherit;
 }
 
-.candidateButton:hover {
-  background: #525a73;
+.candidateGlyph {
+  flex: 0 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
+  color: rgba(241, 244, 251, 0.6);
 }
 
+.candidateText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.candidateName {
+  font-size: 15px;
+  font-weight: 500;
+  color: #f1f4fb;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.candidateSecondary {
+  font-size: 12px;
+  color: rgba(241, 244, 251, 0.6);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.candidateChevron {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  color: rgba(241, 244, 251, 0.3);
+}
+
+.candidateButton:hover,
 .candidateButtonActive {
-  background: #5e6681;
+  background: rgba(94, 102, 129, 0.55);
 }
 
+.candidateButton:hover .candidateChevron,
+.candidateButtonActive .candidateChevron {
+  color: rgba(241, 244, 251, 0.7);
+}
+
+/* Same surface, radius, border and shadow as the list above, so the empty and
+   error states don't look like a different component than the thing they
+   replace. */
 .searchStatus {
   position: absolute;
   top: calc(100% + 6px);
@@ -78,14 +147,16 @@
   right: 0;
   z-index: 240;
   margin: 0;
-  color: #f1f4fb;
-  font-size: 12px;
+  color: rgba(241, 244, 251, 0.85);
+  font-size: 13px;
   text-align: center;
-  background: #3b4154;
-  border: 2px solid #d5dbea;
-  border-radius: 10px;
-  padding: 8px 10px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  background: rgba(59, 65, 84, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
 }
 
 .retryButton {

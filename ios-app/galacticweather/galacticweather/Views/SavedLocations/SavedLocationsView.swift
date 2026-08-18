@@ -44,7 +44,12 @@ struct SavedLocationsView: View {
             VStack(spacing: 0) {
                 header
                 list
+                // The dropdown floats up out of this row over the list. Stack
+                // order already draws it last, but the `List` underneath is
+                // UIKit-backed, so this states the intent rather than relying
+                // on that.
                 searchBar
+                    .zIndex(1)
             }
 
             destinationLayers

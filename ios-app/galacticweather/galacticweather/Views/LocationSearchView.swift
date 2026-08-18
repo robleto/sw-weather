@@ -48,24 +48,43 @@ struct LocationSearchView: View {
         static let retryText = Color(hex: "#1f2330")
     }
 
+    /// Gap between the field and the list, matching the web `.candidateList`'s
+    /// `top: calc(100% + 6px)`.
+    private static let dropdownGap: CGFloat = 6
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if dropdownPosition == .above {
+        textField
+            .frame(maxWidth: variant == .hero ? 480 : 280)
+            // An overlay, not a sibling in a stack: the list has to float over
+            // whatever is behind it rather than take layout space.
+            //
+            // As a stack sibling it did both jobs badly. On `SavedLocationsView`
+            // — `VStack { header; list; searchBar }` — the growing dropdown
+            // shrank the greedy `List` and shoved the whole thing upward, so
+            // typing scrolled the screen out from under you. And in the idle
+            // hero's `HStack(alignment: .top)`, the taller stack dragged the
+            // "use my location" arrow up to align with the top of the dropdown.
+            // Web never had either problem: `.candidateList` is
+            // `position: absolute`, which is what this now is.
+            .overlay(alignment: dropdownPosition == .above ? .top : .bottom) {
                 dropdown
-                textField
-            } else {
-                textField
-                dropdown
+                    .frame(maxWidth: .infinity)
+                    .alignmentGuide(dropdownPosition == .above ? .top : .bottom) { d in
+                        // Anchors the list's near edge to the field's, then
+                        // pushes it clear by the gap. Above: the list's own
+                        // bottom becomes its "top" guide, so it hangs upward.
+                        dropdownPosition == .above
+                            ? d[.bottom] + Self.dropdownGap
+                            : d[.top] - Self.dropdownGap
+                    }
             }
-        }
-        .frame(maxWidth: variant == .hero ? 480 : 280)
-        .onChange(of: query) { _, newValue in
-            if skipNextQueryChange {
-                skipNextQueryChange = false
-                return
+            .onChange(of: query) { _, newValue in
+                if skipNextQueryChange {
+                    skipNextQueryChange = false
+                    return
+                }
+                viewModel.search(query: newValue)
             }
-            viewModel.search(query: newValue)
-        }
     }
 
     @ViewBuilder

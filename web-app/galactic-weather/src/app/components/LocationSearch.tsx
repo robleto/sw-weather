@@ -4,6 +4,10 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "../styles/LocationSearch.module.css";
 import { geocodeLocation } from "@/lib/location/geocode";
 import { parseLocationQuery } from "@/lib/location/parseLocationQuery";
+import {
+	candidateFlag,
+	candidateSecondaryText,
+} from "@/lib/location/candidateDisplay";
 import type { LocationCandidate } from "@/lib/location/types";
 
 interface LocationSearchProps {
@@ -22,6 +26,40 @@ const NO_RESULTS_MESSAGE =
 	"No matches found—try City, State or City, Country.";
 const API_ERROR_MESSAGE =
 	"We couldn't resolve that location. Please try again.";
+
+/** Stands in for the flag on a raw `lat,lon` entry, which has no country. */
+const CoordinateGlyph = () => (
+	<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false">
+		<circle
+			cx="6.75"
+			cy="6.75"
+			r="4.25"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="1.5"
+		/>
+		<path
+			d="M10 10l3.5 3.5"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="1.5"
+			strokeLinecap="round"
+		/>
+	</svg>
+);
+
+const Chevron = () => (
+	<svg viewBox="0 0 12 12" width="9" height="9" aria-hidden="true" focusable="false">
+		<path
+			d="M4 2l4 4-4 4"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		/>
+	</svg>
+);
 
 const LocationSearch: React.FC<LocationSearchProps> = ({
 	value,
@@ -82,14 +120,21 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 
 			if (parsed.kind === "coordinates") {
 				if (!cancelled) {
-					setCandidates([]);
-					setActiveIndex(-1);
+					// Offered as a one-row dropdown rather than resolved on the
+					// spot — see the note on the geocode results below.
+					const displayName = `${parsed.lat}, ${parsed.lon}`;
+					setCandidates([
+						{
+							name: displayName,
+							regionOrState: "",
+							country: "",
+							lat: parsed.lat,
+							lon: parsed.lon,
+							displayName,
+						},
+					]);
+					setActiveIndex(0);
 					setIsLoading(false);
-					onLocationResolvedRef.current({
-						lat: parsed.lat,
-						lon: parsed.lon,
-						displayName: `${parsed.lat}, ${parsed.lon}`,
-					});
 				}
 				return;
 			}
@@ -106,18 +151,12 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 					return;
 				}
 
-				if (results.length === 1) {
-					setCandidates([]);
-					setActiveIndex(-1);
-					setIsLoading(false);
-					onLocationResolvedRef.current({
-						lat: results[0].lat,
-						lon: results[0].lon,
-						displayName: results[0].displayName,
-					});
-					return;
-				}
-
+				// Every candidate list gets shown, including a single hit —
+				// nothing resolves without a tap. A lone result used to jump
+				// straight to that place, which meant an unambiguous query
+				// navigated the whole page with no dropdown ever appearing and
+				// nothing to confirm it had understood you. Matches iOS, where
+				// `LocationSearchViewModel` has never auto-resolved.
 				setCandidates(results);
 				setActiveIndex(0);
 			} catch {
@@ -170,7 +209,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 			return;
 		}
 
-		if (candidates.length <= 1) {
+		if (candidates.length === 0) {
 			return;
 		}
 
@@ -210,7 +249,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 				value={value}
 				role="combobox"
 				aria-autocomplete="list"
-				aria-expanded={candidates.length > 1}
+				aria-expanded={candidates.length > 0}
 				aria-controls={listboxId}
 				aria-activedescendant={
 					activeIndex >= 0 && candidates[activeIndex]
@@ -227,29 +266,50 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 				</div>
 			)}
 
-			{candidates.length > 1 && (
+			{candidates.length > 0 && (
 				<ul className={styles.candidateList} role="listbox" id={listboxId}>
-					{candidates.map((candidate, index) => (
-						<li
-							key={`${candidate.lat}-${candidate.lon}-${candidate.displayName}`}
-							role="none"
-						>
-							<button
-								type="button"
-								id={`location-candidate-${index}`}
-								role="option"
-								aria-selected={activeIndex === index}
-								className={`${styles.candidateButton} ${
-									activeIndex === index ? styles.candidateButtonActive : ""
-								}`}
-								onMouseDown={(event) => event.preventDefault()}
-								onClick={() => handleCandidateClick(candidate)}
-								onMouseEnter={() => setActiveIndex(index)}
+					{candidates.map((candidate, index) => {
+						const flag = candidateFlag(candidate);
+						const secondaryText = candidateSecondaryText(candidate);
+						return (
+							<li
+								key={`${candidate.lat}-${candidate.lon}-${candidate.displayName}`}
+								role="none"
 							>
-								{candidate.displayName}
-							</button>
-						</li>
-					))}
+								<button
+									type="button"
+									id={`location-candidate-${index}`}
+									role="option"
+									aria-selected={activeIndex === index}
+									className={`${styles.candidateButton} ${
+										activeIndex === index ? styles.candidateButtonActive : ""
+									}`}
+									onMouseDown={(event) => event.preventDefault()}
+									onClick={() => handleCandidateClick(candidate)}
+									onMouseEnter={() => setActiveIndex(index)}
+								>
+									{/* Flag, city, and where the city is — the three things you
+									    need to tell two same-named places apart, which is the
+									    whole reason this list exists. The flag does most of that
+									    work before you've read anything. */}
+									<span className={styles.candidateGlyph} aria-hidden="true">
+										{flag ?? <CoordinateGlyph />}
+									</span>
+									<span className={styles.candidateText}>
+										<span className={styles.candidateName}>{candidate.name}</span>
+										{secondaryText && (
+											<span className={styles.candidateSecondary}>
+												{secondaryText}
+											</span>
+										)}
+									</span>
+									<span className={styles.candidateChevron} aria-hidden="true">
+										<Chevron />
+									</span>
+								</button>
+							</li>
+						);
+					})}
 				</ul>
 			)}
 
