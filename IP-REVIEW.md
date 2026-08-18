@@ -1,7 +1,8 @@
 # IP review — the distribution surface
 
-Status: **review complete 2026-08-18. Every art finding is remediated. One policy
-decision remains — see item 4 under "Before submission".**
+Status: **closed 2026-08-18. Every art finding is remediated and the
+franchise-name question is resolved by design. Only the attorney review remains
+outstanding, and it is a recommendation rather than a defect.**
 
 **This is not legal advice.** It is an audit of the broadcast assets against the
 rule this project already set for itself, recorded in `ATLAS-HANDOFF.md`:
@@ -18,7 +19,17 @@ franchise involved. What follows is only whether the current assets sit on the
 correct side of the line as drawn.
 
 Every visual claim below was made by opening the file, not by inference from
-filenames. Two ambiguous details were cropped and upscaled before being judged.
+filenames, and ambiguous details were cropped and upscaled before being judged.
+
+**Two limits of that method, recorded because both produced wrong calls.** Crops
+were drawn tightly around objects already noticed, which is verification of a
+hypothesis rather than a sweep — the Tatooine foreground was cleared as "a domed
+homestead, architecture, permitted" while a speeder sat just outside the crop
+window. And `og-card.png` was judged from a single full-image view at display
+resolution with no crops at all, then written up as "no vehicles found," which was
+more confidence than the evidence carried. The owner found and removed vehicles in
+both places. A foreground sweep at several crops beats one crop aimed at the thing
+you already suspect.
 
 ---
 
@@ -88,13 +99,23 @@ does nothing on its own. Either wire it up or drop it.
 
 ---
 
-## RESOLVED — the vehicle silhouette in the primary Open Graph image
+## RESOLVED — the primary Open Graph image
 
-**Fixed 2026-08-18 in `01eeaa7`.** The Kamino sky is now clean; platform edges, the
-antenna spire, and the lightning remain, all architecture or weather rather than
-vehicle design. Confirmed by cropping and upscaling the same region the original
-finding came from, so before and after are the same measurement rather than an
-impression. The finding as originally written follows.
+**Fixed 2026-08-18, across two passes.** `01eeaa7` removed the Kamino craft. A
+second pass by the owner went further than this review had asked:
+
+- The **Tatooine speeder** removed — the vehicle this review had missed.
+- **Planet names demoted** from the largest element on each panel to a subordinate
+  caption beneath the temperature: `72°F & CLOUDY` over `It feels like being on
+  Ghorman`.
+- **`Today's Forecast`** with the apostrophe, on all three panels.
+- A **mislabelled panel corrected** — the Ghorman art had briefly been captioned
+  Kamino, duplicating the third panel.
+
+Verified panel by panel at 3–4× crops rather than from the full view: three
+distinct worlds, correct captions, apostrophes present. Kamino's sky retains only
+platform edges, the antenna spire, and lightning — architecture and weather. The
+finding as originally written follows.
 
 `web-app/galactic-weather/public/galactic-weather.png` (1200×630)
 
@@ -116,7 +137,14 @@ Remove or paint out the Kamino craft. The rest of the image is compliant.
 
 ---
 
-## HIGH — the square OG card leads with a franchise name
+## RESOLVED — the square OG card no longer leads with a franchise name
+
+**Fixed 2026-08-18.** `91°F & SUNNY` is now the dominant element and the world is a
+caption beneath it — `It feels like being on Tatooine`. The apostrophe is correct,
+and a speeder in the foreground was removed, leaving a domed homestead and dunes.
+The twin-suns composition remains, which this review flagged as the softer half of
+the concern and does not consider actionable. The finding as originally written
+follows.
 
 `web-app/galactic-weather/public/og-card.png` (1200×1200)
 
@@ -197,12 +225,15 @@ homage rather than passing-off. Leave it.
 
 ---
 
-## Not IP, but on every broadcast asset
+## RESOLVED — not IP, but it was on every broadcast asset
 
-**"Todays Forecast" is missing its apostrophe.** It appears in `og-card.png` and
-`galactic-weather.png` — the square fallback and the primary link-share card — and
-in the poster art iOS still bundles for Credits. Both OG images need another pass
-anyway to settle item 4; fix the apostrophe in the same pass.
+**"Todays Forecast" now reads "Today's Forecast."** Fixed on `og-card.png` and on
+all three panels of `galactic-weather.png`, each verified by individual crop rather
+than from the full view — the first fix pass landed on the square card only, and
+that partial state was invisible at full-image scale.
+
+Still present in the poster art iOS bundles for Credits, which is in-app rather
+than broadcast, so it is cosmetic rather than a submission concern.
 
 ---
 
@@ -214,11 +245,15 @@ anyway to settle item 4; fix the apostrophe in the same pass.
    (`01eeaa7`).
 3. ~~**Decide whether `public/posters/` counts as broadcast.**~~ **Decided and
    done** — removed from the web app; iOS keeps its own copies for in-app Credits.
-4. **Decide the franchise-name-as-broadcast-art question**, and amend the rule in
-   `ATLAS-HANDOFF.md` to say what was decided either way. **Now the only open IP
-   item.** Both OG images still lead with a franchise planet name in the largest
-   type on the card, and the rule as written does not cover that case.
-5. **Fix "Todays" → "Today's"** on the OG art.
+4. ~~**Decide the franchise-name-as-broadcast-art question.**~~ **Resolved by
+   design, not by policy.** Rather than rule on whether a franchise planet name may
+   headline a broadcast card, the cards were changed so none of them does — the
+   world is now a caption under the temperature on every surface. The gap in the
+   written rule still exists in principle; it no longer has anything sitting in it.
+   Worth one line in `ATLAS-HANDOFF.md` recording that broadcast art leads with
+   weather and treats the world as a caption, so the next redesign does not
+   reintroduce the question.
+5. ~~**Fix "Todays" → "Today's"** on the OG art.~~ **Done** on both cards.
 6. **One hour with an actual attorney.** Everything above is an audit against a
    self-imposed rule. Whether the accepted-risk position on in-app planet names
    holds up is a question for someone qualified to answer it, and it is cheap
