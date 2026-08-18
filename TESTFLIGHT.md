@@ -59,17 +59,13 @@ type Non-Consumable, matching what `PremiumStore.swift` asks StoreKit for. A
 mismatch here does not error — `Product.products(for:)` simply returns nothing and
 the paywall renders with no purchase button.
 
-**Settle the price, and make both places agree.** There is a live discrepancy:
-
-| Source | Price |
-|---|---|
-| `StoreKitConfig/Products.storekit` | **$4.99** |
-| `PRICING.md` recommendation | **$2.99** |
-
-The `.storekit` file only drives local and Simulator testing; App Store Connect
-sets the real price. But leaving them different means local testing shows a price
-production will not charge. Decide, set it in App Store Connect, and edit
-`Products.storekit` to match.
+**Set the price to $2.99.** `StoreKitConfig/Products.storekit` already says
+$2.99, but that file only supplies the price in the Simulator — sandbox and
+TestFlight both read it from App Store Connect. Until the product exists there,
+the paywall in a TestFlight build shows "—", because
+`PremiumStore.displayPrice` falls back to that when no product loads. Nothing
+hardcodes a number, so the two files disagreeing surfaces as a wrong price on the
+paywall rather than as a crash.
 
 **Fill in App Privacy.** The app sends analytics through TelemetryDeck, so data
 collection has to be declared. `shared/analytics-signals.json` is the honest

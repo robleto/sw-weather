@@ -53,7 +53,13 @@ final class PremiumStore {
 
     private init() {}
 
-    /// Human-facing price, e.g. "$4.99", or "—" before the product loads.
+    /// Human-facing price, e.g. "$2.99", or "—" before the product loads.
+    ///
+    /// Always StoreKit's own string, never a local constant: it arrives already
+    /// localized and currency-converted, and it comes from App Store Connect in
+    /// sandbox and production. `StoreKitConfig/Products.storekit` only supplies it
+    /// in the Simulator, so the two can disagree — which is why nothing here
+    /// hardcodes a number.
     var displayPrice: String {
         product?.displayPrice ?? "—"
     }

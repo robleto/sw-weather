@@ -206,11 +206,14 @@ strip. Their defining property is that each is built once and never needs feedin
 ## Before this goes live
 
 - Configure the product in App Store Connect at **$2.99**.
-- **Make `StoreKitConfig/Products.storekit` match.** It currently says **$4.99**.
-  That file only drives local and Simulator testing, so the mismatch is not a
-  shipping bug — but it means local testing shows a price production will not
-  charge, which is exactly the kind of discrepancy that gets discovered during a
-  purchase demo.
+- ~~**Make `StoreKitConfig/Products.storekit` match.**~~ **Done** — set to
+  **$2.99**. Worth being precise about what that did and did not fix: that file
+  supplies the price **only in the Simulator**. Sandbox and TestFlight read it from
+  App Store Connect, so until the product is created there the beta has no price at
+  all, and once it exists the two can disagree again. Nothing in the app hardcodes a
+  number — `PremiumStore.displayPrice` always returns StoreKit's own localized
+  string — so a disagreement shows up as a wrong price on the paywall rather than as
+  a bug.
 - Exercise the sandbox purchase end to end, including Restore Purchases. Still
   untested, and it is the only revenue path in the product. See `TESTFLIGHT.md`
   Part 6.
