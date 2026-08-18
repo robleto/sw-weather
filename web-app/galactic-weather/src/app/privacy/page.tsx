@@ -184,9 +184,10 @@ const PrivacyPage = () => (
 
 			<h2 className={styles.subheading}>Contact</h2>
 			<p>
-				Questions about any of this can go to{" "}
-				<a href="https://www.robleto.com/" target="_blank" rel="noopener noreferrer">
-					Greg Robleto
+				Questions about any of this, including any request concerning your own
+				data, can go to{" "}
+				<a href="mailto:greg.robleto@creativemadness.studio">
+					greg.robleto@creativemadness.studio
 				</a>
 				.
 			</p>

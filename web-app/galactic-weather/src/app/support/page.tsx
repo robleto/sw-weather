@@ -42,9 +42,9 @@ const SupportPage = () => (
 
 			<h2 className={styles.subheading}>Getting in touch</h2>
 			<p>
-				The fastest way to reach a human is through{" "}
-				<a href="https://www.robleto.com/" target="_blank" rel="noopener noreferrer">
-					robleto.com
+				Email{" "}
+				<a href="mailto:greg.robleto@creativemadness.studio">
+					greg.robleto@creativemadness.studio
 				</a>
 				. This is a small independent app made by one person, so replies are
 				not instant — but they are from the person who wrote it.
