@@ -10,9 +10,16 @@ struct MenuScreen<Content: View>: View {
     /// Overridable so a longer title can step down a size rather than wrap
     /// into a header two or three times as tall as its siblings'.
     var titleSize: CGFloat = 30
+    /// Whether the title block can be grabbed to throw the screen back where
+    /// it came from. Off for the screens presented as sheets — they already
+    /// have the system's own drag-to-dismiss — and on for Passport, which is
+    /// a full-screen cover and otherwise has only the X.
+    var isTossable: Bool = false
     @ViewBuilder var content: () -> Content
 
     @Environment(\.dismiss) private var dismiss
+
+    @State private var tossOffset: CGFloat = 0
 
     var body: some View {
         ZStack {
@@ -27,27 +34,31 @@ struct MenuScreen<Content: View>: View {
                 .padding(.top, 28)
                 .padding(.bottom, 48)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                // Inert unless something above asked to be tossable — which
-                // Passport does, and the sheet-presented screens don't need
-                // to, having the system's own drag-to-dismiss.
-                .tossScrollAnchor()
             }
         }
+        .offset(y: tossOffset)
         .foregroundStyle(Color(hex: "#f2f5fa"))
     }
 
+    /// When tossable, the title block is also the grab handle — reaching to
+    /// just short of the X, because a drag gesture laid over a button makes
+    /// the button feel broken.
     private var header: some View {
         HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(eyebrow)
-                    .font(.system(size: 12, weight: .medium))
-                    .tracking(1.8)
-                    .foregroundStyle(.white.opacity(0.6))
-                Text(title)
-                    .font(.custom("PoiretOne-Regular", size: titleSize))
-                    .tracking(0.5)
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(eyebrow)
+                        .font(.system(size: 12, weight: .medium))
+                        .tracking(1.8)
+                        .foregroundStyle(.white.opacity(0.6))
+                    Text(title)
+                        .font(.custom("PoiretOne-Regular", size: titleSize))
+                        .tracking(0.5)
+                }
+                Spacer(minLength: 0)
             }
-            Spacer()
+            .tossHandle(offset: $tossOffset, isEnabled: isTossable) { dismiss() }
+
             CloseButton { dismiss() }
         }
     }

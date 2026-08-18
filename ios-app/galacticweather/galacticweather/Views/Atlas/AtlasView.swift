@@ -10,6 +10,8 @@ struct AtlasView: View {
 
     @State private var activeSlot: Slot?
     @State private var isPaywallOpen = false
+    /// How far the screen has been thrown — see `tossHandle`, on the header.
+    @State private var tossOffset: CGFloat = 0
 
     private static let groupedSlots: [(group: SlotGroup, slots: [Slot])] =
         SLOT_GROUP_ORDER.map { group in (group, SLOTS.filter { $0.group == group }) }
@@ -28,10 +30,8 @@ struct AtlasView: View {
             scrim
             content
         }
+        .offset(y: tossOffset)
         .ignoresSafeArea()
-        // Reached from the list, and thrown back to it the same way the
-        // weather screen is.
-        .tossToDismiss { dismiss() }
         .sheet(item: $activeSlot) { slot in
             PlanetPickerView(
                 slot: slot,
@@ -90,7 +90,6 @@ struct AtlasView: View {
             .padding(.horizontal, 20)
             .padding(.top, 60)
             .padding(.bottom, 60)
-            .tossScrollAnchor()
         }
         .foregroundStyle(Color(hex: "#f2f5fa"))
         .sheet(isPresented: $isPaywallOpen) {
@@ -100,18 +99,25 @@ struct AtlasView: View {
         }
     }
 
+    /// The title block doubles as the grab handle for throwing the screen back
+    /// to the list. It reaches to just short of the X — a drag gesture laid
+    /// over a button makes the button feel broken.
     private var header: some View {
         HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("YOUR ATLAS")
-                    .font(.system(size: 12, weight: .medium))
-                    .tracking(1.8)
-                    .foregroundStyle(.white.opacity(0.6))
-                Text("Reassign any condition")
-                    .font(.custom("PoiretOne-Regular", size: 30))
-                    .tracking(0.5)
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("YOUR ATLAS")
+                        .font(.system(size: 12, weight: .medium))
+                        .tracking(1.8)
+                        .foregroundStyle(.white.opacity(0.6))
+                    Text("Reassign any condition")
+                        .font(.custom("PoiretOne-Regular", size: 30))
+                        .tracking(0.5)
+                }
+                Spacer(minLength: 0)
             }
-            Spacer()
+            .tossHandle(offset: $tossOffset) { dismiss() }
+
             CloseButton { dismiss() }
         }
     }
