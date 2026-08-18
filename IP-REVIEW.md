@@ -1,7 +1,7 @@
 # IP review — the distribution surface
 
-Status: **review complete 2026-08-18. The blocking finding is remediated; one
-broadcast-art item and two policy decisions remain.**
+Status: **review complete 2026-08-18. Every art finding is remediated. One policy
+decision remains — see item 4 under "Before submission".**
 
 **This is not legal advice.** It is an audit of the broadcast assets against the
 rule this project already set for itself, recorded in `ATLAS-HANDOFF.md`:
@@ -88,7 +88,13 @@ does nothing on its own. Either wire it up or drop it.
 
 ---
 
-## HIGH — a vehicle silhouette in the primary Open Graph image
+## RESOLVED — the vehicle silhouette in the primary Open Graph image
+
+**Fixed 2026-08-18 in `01eeaa7`.** The Kamino sky is now clean; platform edges, the
+antenna spire, and the lightning remain, all architecture or weather rather than
+vehicle design. Confirmed by cropping and upscaling the same region the original
+finding came from, so before and after are the same measurement rather than an
+impression. The finding as originally written follows.
 
 `web-app/galactic-weather/public/galactic-weather.png` (1200×630)
 
@@ -133,19 +139,32 @@ images currently sit in it.
 
 ---
 
-## MEDIUM — posters are publicly fetchable, not just in-app
+## RESOLVED — the publicly fetchable posters are gone from the web app
 
-`web-app/galactic-weather/public/posters/` — Naboo, Hoth, Tatooine, Endor,
-Scarif, Alderaan, Bespin.
+`web-app/galactic-weather/public/posters/` held Naboo, Hoth, Tatooine, Endor,
+Scarif, Alderaan, and Bespin. The Naboo and Hoth files were the source art for the
+old icon composite, so they carried the same AT-AT and starfighters — served as
+plain URLs from a public domain, fetchable by anyone including a rights holder's
+crawler, without ever opening the app. That is broadcast in every practical sense.
 
-These are the Credits posters, and the Naboo and Hoth files are the source art
-for the icon composite, so they carry the same AT-AT and starfighters.
+**Removed 2026-08-18.** They were dead weight as well as exposure — 3.7 MB serving
+no purpose. Verified unreferenced before removal, by more than a filename grep:
 
-Displaying them in an in-app Credits screen falls inside the accepted-risk zone.
-But files under `public/` are served as plain URLs from a public domain, which is
-meaningfully more exposed than "in-app" — anyone, including a rights holder's
-crawler, can fetch them directly without the app. Worth deciding whether that
-counts as broadcast under your own rule. It probably does.
+- The only dynamic image paths anywhere in the web codebase are
+  `planetImageSrc = (id) => \`/planets/${id}.jpg\`` and
+  `IDLE_BACKDROP_SRC = "/planets/_hyperspace.jpg"`, both in `src/lib/atlas/worlds.ts`.
+  Neither touches `/posters/`.
+- `WorldPoster.tsx` — the component that *renders* a poster — loads
+  `planetImageSrc(world.id)`. It composes the poster look in CSS from planet art
+  rather than loading a pre-rendered JPG, which is why the directory could go
+  unreferenced while the feature kept working.
+- Zero references to any of the seven filenames; nothing in sitemap or robots.
+
+**iOS is unaffected.** It keeps its own copies in
+`Resources/Assets.xcassets/Posters/` as `poster-<world>.imageset`, guarded by
+`galacticweatherTests/CreditsPosterTests.swift`. In-app Credits on iOS still shows
+the posters, which remains inside the accepted-risk zone — the exposure that got
+removed was the public web URL, not the in-app display.
 
 ---
 
@@ -180,26 +199,26 @@ homage rather than passing-off. Leave it.
 
 ## Not IP, but on every broadcast asset
 
-**"Todays Forecast" is missing its apostrophe.** It appears in `og-card.png`, in
-`galactic-weather.png`, and in the poster art itself — so the typo is on the
-primary link-share card, the square fallback, and the Credits posters. Since the
-icon and OG art both need regenerating anyway, fix it in the same pass.
+**"Todays Forecast" is missing its apostrophe.** It appears in `og-card.png` and
+`galactic-weather.png` — the square fallback and the primary link-share card — and
+in the poster art iOS still bundles for Credits. Both OG images need another pass
+anyway to settle item 4; fix the apostrophe in the same pass.
 
 ---
 
 ## Before submission
 
-1. ~~**Wire in the new app icon.**~~ **Done.** New art in the appiconset,
-   conformed to 1024×1024 RGB, source art committed under `design/app-icon/`,
-   superseded concepts' deletion committed. Suites green afterwards: 164 web, 85
-   iOS.
-2. **Remove the Kamino aircraft** from `galactic-weather.png`. Now the only
-   remaining IP item on a broadcast surface.
-3. **Decide the franchise-name-as-broadcast-art question**, and amend the rule
-   in `ATLAS-HANDOFF.md` to say what was decided either way.
-4. **Decide whether `public/posters/` counts as broadcast**, given the files are
-   directly fetchable.
-5. **Fix "Todays" → "Today's"** while regenerating art.
+1. ~~**Wire in the new app icon.**~~ **Done** (`f015687`). New art in the
+   appiconset, conformed to 1024×1024 RGB. Suites green afterwards: 164 web, 85 iOS.
+2. ~~**Remove the Kamino aircraft** from `galactic-weather.png`.~~ **Done**
+   (`01eeaa7`).
+3. ~~**Decide whether `public/posters/` counts as broadcast.**~~ **Decided and
+   done** — removed from the web app; iOS keeps its own copies for in-app Credits.
+4. **Decide the franchise-name-as-broadcast-art question**, and amend the rule in
+   `ATLAS-HANDOFF.md` to say what was decided either way. **Now the only open IP
+   item.** Both OG images still lead with a franchise planet name in the largest
+   type on the card, and the rule as written does not cover that case.
+5. **Fix "Todays" → "Today's"** on the OG art.
 6. **One hour with an actual attorney.** Everything above is an audit against a
    self-imposed rule. Whether the accepted-risk position on in-app planet names
    holds up is a question for someone qualified to answer it, and it is cheap
