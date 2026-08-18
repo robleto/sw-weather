@@ -1,10 +1,13 @@
 # TestFlight — getting a build to real people
 
-Status: **build 1.0 (1) uploaded to App Store Connect on 2026-08-18.** Parts 1
-through 4 are done — App ID with iCloud, app record, in-app purchase at $2.99,
-archive built and uploaded. What remains is Part 5 (invite testers) and Part 7,
-the device checklist, which is where this stops being a setup task and starts
-producing findings.
+Status: **build 1.0 (1) is installed and running on a real device, 2026-08-18.**
+Parts 1 through 5 are done. Part 7's first run found **no defects** — forecast path,
+Atlas, app icon and analytics all confirmed working.
+
+One thing is blocked and it is not code: the account has only a **Free Apps
+Agreement**, so StoreKit returns no products and the paywall cannot show a price.
+Filed with Apple Developer Support. Premium is testable meanwhile by running Debug
+to a device — see Part 7.
 
 This is the step between "the app works on my machine" and "strangers have
 opinions." It comes before any launch channel — `MEASUREMENT.md` sets bars that
@@ -181,14 +184,52 @@ no-backend architecture rests on.
 
 ## Part 7 — First run on a real device
 
-**Nothing in this app has ever been seen running by a human.** Browser preview and
-Simulator control are both DLP-blocked in the environment it was written in, so
-every feature here was built, unit-tested, and shipped without anyone clicking it.
-The TestFlight install is the first time that changes.
+**Run 1: build 1.0 (1), 2026-08-18.** Until this build, nothing in this app had
+ever been seen running by a human — browser preview and Simulator control are both
+DLP-blocked in the environment it was written in, so every feature was built,
+unit-tested and shipped without anyone clicking it.
+
+| | |
+|---|---|
+| Forecast path | ✅ renders |
+| Atlas | ✅ nothing erroneous |
+| App icon at real size | ✅ |
+| Analytics reaching TelemetryDeck | ✅ signals arriving |
+| Paywall price | ⚠️ shows `—` — **not a bug, see 2** |
+| Everything premium | ⏸ blocked in TestFlight, **testable via Debug on device — see below** |
+| Passport hints, iCloud sync | ⏳ untested |
+
+**No defects found in run 1.** The one thing that looks broken is an Apple account
+state, not code.
 
 Ordered by risk, not by how the app is laid out. Work down it and write what breaks
 directly into this section — a finding recorded here is worth more than a finding
 remembered.
+
+### Testing premium while the store is unprovisioned
+
+A TestFlight build cannot exercise premium at all right now: the price does not
+load, and `debugPremiumOverride` is `#if DEBUG`, so it is compiled out of a Release
+build on purpose.
+
+**Run the Debug configuration to a physical device from Xcode instead.** The scheme
+already points `run` at Debug with `storeKitConfiguration:
+StoreKitConfig/Products.storekit`, so this needs no setup:
+
+- The paywall shows **$2.99** from the local config — App Store Connect is not involved
+- Purchases complete locally, cost nothing, and need no sandbox account
+- The premium toggle appears in the Account view (`AccountView.swift`), and unlike a
+  real non-consumable it flips **both** ways, so the free experience stays testable
+- Xcode → Debug → StoreKit → Manage Transactions resets purchases to re-test Restore
+
+Needs Developer Mode enabled on the phone (Settings → Privacy & Security). This is
+ordinary Xcode device deployment, not the DLP-blocked Simulator tooling.
+
+**What it does not prove:** that the real App Store Connect product is fetchable,
+that a real sandbox transaction settles, or that Restore works across devices via a
+real Apple ID. Those need the Paid Applications Agreement. This covers everything
+that could be wrong *in the app*, so that when the account is provisioned there is
+one thing to verify rather than twenty to debug.
 
 ### 1. The plain forecast path
 
@@ -200,34 +241,56 @@ This is first because it is the highest-risk thing in the build. Atlas rewrote
 moot. Also worth trying **city search** as well as geolocation, since a first-run
 user who declines the location prompt has only that path.
 
-- [ ] Landed screen renders a world, temperature, and condition
+- [x] Landed screen renders a world, temperature, and condition — **run 1**
 - [ ] City search resolves and renders
 - [ ] Text over the art is legible — this is what `measure-text-tone.py` generates
       `textColor` for, and it has never been checked against a real screen
 
-### 2. The paywall price
+### 2. The paywall price — **run 1: showed `—`, diagnosed**
 
-Open the paywall and read the button.
+**Root cause: the account has no Paid Applications Agreement.** Business →
+Agreements lists only a Free Apps Agreement, so the account is not permitted to
+sell anything and `Product.products(for:)` returns an **empty array** — no throw, no
+products. Filed with Apple Developer Support; tax and banking verification takes
+days.
 
-- [ ] Shows **$2.99** → the App Store Connect product is fetchable in sandbox
-- [ ] Shows **—** → it is not. `PremiumStore.displayPrice` falls back to that when
-      `Product.products(for:)` returns nothing, deliberately, so the failure is
-      visible. Fix is App Store Connect, not the app: check the product ID matches
-      `com.robleto.galacticweather.premium` exactly and that its state and price
-      have finished saving.
+Everything on this side was correct and is worth not re-checking: product ID
+`com.robleto.galacticweather.premium` matches `PremiumStore.productID`, price set to
+$2.99 across 175 regions, English (U.S.) localization saved, IAP status "Prepare for
+Submission".
 
-This also settles a question that could not be answered from the console — whether
-a product in "Prepare for Submission" is fetchable in sandbox.
+So the question this was meant to settle — whether a product in "Prepare for
+Submission" is fetchable in sandbox — **is still open**, because the agreement
+masked it. Re-check once Paid Applications is Active.
 
-### 3. The purchase and the restore
+Two things changed as a result:
 
-Full detail in Part 6. The short version: sandbox charges nothing, and **Restore
-Purchases after a delete-and-reinstall is the test that matters** — it is what
-proves Apple's ID works as the account system this app has instead of a backend.
+- The empty case now explains itself rather than showing a bare dash. See
+  `PremiumStore.loadProduct()`.
+- A brand-new developer account starts with only a Free Apps Agreement, so this is
+  the *default* experience of shipping a first paid product, not an edge case.
 
-- [ ] Purchase completes, premium worlds unlock
+- [ ] Re-verify once Paid Applications is Active: paywall shows **$2.99** in TestFlight
+
+### 3. The purchase and the restore — **blocked on Apple**
+
+Cannot run in TestFlight until Paid Applications is Active (see 2). Full detail in
+Part 6. The short version: sandbox charges nothing, and **Restore Purchases after a
+delete-and-reinstall is the test that matters** — it is what proves Apple's ID works
+as the account system this app has instead of a backend.
+
+Do the local versions now via Debug on device; they cover the app's own logic:
+
+- [ ] Local purchase completes against `Products.storekit`, premium worlds unlock
+- [ ] Premium toggle off again restores the free experience intact
+- [ ] Saved-location cap goes from 1 to 20, and back to 1
+- [ ] Multi-assign accepts several worlds on one condition
+
+Then, once the agreement is Active:
+
+- [ ] Real sandbox purchase completes
 - [ ] Delete the app, reinstall, Restore Purchases returns entitlement
-- [ ] Saved-location cap goes from 1 to 20
+- [ ] Entitlement appears on a second device on the same Apple ID
 
 ### 4. Atlas
 
@@ -252,9 +315,7 @@ proves Apple's ID works as the account system this app has instead of a backend.
 Least likely to be broken, most likely to look wrong, because none of it has been
 seen at real size on a real screen.
 
-- [ ] **App icon** on the home screen. Conformed to 1024×1024 RGB with no alpha for
-      App Store validation, but never viewed small. Check it is legible at icon
-      size and that the corners mask cleanly.
+- [x] **App icon** on the home screen, legible at real size — **run 1**
 - [ ] **Picker banner** reads "N more to swap in here" / "Every condition already
       has a world"
 - [ ] Fonts render as intended — Poiret One and Russo One are bundled, and the web
@@ -273,7 +334,7 @@ signed build carries `com.apple.developer.ubiquity-kvstore-identifier`.
 
 ### 8. Analytics actually arriving
 
-- [ ] TelemetryDeck dashboard shows `App.launched` and `Forecast.landed`
+- [x] TelemetryDeck dashboard shows signals arriving — **run 1**
 
 The build was verified to carry a substituted `TELEMETRYDECK_APP_ID`, so signals
 should flow. If the dashboard stays empty, that is worth chasing before inviting
