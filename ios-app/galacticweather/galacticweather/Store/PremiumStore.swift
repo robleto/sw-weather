@@ -84,9 +84,26 @@ final class PremiumStore {
         _ = await (productLoad, entitlementRefresh)
     }
 
+    /// Two different failures, and only one of them used to say anything.
+    ///
+    /// `Product.products(for:)` throws when the store is unreachable, and that
+    /// case was covered. But it also succeeds and returns an **empty array** when
+    /// the product exists in App Store Connect yet is not offerable — most often
+    /// because the account has no active Paid Applications Agreement, which is
+    /// the state a brand-new developer account starts in. That path set no error,
+    /// so the paywall showed a bare "—" with nothing to explain it, and the only
+    /// way to find out why was to go reading agreements in App Store Connect.
+    ///
+    /// Distinguishing the two turns "is the app broken?" into "the store is not
+    /// provisioned yet", which is the difference between a bug report and a
+    /// known wait.
     private func loadProduct() async {
         do {
-            product = try await Product.products(for: [Self.productID]).first
+            let products = try await Product.products(for: [Self.productID])
+            product = products.first
+            lastErrorMessage = products.isEmpty
+                ? "Premium isn't available from the App Store yet. Nothing is wrong with the app — check back soon."
+                : nil
         } catch {
             lastErrorMessage = "Couldn't reach the App Store. Please try again later."
         }
