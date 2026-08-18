@@ -22,5 +22,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			changeFrequency: "yearly",
 			priority: 0.3,
 		},
+		{
+			// Higher than the other two: this is the URL App Store Connect
+			// publishes as the app's support page, so it's one people are sent
+			// to rather than one they stumble on.
+			url: `${siteUrl}/support`,
+			lastModified: new Date(),
+			changeFrequency: "yearly",
+			priority: 0.5,
+		},
 	];
 }

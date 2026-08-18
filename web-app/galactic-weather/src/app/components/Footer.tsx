@@ -60,7 +60,7 @@ const Footer: React.FC = () => (
 				OpenWeather
 			</a>
 			. <Link href="/privacy">Privacy</Link> ·{" "}
-			<Link href="/terms">Terms</Link>
+			<Link href="/terms">Terms</Link> · <Link href="/support">Support</Link>
 		</p>
 	</footer>
 );
