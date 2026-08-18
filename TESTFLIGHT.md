@@ -4,10 +4,13 @@ Status: **build 1.0 (1) is installed and running on a real device, 2026-08-18.**
 Parts 1 through 5 are done. Part 7's first run found **no defects** — forecast path,
 Atlas, app icon and analytics all confirmed working.
 
-One thing is blocked and it is not code: the account has only a **Free Apps
-Agreement**, so StoreKit returns no products and the paywall cannot show a price.
-Filed with Apple Developer Support. Premium is testable meanwhile by running Debug
-to a device — see Part 7.
+**Paid Apps Agreement went Active the same day**, along with the bank account and
+W-9, so the store blocker is cleared. The paywall price needs re-checking on device
+— `PremiumStore.start()` attempts the product load once per launch, so a running
+copy must be force-quit before it will retry.
+
+Still pending, EU only: the Digital Services Act trader declaration is In Review.
+That gates EU availability, not the purchase test.
 
 This is the step between "the app works on my machine" and "strangers have
 opinions." It comes before any launch channel — `MEASUREMENT.md` sets bars that
@@ -95,8 +98,16 @@ The sequence that gets there, discovered the hard way on 2026-08-18:
 3. **Its status starts at "Pending User Info"** — which is not Active, and does not
    yet let StoreKit return products. Apple is waiting on contact details, banking
    information, and tax forms (a W-9 for a US individual).
-4. **Once those are complete and verified, the status becomes Active** and products
-   start loading. Verification is on Apple's timeline — days, not minutes.
+4. **Once those are complete the status becomes Active** and products start loading.
+   On 2026-08-18 this took under an hour end to end, not the days the wording implies
+   — bank account, W-9 and Mexico questionnaire submitted in one sitting, and the
+   agreement flipped to Active immediately afterwards. Do not defer this expecting a
+   long wait.
+
+Note the retry behaviour once it goes Active: `PremiumStore.start()` is guarded by
+`didStart` and `loadProduct()` runs only from inside it, so the app makes exactly one
+product-load attempt per launch. An already-running build will not pick up a
+newly-active agreement — force-quit and reopen.
 
 Two things follow from this. Everything else in Part 2 can be done while the
 agreement is pending, so it should not stall the build. And premium is still
