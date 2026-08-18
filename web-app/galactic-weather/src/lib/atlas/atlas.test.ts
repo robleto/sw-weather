@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { WORLDS } from "./worlds";
 import { resolveWorld } from "./resolve";
-import { RENAMED_SLOT_IDS, canonicalSlotId, getSlot } from "./slots";
+import { RENAMED_SLOT_IDS, SLOTS, SLOT_HUNT_HINT, canonicalSlotId, getSlot, huntForWorld } from "./slots";
 import { __testing as atlasTesting } from "./storage";
 import { __testing as passportTesting } from "@/lib/passport/storage";
 
@@ -112,5 +112,50 @@ describe("slot id migration", () => {
 			},
 		};
 		expect(passportTesting.sanitize(stored).tatooine.wild?.slotId).toBe("dust");
+	});
+});
+
+// ── hunt hints ──────────────────────────────────────────────────────────────
+
+describe("hunt hints", () => {
+	it("covers every slot", () => {
+		// A slot without a hint shows a bare label in the Passport, which is the
+		// checklist reading the hints exist to replace. Adding a slot should fail
+		// here until its hint is written.
+		const missing = SLOTS.filter((s) => !SLOT_HUNT_HINT[s.id]?.trim()).map((s) => s.id);
+		expect(missing).toEqual([]);
+	});
+
+	it("has no hints for slots that no longer exist", () => {
+		const known = new Set(SLOTS.map((s) => s.id));
+		expect(Object.keys(SLOT_HUNT_HINT).filter((id) => !known.has(id))).toEqual([]);
+	});
+
+	it("describes a world that a slot defaults to", () => {
+		const hunt = huntForWorld("mustafar");
+		expect(hunt?.slotLabels).toEqual(["Clear · scorching"]);
+		expect(hunt?.range).toBe("100°F and up");
+		expect(hunt?.hint).toContain("Desert interiors");
+	});
+
+	it("names every condition a world covers, not just the first", () => {
+		// Hoth is the default for both heavy snow and clear · cold. Naming one
+		// would send someone hunting for half the ways they could find it — and
+		// this is derived from the slot table precisely so a moved default cannot
+		// leave a hand-written list stale.
+		expect(huntForWorld("hoth")?.slotLabels).toEqual(["Heavy snow", "Clear · cold"]);
+	});
+
+	it("returns nothing for a world no forecast leads to", () => {
+		// The premium alternates. The Passport tells these to assign the world in
+		// Atlas instead, which is a different sentence for a different situation.
+		expect(huntForWorld("ahch-to")).toBeUndefined();
+		expect(huntForWorld("not-a-world")).toBeUndefined();
+	});
+
+	it("gives a hunt to exactly the worlds the Passport calls wild-reachable", () => {
+		const withHunt = WORLDS.filter((w) => huntForWorld(w.id)).length;
+		const defaults = new Set(SLOTS.map((s) => s.defaultWorld));
+		expect(withHunt).toBe(defaults.size);
 	});
 });

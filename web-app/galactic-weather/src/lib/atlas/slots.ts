@@ -1,4 +1,4 @@
-import type { Slot, SlotGroup, SlotId } from "./types";
+import type { Slot, SlotGroup, SlotId, WorldId } from "./types";
 
 /**
  * Every weather bucket the app can land in, with the world it uses by default.
@@ -113,6 +113,88 @@ export const SLOT_RANGE_HINT: Readonly<Record<SlotId, string>> = {
 	clear_chilly: "45–57°F",
 	clear_cold: "32–44°F",
 	clear_freezing: "below 32°F",
+};
+
+/**
+ * Where on Earth to go looking for each condition.
+ *
+ * The Passport's difficulty was never a function of how many worlds exist — it
+ * comes from physics. `clear_temperate` happens everywhere; `clear_scorching`
+ * needs 100°F *and* a clear sky, which in January is a short list of places.
+ * Without a nudge that asymmetry is invisible, and an unfound world reads as a
+ * checklist row rather than something huntable.
+ *
+ * Deliberately geographic and seasonal rather than numeric: `SLOT_RANGE_HINT`
+ * already carries the temperature band, and repeating it here would say nothing
+ * the label doesn't. These name places.
+ *
+ * Kept as a map beside the range hints rather than a field on `Slot`, for the
+ * same reason that one is: it is display copy, not part of resolution, and
+ * nothing in the mapping logic should be able to read it.
+ *
+ * Duplicated in the iOS `Slots.swift`. Divergence here is cosmetic — unlike the
+ * weather→slot mapping, prose drifting between platforms produces a slightly
+ * different sentence, not a wrong answer, which is why this has no shared
+ * fixture.
+ */
+export const SLOT_HUNT_HINT: Readonly<Record<SlotId, string>> = {
+	thunderstorm: "Somewhere is always storming — the tropics, or inland on a summer afternoon.",
+	drizzle: "Maritime coasts and mild winters — Britain, the Pacific Northwest.",
+	rain: "Monsoon belts, or a warm front parked over a coast.",
+	rain_cold: "Late autumn in the north — the Great Lakes, the Baltic.",
+	rain_light: "Common and forgiving. Most temperate coasts will do.",
+	rain_light_cold: "A raw drizzle in shoulder season — the North Atlantic.",
+	snow: "Winter at altitude or high latitude — the Alps, the Rockies, Hokkaido.",
+	snow_light: "The edges of winter, or a cold snap anywhere temperate.",
+	mist: "River valleys at dawn, and mild coasts just after rain.",
+	fog: "Cool water beside warm land — San Francisco, Newfoundland, the North Sea.",
+	haze: "Humid summer air over a large city.",
+	smoke: "Rare and grim: downwind of a wildfire, in fire season.",
+	dust: "Desert margins in spring — the Sahel, Mongolia, inland Australia.",
+	clouds_warm: "An overcast tropic — the Gulf Coast, Southeast Asia.",
+	clouds_temperate: "The default weather of half the temperate world.",
+	clouds_cool: "Northern Europe, most of the year.",
+	clouds_cold: "A grey winter day inland — above freezing, but not by much.",
+	clouds_freezing: "Overcast and below freezing — continental interiors in deep winter.",
+	clear_scorching: "Desert interiors at midsummer — Arabia, the Sahara, Death Valley.",
+	clear_hot: "A cloudless summer afternoon in the subtropics.",
+	clear_warm: "Mediterranean summer, or the tropics in dry season.",
+	clear_temperate: "The easiest stamp in the book — a fine spring day almost anywhere.",
+	clear_cool: "Clear and crisp — temperate spring and autumn.",
+	clear_chilly: "A bright, cold morning in early spring.",
+	clear_cold: "Clear winter sun with frost still on the ground.",
+	clear_freezing: "A clear winter night inland — Siberia, the Prairies, high Asia.",
+};
+
+/** What a Passport entry needs to say about how to find a world in the wild. */
+export interface WorldHunt {
+	/** Every condition this world is the default for, in slot order. */
+	slotLabels: readonly string[];
+	/** Temperature band for the first of those conditions, when it has one. */
+	range?: string;
+	/** Where to go looking. */
+	hint?: string;
+}
+
+/**
+ * How to find `worldId` without assigning it first.
+ *
+ * Derived from the slot table rather than authored per world, so it cannot fall
+ * out of step with the defaults — five worlds cover two conditions each, and a
+ * hand-written list would have to be revisited every time a default moved.
+ *
+ * Returns undefined for a world no slot defaults to. Those are the 22 premium
+ * alternates, which no forecast leads to and which the Passport already covers
+ * with its own copy.
+ */
+export const huntForWorld = (worldId: WorldId): WorldHunt | undefined => {
+	const owning = SLOTS.filter((s) => s.defaultWorld === worldId);
+	if (owning.length === 0) return undefined;
+	return {
+		slotLabels: owning.map((s) => s.label),
+		range: SLOT_RANGE_HINT[owning[0].id],
+		hint: SLOT_HUNT_HINT[owning[0].id],
+	};
 };
 
 /**

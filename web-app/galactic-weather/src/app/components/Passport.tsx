@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import styles from "../styles/Passport.module.css";
 import WorldPoster, { type PosterStamp } from "./WorldPoster";
-import { getSlot } from "@/lib/atlas/slots";
+import { getSlot, huntForWorld } from "@/lib/atlas/slots";
 import type { PassportProgress, WorldProgress } from "@/lib/passport/progress";
 import type { Sighting } from "@/lib/passport/types";
 import type { WorldId } from "@/lib/atlas/types";
@@ -36,6 +36,40 @@ const formatStampDate = (iso: string): string => {
 /** The wild find is the one that counts, so it's the one the stamp shows. */
 const primarySighting = (entry: WorldProgress): Sighting | undefined =>
 	entry.stamp?.wild ?? entry.stamp?.chartered;
+
+/**
+ * What to tell someone about a world they have not found yet.
+ *
+ * Two different situations, and only the second had copy — which is what made an
+ * unfound row read as a checklist. A world some slot defaults to is huntable
+ * right now, if the right weather is happening somewhere on Earth; a premium
+ * alternate that no slot points at cannot be found at all until it is assigned.
+ * Saying nothing in the first case left the interesting half silent.
+ */
+const UnfoundHint: React.FC<{ entry: WorldProgress }> = ({ entry }) => {
+	if (!entry.wildReachable) {
+		return (
+			<span className={styles.stampHint}>
+				No forecast leads here — assign it in Atlas, then live through that weather
+			</span>
+		);
+	}
+
+	const hunt = huntForWorld(entry.world.id);
+	if (!hunt) return null;
+
+	// The hint is joined with a full stop rather than a dash. Most hints already
+	// contain an em-dash of their own ("Winter at altitude or high latitude — the
+	// Alps, the Rockies, Hokkaido"), so dashing them onto the label produced two
+	// in one line and read as a run-on. The iOS port pins this in a test.
+	return (
+		<span className={styles.stampHint}>
+			{hunt.slotLabels.join(" or ")}
+			{hunt.range ? ` · ${hunt.range}` : ""}
+			{hunt.hint ? `. ${hunt.hint}` : ""}
+		</span>
+	);
+};
 
 /** Flattens a progress entry into the shape the poster's caption needs. */
 const toPosterStamp = (entry: WorldProgress): PosterStamp => {
@@ -186,12 +220,7 @@ const Passport: React.FC<PassportProps> = ({ progress, onClose }) => {
 															<span className={styles.stampPlace}>
 																Not yet found
 															</span>
-															{!entry.wildReachable && (
-																<span className={styles.stampHint}>
-																	No forecast leads here — assign it in
-																	Atlas, then live through that weather
-																</span>
-															)}
+															<UnfoundHint entry={entry} />
 														</>
 													)}
 												</span>

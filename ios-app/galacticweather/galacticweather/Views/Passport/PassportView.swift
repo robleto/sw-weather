@@ -197,14 +197,28 @@ struct PassportView: View {
                         .font(.system(size: 13))
                         .foregroundStyle(.white.opacity(0.7))
 
-                    // Suppressed when locked: the lock chip is already saying
-                    // "not yours yet", and telling a free user to assign a
-                    // world they can't assign is a dead end, not a hint.
-                    if !entry.wildReachable, !locked {
-                        Text("No forecast leads here — assign it in Atlas, then live through that weather")
-                            .font(.system(size: 11))
-                            .foregroundStyle(.white.opacity(0.55))
-                            .fixedSize(horizontal: false, vertical: true)
+                    // Two different situations, and only the second used to have
+                    // copy — which is what made an unfound row read as a
+                    // checklist. A world some slot defaults to is huntable right
+                    // now, if the right weather is happening somewhere on Earth;
+                    // an alternate no slot points at cannot be found at all
+                    // until it is assigned.
+                    //
+                    // Both are suppressed when locked: the lock chip is already
+                    // saying "not yours yet", and telling a free user how to
+                    // hunt a world they cannot assign is a dead end, not a hint.
+                    if !locked {
+                        if entry.wildReachable, let hunt = huntForWorld(entry.world.id) {
+                            Text(Self.huntText(hunt))
+                                .font(.system(size: 11))
+                                .foregroundStyle(.white.opacity(0.55))
+                                .fixedSize(horizontal: false, vertical: true)
+                        } else if !entry.wildReachable {
+                            Text("No forecast leads here — assign it in Atlas, then live through that weather")
+                                .font(.system(size: 11))
+                                .foregroundStyle(.white.opacity(0.55))
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
                     }
                 }
             }
@@ -253,6 +267,24 @@ struct PassportView: View {
         if let label = getSlot(sighting.slotId)?.label { parts.append(label) }
         parts.append(Self.temperatureText(sighting.tempF))
         return parts.joined(separator: " · ")
+    }
+
+    /// One line naming the conditions that lead to a world, and where to look.
+    ///
+    /// The temperature band is left in Fahrenheit rather than routed through
+    /// `temperatureText`: `SLOT_RANGE_HINT` holds ranges as prose ("100°F and
+    /// up", "69–78°F"), not numbers, so there is nothing here to convert. Worth
+    /// revisiting if this line ever bothers a Celsius user, which would mean
+    /// making the ranges structured data on both platforms.
+    /// The hint is joined with a full stop rather than a dash. Most hints already
+    /// contain an em-dash of their own ("Winter at altitude or high latitude —
+    /// the Alps, the Rockies, Hokkaido"), so dashing them onto the label produced
+    /// two in one line and read as a run-on. A test pins this.
+    static func huntText(_ hunt: WorldHunt) -> String {
+        var line = hunt.slotLabels.joined(separator: " or ")
+        if let range = hunt.range { line += " · \(range)" }
+        if let hint = hunt.hint { line += ". \(hint)" }
+        return line
     }
 
     /// Stored temperatures are always Fahrenheit; the display follows the
