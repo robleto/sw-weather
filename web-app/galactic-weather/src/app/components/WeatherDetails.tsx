@@ -54,7 +54,13 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 					className={weatherStyles.location}
 					style={secondaryStyle}
 				>
-					Today&apos;s Forecast for {weatherData.name}
+					Today&apos;s Forecast for
+				</p>
+				<p
+					className={weatherStyles.city}
+					style={{ color: textColor }}
+				>
+					{weatherData.name}
 				</p>
 				<p
 					className={weatherStyles.tempForecast}
@@ -62,11 +68,14 @@ const WeatherDetails: React.FC<WeatherDetailsProps> = ({
 				>
 					{convertKelvinToFahrenheit(weatherData.main.temp).toFixed(0)}°F and {weatherData.weather[0].main}
 				</p>
+				{/* Just "feels like being on" now — with the city on its own
+				    line above, naming it again a few lines later read as a
+				    stutter rather than a callback. */}
 				<p
 					className={weatherStyles.feelsLike}
 					style={secondaryStyle}
 				>
-					{weatherData.name} feels like being on
+					feels like being on
 				</p>
 				<h2
 					className={weatherStyles.planetName}

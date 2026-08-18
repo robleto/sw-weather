@@ -13,10 +13,6 @@ struct WeatherDetailsView: View {
     /// Shown instead of `weatherData.name`, so a renamed saved location keeps
     /// its user-chosen label here too.
     var locationName: String
-    /// Optional short status shown directly under the location line. The
-    /// preview screen uses it for "Not saved" — without it that screen is
-    /// pixel-identical to a real page apart from its two buttons.
-    var badge: String?
 
     var body: some View {
         let info = weatherInfo
@@ -25,29 +21,42 @@ struct WeatherDetailsView: View {
         let headline = Color(hex: info.textColor)
 
             VStack(spacing: 10) {
-                Text("Today's Forecast for \(locationName)")
+                Text("Today's Forecast for")
                     .font(.system(size: 13, weight: .medium))
                     .tracking(1.5)
                     .textCase(.uppercase)
                     .foregroundStyle(headline.opacity(0.78))
 
-                if let badge {
-                    Text(badge)
-                        .font(.system(size: 11, weight: .semibold))
-                        .tracking(1.4)
-                        .textCase(.uppercase)
-                        .foregroundStyle(headline)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(Capsule().fill(headline.opacity(0.14)))
-                        .overlay(Capsule().strokeBorder(headline.opacity(0.35)))
-                }
+                // The city, on its own line.
+                //
+                // Sits between the eyebrow and the temperature deliberately:
+                // paging between saved locations changes this line and the
+                // readout under it, and the city was hard to pick out at a
+                // glance when it was buried in a 13pt uppercase label.
+                //
+                // PoiretOne uppercase, matching how `SavedLocationCardView`
+                // already sets a location name. The face has one weight, so
+                // emphasis here is caps, tracking and full opacity rather than
+                // a heavier cut — faux-bolding a hairline Art Deco face thickens
+                // the joints and loses exactly what makes it worth using.
+                // Sized well under the planet name so the reveal still wins.
+                Text(locationName)
+                    .font(.custom("PoiretOne-Regular", size: 30))
+                    .tracking(2)
+                    .textCase(.uppercase)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.6)
+                    .foregroundStyle(headline)
 
                 Text(temperatureLine(for: weatherData))
                     .font(.custom("PoiretOne-Regular", size: 42))
                     .foregroundStyle(headline)
 
-                Text("\(locationName) feels like being on")
+                // Just "feels like being on" now — with the city on its own
+                // line above, naming it again a few lines later read as a
+                // stutter rather than a callback.
+                Text("feels like being on")
                     .font(.system(size: 13))
                     .tracking(1.5)
                     .textCase(.uppercase)

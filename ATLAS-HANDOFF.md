@@ -169,9 +169,12 @@ would force a backend and why favorites don't. In short:
     header ("Weather twin for · Heavy snow") and for the premium
     multi-assign perk ("Weather Twin rotation").
 
-  The free landed screen still says "&lt;city&gt; feels like being on" and should
-  keep avoiding the phrase — not because it's paywalled vocabulary, but
-  because the plain phrasing reads better cold.
+  The landed screen still avoids the phrase entirely — it reads "feels like
+  being on" above the world name — and should keep avoiding it, not because
+  it's paywalled vocabulary, but because the plain phrasing reads better cold.
+  (It said "&lt;city&gt; feels like being on" until the city moved to its own
+  line above the temperature, at which point naming the city twice in five
+  lines read as a stutter.)
 - **The Passport** — the log of worlds you've actually experienced, as a
   scavenger hunt across the catalog — is built on both platforms and specced in
   `PASSPORT.md`. It is **free to collect**: the premium worlds are already

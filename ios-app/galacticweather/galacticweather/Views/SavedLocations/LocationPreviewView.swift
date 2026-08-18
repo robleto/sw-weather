@@ -53,8 +53,7 @@ struct LocationPreviewView: View {
                     WeatherDetailsView(
                         weatherData: weather,
                         weatherInfo: world,
-                        locationName: weather.name,
-                        badge: "Not saved"
+                        locationName: weather.name
                     )
                 }
 
@@ -65,6 +64,8 @@ struct LocationPreviewView: View {
                 topBar
                 Spacer()
                 addButton
+                notSavedNote
+                    .padding(.top, 10)
                     .padding(.bottom, 16)
             }
         }
@@ -130,6 +131,22 @@ struct LocationPreviewView: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Add this location to your collection")
+    }
+
+    /// "Not saved", under the Add button rather than in the readout.
+    ///
+    /// It started as a badge in the middle of the forecast text, which put a
+    /// piece of app state inside the one block on this screen that is purely
+    /// about the weather — it read as though the location itself were unsaved
+    /// weather. Down here it sits with the control that resolves it, so the
+    /// status and its remedy are one thing to look at instead of two.
+    private var notSavedNote: some View {
+        Text("Not saved")
+            .font(.system(size: 12))
+            .tracking(0.6)
+            .foregroundStyle(.white.opacity(0.65))
+            .shadow(color: .black.opacity(0.5), radius: 4, y: 1)
+            .accessibilityLabel("This location is not saved")
     }
 
     @ViewBuilder
