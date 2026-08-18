@@ -227,9 +227,28 @@ struct PlanetPickerView: View {
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(Color(hex: "#8fc7ff"))
 
-                Text("\(lockedVisibleCount) more world\(lockedVisibleCount == 1 ? "" : "s") here with Premium")
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(Color(hex: "#f2f5fa"))
+                // "To swap in", not "with Premium". The count is the persuasive
+                // part and the Unlock button already names the product, so the
+                // words in between are free to do the other job: establish that
+                // these are alternates rather than something withheld.
+                //
+                // Free covers all 26 conditions — the free worlds are exactly the
+                // set that are slot defaults, and the locked ones are exactly the
+                // set that aren't. So nothing here is missing from the app; there
+                // is just more to choose from. A picker that reads "half of this
+                // is locked" undersells a line that is actually generous, and it
+                // works against the free tier's whole point, which is letting
+                // someone feel the loop before paying.
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("\(lockedVisibleCount) more to swap in here")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(Color(hex: "#f2f5fa"))
+
+                    Text("Every condition already has a world")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.white.opacity(0.55))
+                }
+                .fixedSize(horizontal: false, vertical: true)
 
                 Spacer(minLength: 4)
 
