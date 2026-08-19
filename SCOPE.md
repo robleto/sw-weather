@@ -98,5 +98,10 @@ suggestion, or the fact that it would only take an afternoon. Anything that
 clears none of the three bars goes on the deferred list above and waits for
 v1.1.
 
+Neither is a written spec. `WIDGET.md` specs the widgets line above in full —
+gating, storage migration, IP exposure, the lot — precisely so the design is
+ready *if* one of the three bars above is ever cleared. The document existing
+is not itself the clearing, and it says so on its own first line.
+
 If an idea genuinely will not wait, the honest move is to amend this document
 and say why in the commit — not to build it quietly.
