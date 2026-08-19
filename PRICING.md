@@ -1,9 +1,10 @@
 # Pricing — the one-time iOS unlock
 
-Status: **$2.99 flat, decided 2026-08-18. Not yet configured in App Store
-Connect.** Two alternatives were considered and rejected — planet packs sold on top
-of premium, and a price ladder tied to catalog growth. Both are recorded below with
-the reasoning, because the question resurfaces.
+Status: **$2.99 flat, live in App Store Connect as of 2026-08-18.** The in-app
+purchase exists at `com.robleto.galacticweather.premium`, priced across 175 regions,
+and the Paid Apps Agreement is Active. Two alternatives were considered and rejected
+— planet packs sold on top of premium, and a price ladder tied to catalog growth.
+Both are recorded below with the reasoning, because the question resurfaces.
 
 `ATLAS-HANDOFF-ADDENDUM.md` settled the *model* — one non-consumable StoreKit
 purchase, iOS only, no subscription. This document settles the *number*, and
