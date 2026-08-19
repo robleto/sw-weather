@@ -186,6 +186,12 @@ would force a backend and why favorites don't. In short:
   forecast rendered as a strip of different worlds. That last one is the only
   one with a recurring API cost, and whether it belongs in the one-time bundle
   is a separate decision.
+  - **Widgets are specced, not built, in `WIDGET.md`** — and that spec
+    disagrees with "premium perk" above: it argues the base widget should be
+    free, gated only by which saved location it can point at, the same line
+    `PremiumGate` already draws. `SCOPE.md` still lists widgets as deferred;
+    the spec doesn't change that, it just means the design is ready if the
+    amendment bar is ever cleared.
 
 ## IP constraints — read before touching copy or art
 
